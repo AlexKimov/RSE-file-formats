@@ -1,0 +1,115 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: RSB.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.6
+//   Purpose: Ghost Recon RSB file
+ 
+//   History: 
+//
+//   2016.10 v0.6 initial release 
+//------------------------------------------------
+
+struct {
+  UINT version; // *.rsb file version
+  UINT width; // texture width
+  UINT height; // texture height
+  if (version > 7) { 
+    UINT mn1;  
+    UINT16 mn2; 
+    BYTE mn3;
+  }; 
+  struct {
+     UINT red_bits;
+     UINT green_bits;
+     UINT blue_bits;
+     UINT alpha_bits;
+  } RSB_BIT_INFO;
+  if (version == 9) { 
+    UINT mn4; // 
+    UINT mn5; //
+  };  
+} HEADER;
+
+typedef struct {
+    switch( HEADER.RSB_BIT_INFO.red_bits + HEADER.RSB_BIT_INFO.green_bits + HEADER.RSB_BIT_INFO.blue_bits + HEADER.RSB_BIT_INFO.alpha_bits ) 
+        {
+           case 16  : BYTE pixel[2]; break;
+           case 24  : BYTE pixel[3]; break;
+           case 32  : BYTE pixel[4]; break;
+           default : BYTE pixel;
+        } ;
+} PIXEL;
+
+typedef struct (int arraySize) {
+  PIXEL array[arraySize] <optimize=false>;
+} PIXEL_ARRAY;
+
+PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <optimize=false,name="Pixel Array", fgcolor=cBlack, bgcolor=0xccff66>;
+if (HEADER.version > 2) {
+    struct{
+       if (HEADER.version > 5) { 
+         UINT mn6; // 
+       }; 
+       BYTE isAlphaBlending;
+       BYTE isAlphaTesting;
+       BYTE isSampling;
+       BYTE isAnimation;
+       BYTE isScrolling;
+       BYTE isTiled;
+       BYTE isCompression;
+       BYTE isDistortion;
+       if (HEADER.version > 7) {
+          UINT Tags;
+       }
+       else {
+          BYTE mn7;
+          UINT16 mn8;
+       };
+    
+       UINT SourceFunction;
+       UINT DestinationFunction;
+       UINT CompareFunction;
+       BYTE ReferenceValue;
+    
+       UINT ScrollingType;
+    
+       FLOAT HorizontalRate;
+       FLOAT VerticalRate;
+       
+       UINT AnimationType;
+       FLOAT AnimationInterval;
+
+       UINT TextureCount;
+          if (isAnimation > 0) {
+           if (TextureCount > 0) {
+            typedef struct {
+              UINT TextureNameLength;
+              char TextureName[TextureNameLength]; 
+            } Texture <optimize=false>;
+        
+            typedef struct (int arraySize) {
+              Texture array[arraySize];
+            } TextureArray <optimize=false>;   
+           TextureArray RSBTextureArray(TextureCount) <optimize=false>; 
+           };
+          };
+       if (HEADER.version > 4) {        
+         UINT MapsCount;
+         UINT SubsamplingPriority;
+       };
+       BYTE isDamaged;
+    
+       if (isDamaged > 0) {
+         UINT TextureNameLength; // 
+         if (TextureNameLength > 0) {
+             char DamagedTextureName[TextureNameLength];
+         };
+       }; 
+    
+       if (HEADER.version > 2) {
+          UINT SurfaceType;
+       };      
+    } RSB_PROPERTIES;
+};  
