@@ -1,0 +1,357 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: QOB.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.2
+//   Purpose: Ghost Recon QOB file
+//
+//   History: 
+//    
+//   2016.10 v0.2 initial release
+//------------------------------------------------
+
+struct {   
+ struct {
+    UINT Length;  
+    char String[Length];  
+  } Begin_Model_String <name="QOB FileID">; 
+} QOB_FILE_HEADER <name="QOB Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+
+struct { 
+  // MaterailList section header 
+  struct { 
+    UINT SectionSize;
+    UINT MN; // 8
+    struct {    
+      UINT Length; 
+      char String[Length];
+      UINT number; // 3
+    } VERSION_STRING; 
+
+    struct {
+      UINT Length; 
+      char String[Length];
+    } MATERIALLIST_STRING;
+  } SECTION_HEADER <name="1.0 MaterialList section header">;
+  
+  // Materials section 
+  struct {
+    UINT Count <name="Material Count">;
+    if (Count > 0) {
+        typedef struct {
+          struct {
+            UINT SectionSize;
+            UINT MN; // 2
+            struct {    
+              UINT Length; 
+              char String[Length];
+              UINT number;
+            } VERSION_STRING; // 2
+            struct {    
+               UINT Length; // 
+               char String[Length]; //
+            } MATERIAL_NAME_STRING <name="Material Name">; 
+          } SUBSECTION_HEADER <name="Material Section Header">;
+          struct { 
+            FLOAT Opacity;
+            UINT Faceted; // 3,
+            struct {              
+              FLOAT Red; 
+              FLOAT Green; 
+              FLOAT Blue; 
+              FLOAT mn; // 1
+            } AMBIENT; 
+            struct {           
+              FLOAT Red;
+              FLOAT Green; 
+              FLOAT Blue; 
+              FLOAT mn; // 1
+            } DIFFUSE;   
+            struct { 
+              FLOAT Red; 
+              FLOAT Green; 
+              FLOAT Blue; 
+              FLOAT mn; // 1
+            } SPECULAR;
+            FLOAT SpecularLevel; //o.o5
+            BYTE is2Sided;
+          } MATERIAL_PARAMETERS;
+        } MATERIAL <name="Material">;
+    
+        typedef struct (int arraySize) {
+          MATERIAL array[arraySize] <optimize=false>;
+        } MATERIAL_ARRAY; 
+    
+        MATERIAL_ARRAY MaterialArray(Count) <name="Materials Array">; 
+  };
+  } Materials <name="1.1 Materials section">;
+  
+  // Textures section 
+  struct {
+    UINT Count <name="Texture Count">;
+    if (Count > 0) {
+        typedef struct {
+          struct {
+            UINT SectionSize;
+            UINT MN; // 38
+            struct {    
+              UINT Length;  
+              char String[Length]; 
+              UINT number; // 2
+           } VERSION_STRING; 
+            struct {    
+               UINT Length;  
+               char String[Length]; 
+            } TextureNameString <name="Texture Name">; 
+          } SUBSECTION_HEADER <name="Textures section header">;
+     
+          BYTE MN; // 0
+          struct {    
+             UINT Length; // 
+             char String[Length]; //
+          } TEXTURE_FILE_NAME_STRING <name="Texture .rsb file name">; 
+          
+          struct { 
+            UINT AdvTransparencyType;  // 0 2 3
+            UINT isTiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+            FLOAT SelfIllumination; // 0
+          } TEXTURE_PARAMETERS; 
+        } TEXTURE <name="Texture">;
+    
+        typedef struct (int arraySize) {
+          TEXTURE array[arraySize] <optimize=false>;
+        } TEXTURES_ARRAY; 
+    
+        TEXTURES_ARRAY TextureArray(Count) <name="Texture Array">; 
+      };
+  } TEXTURES <name="1.2 Textures section">;
+
+} QOBMATERIALLIST <name="1. MaterialList section">;
+
+//------------------QOBGEOMETRYLIST--------------------// 
+
+struct {   
+
+  struct { 
+    UINT SectionSize;
+    UINT MN; // 7
+    struct {    
+       UINT Length; 
+       char String[Length]; 
+      UINT number; // 1
+    } VERSION_STRING; 
+
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } GEOMETRYLIST_STRING;
+  } HEADER <name="GeometryList Header">;  
+
+ UINT Count <name="Object Count">;
+
+ struct {
+
+ typedef struct { 
+    //  section header 
+    struct { 
+      UINT SectionSize;
+      UINT MN; // 3
+      struct {    
+        UINT Length;  
+        char String[Length]; 
+        UINT number; // 1
+      } VERSION_STRING; 
+
+      struct {
+        UINT Length;  
+        char Text[Length];  
+      } NAME_STRING;
+    } SECTION_HEADER <name="Section header">; 
+
+    UINT16 mn; // 0
+
+    struct {
+      UINT VertexCount;  
+      typedef struct {     
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+       } Vertex;    
+      typedef struct (int arraySize) {
+        Vertex array[arraySize];
+      } VERTEX_ARRAY;     
+      VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
+    } VERTICES <name="Vertex section">;
+
+    UINT Count;  //
+    typedef struct {
+        struct {
+          BYTE mn; // 1
+          BYTE DetailedDarkmap;
+          BYTE DetailTexture;
+          UINT MaterialIndex;
+          UINT isTextured;
+          if (isTextured > 0) {
+            UINT TextureIndex;
+            if (DetailTexture > 0) {
+               UINT DetailTextureIndex;
+            };
+          };
+          struct {
+            UINT MN;     
+            UINT SelfIlluminationMap;
+            UINT SpecularMap;
+            UINT BumpMap;
+            UINT ReflectionMap;
+            UINT MapCount;
+          } MAPPING;
+       } PARAMETERS;
+    
+       struct {
+          UINT FaceCount; 
+    
+          typedef struct {     
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z;
+            FLOAT MN;
+           } FACE_NORMALS;
+    
+          typedef struct (int arraySize) {
+            FACE_NORMALS array[arraySize];
+          } FACE_NORMALS_ARRAY;
+          
+          FACE_NORMALS_ARRAY FacesNormalsArray(FaceCount);
+        
+          typedef struct  {
+            UINT16 Vertex1;
+            UINT16 Vertex2;
+            UINT16 Vertex3;
+          } FACE_INDICIES;
+    
+          typedef struct (int arraySize) {
+            FACE_INDICIES array[arraySize];
+          } FACE_INDICIES_ARRAY;
+          
+          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount);
+    
+          typedef struct  {
+            UINT16 Vertice1;
+            UINT16 Vertice2;
+            UINT16 Vertice3;
+          } TEXTURE_INDICIES;
+    
+          typedef struct (int arraySize) {
+            TEXTURE_INDICIES array[arraySize];
+          } TEXTURE_INDICIES_ARRAY;
+          
+          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount);
+    
+        } Faces <name="Faces">;
+    
+      struct {  
+        UINT VertexCount;
+        UINT TextureCount;
+          
+        typedef struct   {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } QOBNORMALSCOORDINATES;
+         
+        typedef struct (int arraySize) {
+          QOBNORMALSCOORDINATES array[arraySize];
+        } QOBNORMALSCOORDINATESARRAY;
+        
+        QOBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount);
+         
+        typedef struct   {
+          FLOAT U;
+          FLOAT V;
+        } QOBTEXTURECOORDINATES;
+        
+        typedef struct (int arraySize) {
+           QOBTEXTURECOORDINATES array[arraySize];
+        } QOBTEXTURECOORDINATESARRAY;
+        
+        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount*TextureCount); 
+          
+        typedef struct   {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT W;
+        } QOBCOORDINATE; 
+        
+        typedef struct (int arraySize) {
+           QOBCOORDINATE array[arraySize];
+        } QOBCOORDINATEARRAY; 
+        
+        QOBCOORDINATEARRAY CoordinatArray(VertexCount); 
+      } TEXTUREVERTICIES <name="Texture data">;   
+    } GEOMETRY_OBJECT;
+
+    typedef struct (int arraySize) {
+      GEOMETRY_OBJECT array[arraySize] <optimize=false>;
+    } GEOMETRY_OBJECT_ARRAY; 
+    
+    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(Count) <name="Object geometry data array">; 
+
+ } GEOMETRY_DATA;  
+
+  typedef struct (int arraySize) {
+    GEOMETRY_DATA array[arraySize] <optimize=false>;
+  } GEOMETRY_DATA_ARRAY; 
+
+  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
+
+ } QOB_GEOMETRY_DATA <name="Geometry data section">;
+  
+} QOBGEOMETRYLIST  <name="2. GeometryList Section">;
+
+struct {
+  UINT PointCount;
+  if (PointCount > 0) {
+    typedef struct {
+      struct {
+        UINT Length; // 
+        char String[Length]; // 
+      } POINT_NAME;
+      struct {
+        struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+        } XAxis;
+         struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+        } YAxis;
+        struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+        } ZAxis;
+        struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT Z;
+        } Position;
+        } TRANSFORMATION_MATRIX;
+    } POINT;
+    
+    typedef struct (int arraySize) {
+      POINT array[arraySize] <optimize=false>; 
+    } POINT_ARRAY <optimize=false>;   
+
+    POINT_ARRAY PointArray(PointCount) <optimize=false>; 
+  };
+} QOBPOINTS <name="3. Points section">;
+
+struct {
+  UINT Length;
+  char String[Length]; 
+} ENDMODEL_STRING <name="QOB File End">;
