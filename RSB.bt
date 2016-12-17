@@ -32,15 +32,12 @@ struct {
   };  
 } HEADER;
 
-typedef struct {
-    switch( HEADER.RSB_BIT_INFO.red_bits + HEADER.RSB_BIT_INFO.green_bits + HEADER.RSB_BIT_INFO.blue_bits + HEADER.RSB_BIT_INFO.alpha_bits ) 
-        {
-           case 16  : BYTE pixel[2]; break;
-           case 24  : BYTE pixel[3]; break;
-           case 32  : BYTE pixel[4]; break;
-           default : BYTE pixel;
-        } ;
-} PIXEL;
+typedef struct {    
+    ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
+    ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
+    ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
+    ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">;
+} PIXEL <name="Pixel">;
 
 typedef struct (int arraySize) {
   PIXEL array[arraySize] <optimize=false>;
