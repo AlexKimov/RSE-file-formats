@@ -1,0 +1,352 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: CHR.bt
+//   Authors: AlexKimov
+//   Version: 0.4
+//   Purpose: Ghost Recon CHR file
+//
+//   History: 
+//
+//   2016.12 v0.4 initial release
+//------------------------------------------------
+
+time_t ModifiedDate <name="CHR File Modified Date">;
+
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} BEGINMODEL_STRING <name="Model section begin">;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT value;
+    } VERSION; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIALNAME_STRING <name="Material Name">; 
+  } HEADER <name="Section header">;
+  struct { 
+    FLOAT Opacity;
+    FLOAT Faceted;
+    struct {              
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Ambient; 
+    struct {           
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Diffuse;   
+    struct { 
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Specular;
+    FLOAT SpecularLevel; //o.o5
+    BYTE twoSided;
+  } PARAMETERS;
+} MATERIAL <name=MaterialName>;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT value;
+   } VERSION_STRING; 
+   struct {    
+      UINT Length; // 
+      char Text[Length]; //
+   } TEXTURE_NAME_STRING <name="Texture Name">; 
+  } HEADER <name="Textures section HEADER">;
+
+  BYTE mn;
+
+  struct {    
+     UINT Length; // 
+     char Text[Length]; //
+  } TEXTURE_FILENAME_STRING <name="Texture .rsb file name">; 
+  
+  struct { 
+    UINT AdvTransparencyType;  // 0 2 3
+    UINT Tiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+    FLOAT SelfIllumination; // 0
+  } PARAMETERS; 
+} TEXTURE <name=TextureName>;
+
+string MaterialName(MATERIAL &material) {
+  return "Name: " + material.HEADER.MATERIALNAME_STRING.Text + " ";
+} 
+
+string TextureName(TEXTURE &texture) {
+  return "FileName: " + texture.TEXTURE_FILENAME_STRING.Text + " ";
+} 
+
+struct {  
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT value;
+    } VERSION; 
+
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } MATERIALLIST_STRING;
+  } HEADER <name="1.0 MaterialList section header">;
+    
+  struct {
+    UINT Count <name="Materials Count">;
+
+    typedef struct (int arraySize) {
+      MATERIAL array[arraySize] <optimize=false>;
+    } MATERIAL_ARRAY; 
+
+    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
+  } Materials <name="1.1 Materials section">;
+
+  struct {
+    UINT Count <name="Textures Count">;
+    if (Count > 0) {    
+        typedef struct (int arraySize) {
+          TEXTURE array[arraySize] <optimize=false>;
+        } TEXTURE_ARRAY; 
+        TEXTURE_ARRAY TextureArray(Count) <name="Textures Array">; 
+    };
+  } Textures <name="1.2 Textures section">;
+} CHRMATERIALLIST <name="1. MaterialList section">;
+
+struct {   
+
+  struct { 
+    UINT SectionSize;
+    UINT MN; // 7
+    struct {    
+      UINT Length; 
+      char String[Length]; 
+      UINT value; // 1
+    } VERSION; 
+
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } GEOMETRYLIST_STRING;
+  } HEADER <name="GeometryList Header">;  
+
+ UINT Count <name="Object Count">;
+
+ struct {
+
+ typedef struct { 
+    //  section header 
+    struct { 
+      UINT SectionSize;
+      UINT MN; // 3
+      struct {    
+        UINT Length;  
+        char String[Length]; 
+        UINT value; // 1
+      } VERSION; 
+      struct {
+        UINT Length;  
+        char Text[Length];  
+      } NAME_STRING;
+    } SECTION_HEADER <name="Section header">; 
+    UINT16 mn; // 0
+    struct {
+      UINT VertexCount;  
+      typedef struct {     
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+       } Vertex <name="Vertex">;    
+      typedef struct (int arraySize) {
+        Vertex array[arraySize];
+      } VERTEX_ARRAY;     
+      VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
+    } VERTICES <name="Vertices section">;
+    UINT Count;  //
+    typedef struct {
+      struct {
+          BYTE mn; // 1
+          BYTE DetailedDarkmap;
+          BYTE DetailTexture;
+          UINT MaterialIndex;
+          UINT isTextured;
+          if (isTextured > 0) {
+            UINT TextureIndex;
+            if (DetailTexture > 0) {
+               UINT DetailTextureIndex;
+            };
+          };
+          struct {
+            UINT MN;     
+            UINT SelfIlluminationMap;
+            UINT SpecularMap;
+            UINT BumpMap;
+            UINT ReflectionMap;
+            UINT MapCount;
+          } MAPPING;
+      } PARAMETERS;
+    
+      struct {
+          UINT FaceCount; 
+    
+          typedef struct {     
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z;
+            FLOAT MN;
+           } FACE_NORMALS;
+    
+          typedef struct (int arraySize) {
+            FACE_NORMALS array[arraySize];
+          } FACE_NORMALS_ARRAY;
+          
+          FACE_NORMALS_ARRAY FaceNormalsArray(FaceCount);
+        
+          typedef struct  {
+            UINT16 Vertex1;
+            UINT16 Vertex2;
+            UINT16 Vertex3;
+          } FACE_INDICIES;
+    
+          typedef struct (int arraySize) {
+            FACE_INDICIES array[arraySize];
+          } FACE_INDICIES_ARRAY;
+          
+          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount);
+    
+          typedef struct  {
+            UINT16 Vertex1;
+            UINT16 Vertex2;
+            UINT16 Vertex3;
+          } TEXTURE_INDICIES;
+    
+          typedef struct (int arraySize) {
+            TEXTURE_INDICIES array[arraySize];
+          } TEXTURE_INDICIES_ARRAY;
+          
+          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount);    
+      } Faces <name="Faces">;
+    
+      struct {  
+        UINT VertexCount;
+        UINT TextureCount;
+          
+        typedef struct   {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } CHRNORMALSCOORDINATES;
+         
+        typedef struct (int arraySize) {
+          CHRNORMALSCOORDINATES array[arraySize];
+        } CHRNORMALSCOORDINATESARRAY;
+        
+        CHRNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount);
+         
+        typedef struct   {
+          FLOAT U;
+          FLOAT V;
+        } TEXTURE_UV;
+        
+        typedef struct (int arraySize) {
+           TEXTURE_UV array[arraySize];
+        } TEXTURE_UV_ARRAY;
+        
+        TEXTURE_UV_ARRAY TextureCoordinatesArray(VertexCount*TextureCount); 
+          
+        typedef struct   {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT W;
+        } CHRCOORDINATE; 
+        
+        typedef struct (int arraySize) {
+           CHRCOORDINATE array[arraySize];
+        } CHRCOORDINATEARRAY; 
+        
+        CHRCOORDINATEARRAY CoordinatArray(VertexCount); 
+      } TEXTUREVERTICIES <optimize=false,name="Texture data">;   
+    } GEOMETRY_OBJECT;
+
+    typedef struct (int arraySize) {
+      GEOMETRY_OBJECT array[arraySize] <optimize=false>;
+    } GEOMETRY_OBJECT_ARRAY; 
+    
+    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(Count) <optimize=false,name="Object geometry data array">; 
+
+ } GEOMETRY_DATA;  
+
+  typedef struct (int arraySize) {
+    GEOMETRY_DATA array[arraySize] <optimize=false>;
+  } GEOMETRY_DATA_ARRAY; 
+
+  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
+
+ } CHR_GEOMETRY_DATA <name="Geometry data section">; 
+} CHRGEOMETRYLIST  <name="2. GeometryList Section">;
+
+UINT MN; //0
+
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} EndModelString <name="Model section end">;
+    
+typedef struct { 
+  struct {
+    UINT MN; 
+    struct {    
+       UINT Length; 
+       char Text[Length]; 
+       UINT value; // 1
+    } VERSION_STRING; 
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } BONE_NAME_STRING;
+  } SECTION_HEADER;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION;
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN; 
+  FLOAT MN; // 0
+  UINT Connections;  
+} BONE <name=BoneName>;
+
+// BoneName function 
+string BoneName(BONE &bone) {
+  return "Name: " + bone.SECTION_HEADER.BONE_NAME_STRING.Text;
+} 
+
+struct {
+  typedef struct (int arraySize) {
+    BONE array[arraySize] <optimize=false>;
+  } BONE_ARRAY;
+
+  BONE_ARRAY CHRBoneArray(21) <name="Bones array">;
+} Bones <name="3. Model bones section">;
