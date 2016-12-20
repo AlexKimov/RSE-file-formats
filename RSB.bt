@@ -11,6 +11,82 @@
 //   2016.10 v0.6 initial release 
 //------------------------------------------------
 
+typedef enum <ubyte> {
+    no,
+    yes
+} BOOL; // bool data type
+
+typedef enum <uint> {
+  sZero, 
+  sOne, 
+  sSource_Alpha, 
+  sInverse_Source_Alpha, 
+  sSource_Color, 
+  sInverse_Source_Color, 
+  sDestination_Color, 
+  sInverse_Destination_Color, 
+  sBoth_Source_Alpha, 
+  sBoth_Inverse_Source_Alpha } SOURCE_FUNCTION_PARAMETER; 
+
+typedef enum <uint> {
+  dZero, 
+  dOne, 
+  dSource_Alpha, 
+  dInverse_Source_Alpha_Source_Color, 
+  dInverse_Source_Color, 
+  dDestination_Color, 
+  dInverse_Destination_Color, 
+  dBoth_Source_Alpha, 
+  dBoth_Inverse_Source_Alpha 
+} DESTINATION_FUNCTION_PARAMETER; 
+
+typedef enum <uint> {
+  Never, 
+  Less, 
+  Equal, 
+  Less_Equal, 
+  Greater_Equal, 
+  Always, } COMPARE_FUNCTION_PARAMETER;
+
+typedef enum <uint>  {
+  Cycle,
+  Oscillate, 
+  Constant} ANIMATION_TYPE;
+
+typedef enum <uint>  {
+  Rotate,
+  Degrees_Sec } SCROLLING_TYPE;
+
+typedef enum <uint> {
+  NONE, 
+  Carpet, 
+  Concrete, 
+  Wood, 
+  Metal, 
+  Asphalt, 
+  Sand, 
+  Lowgrass, 
+  Highgrass, 
+  Puddle, 
+  Water, 
+  Drywall, 
+  Thin_Metal, 
+  Thick_Metal, 
+  Metal_Gas_Tank, 
+  Steam_Pipe, 
+  Electrical_Panel,   Snow, 
+  Safety_Glass, 
+  Bullet_Resistant_Glass, 
+  Ice, 
+  Mud, 
+  Glass, 
+  Foliage, 
+  Gravel, 
+  Glass_Shards, 
+  Creaky_Wood,
+  unset = 4294967295
+} SURFACE_TYPE ; 
+
 struct {
   UINT version; // *.rsb file version
   UINT width; // texture width
@@ -32,6 +108,8 @@ struct {
   };  
 } HEADER;
 
+BitfieldDisablePadding();
+
 typedef struct {    
     ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
     ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
@@ -43,20 +121,21 @@ typedef struct (int arraySize) {
   PIXEL array[arraySize] <optimize=false>;
 } PIXEL_ARRAY;
 
-PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <optimize=false,name="Pixel Array", fgcolor=cBlack, bgcolor=0xccff66>;
+PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <optimize=false, name="Pixel Array", fgcolor=cBlack, bgcolor=0xccff66>;
+
 if (HEADER.version > 2) {
     struct{
        if (HEADER.version > 5) { 
          UINT mn6; // 
        }; 
-       BYTE isAlphaBlending;
-       BYTE isAlphaTesting;
-       BYTE isSampling;
-       BYTE isAnimation;
-       BYTE isScrolling;
-       BYTE isTiled;
-       BYTE isCompression;
-       BYTE isDistortion;
+       BOOL AlphaBlending <name="AlphaBlending", comment="yes - use alpha channel">;
+       BOOL AlphaTesting <name="AlphaTesting">;
+       BOOL Sampling <name="Sampling">;
+       BOOL Animation <name="Animation">;
+       BOOL Scrolling <name="Scrolling">;
+       BOOL Tiled <name="Tiled">;   // unused
+       BOOL Compression <name="Compression">;   // unused
+       BOOL Distortion <name="Distortion">;
        if (HEADER.version > 7) {
           UINT Tags;
        }
@@ -65,40 +144,42 @@ if (HEADER.version > 2) {
           UINT16 mn8;
        };
     
-       UINT SourceFunction;
-       UINT DestinationFunction;
-       UINT CompareFunction;
+       SOURCE_FUNCTION_PARAMETER SourceFunction <name="Source Function">;
+       DESTINATION_FUNCTION_PARAMETER DestinationFunction <name="Destination Function">;
+       COMPARE_FUNCTION_PARAMETER CompareFunction <name="Compare Function">;
        BYTE ReferenceValue;
     
-       UINT ScrollingType;
-    
-       FLOAT HorizontalRate;
-       FLOAT VerticalRate;
-       
-       UINT AnimationType;
-       FLOAT AnimationInterval;
-
-       UINT TextureCount;
-          if (isAnimation > 0) {
-           if (TextureCount > 0) {
-            typedef struct {
-              UINT TextureNameLength;
-              char TextureName[TextureNameLength]; 
-            } Texture <optimize=false>;
+       struct { 
+         SCROLLING_TYPE ScrollingType;    
+         FLOAT HorizontalRate;
+         FLOAT VerticalRate;
+       } TEXTURE_SCROLLING <name="Scrolling">;
+      
+       struct {
+         ANIMATION_TYPE AnimationType <name="Animation Type">; 
+         FLOAT AnimationInterval;
+         UINT TextureCount;
+         if ((Animation) && (TextureCount)) {
+              typedef struct {
+                UINT TextureNameLength;
+                char TextureName[TextureNameLength]; 
+              } TEXTURE_NAME <optimize=false>;
         
-            typedef struct (int arraySize) {
-              Texture array[arraySize];
-            } TextureArray <optimize=false>;   
-           TextureArray RSBTextureArray(TextureCount) <optimize=false>; 
-           };
+              typedef struct (int arraySize) {
+                TEXTURE_NAME array[arraySize];
+              } TEXTURE_ARRAY <optimize=false>;
+   
+             TEXTURE_ARRAY RSBTextureArray(TextureCount) <optimize=false>; 
           };
+       } ANIMATION <name="Animation">; 
+
        if (HEADER.version > 4) {        
-         UINT MapsCount;
-         UINT SubsamplingPriority;
+         UINT MapsCount;   // unused
+         UINT SubsamplingPriority;  // unused
        };
-       BYTE isDamaged;
-    
-       if (isDamaged > 0) {
+
+       BOOL Damaged <name="Damaged">;    
+       if (Damaged > 0) {
          UINT TextureNameLength; // 
          if (TextureNameLength > 0) {
              char DamagedTextureName[TextureNameLength];
@@ -106,7 +187,7 @@ if (HEADER.version > 2) {
        }; 
     
        if (HEADER.version > 2) {
-          UINT SurfaceType;
+          SURFACE_TYPE SurfaceType <name="Surface Type">; 
        };      
     } RSB_PROPERTIES;
 };  
