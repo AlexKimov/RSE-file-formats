@@ -1,0 +1,1377 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template ------------
+//
+//      File: MAP.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Ghost Recon MAP file 
+// File Mask: *.map
+// 
+//   History: 
+//
+//   2016.12 v0.1 initial release
+//------------------------------------------------
+
+typedef enum <ubyte> {
+    no,
+    yes
+} BOOL; // bool data type
+
+struct {
+ struct {
+    UINT Length; // 
+    char Text[Length]; // BeginMapv4.0
+  } BEGINMAP_STRING <name="File ID (Signature)">;
+ struct {
+    time_t CreateDate <name="File Creation Date">;
+  } DATETIME <name="File DATETIME">;
+} MAPHEADER <name="MAP Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+//------------------------------------------------
+// Section - MaterialList 
+//------------------------------------------------
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIAL_NAME_STRING <name="Material Name">; 
+  } HEADER <name="Material Section Header">;
+  struct { 
+    FLOAT Opacity;
+    FLOAT isFaceted;
+    struct {              
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } AMBIENT; 
+    struct {           
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } DIFFUSE;   
+    struct { 
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } SPECULAR;
+    FLOAT SpecularLevel; //o.o5
+    BOOL twoSide;
+  } PARAMETRES;
+} MATERIAL <name=MaterialName>;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; 
+      char Text[Length]; 
+      UINT Value;
+   } VERSION; 
+    struct {    
+       UINT Length;  
+       char Text[Length]; 
+    } TEXTURENAME_STRING <name="Texture Name">; 
+  } HEADER <name="Textures section header">;
+
+  BOOL mn;
+
+  struct {    
+     UINT Length;  
+     char Text[Length]; 
+  } TEXTURE_FILENAME_STRING <name="Texture .rsb file name">; 
+  
+  struct { 
+    UINT AdvTransparencyType;  // 0 2 3
+    UINT isTiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+    FLOAT SelfIllumination; // 0
+  } PARAMETERS; 
+} TEXTURE <name=TextureName>;
+
+string MaterialName(MATERIAL &material) {
+  return "Name: " + material.HEADER.MATERIAL_NAME_STRING.Text + " ";
+} 
+
+string TextureName(TEXTURE &texture) {
+  return "FileName: " + texture.TEXTURE_FILENAME_STRING.Text + " ";
+} 
+
+struct {  
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } MATERIALLIST_STRING;
+  } HEADER <name="1.0 MaterialList section header">;
+    
+  struct {
+    UINT Count <name="Materials Count">;
+
+    typedef struct (int arraySize) {
+      MATERIAL array[arraySize] <optimize=false>;
+    } MATERIAL_ARRAY; 
+
+    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
+  } MATERIALS <name="1.1 Materials section">;
+
+  struct {
+    UINT Count <name="Textures Count">;
+     if (Count > 0) {
+
+        typedef struct (int arraySize) {
+          TEXTURE array[arraySize] <optimize=false>;
+        } TEXTURE_ARRAY; 
+    
+        TEXTURE_ARRAY TextureArray(Count) <name="Textures Array">; 
+    };
+  } TEXTURES <name="1.2 Textures section">;
+
+} MAPMATERIALLIST <name="1. MaterialList section">;
+
+//------------------------------------------------
+// Section - GeometryList 
+//------------------------------------------------
+
+typedef struct {
+    UINT Length;
+    char PointName[Length];
+    struct {
+      struct { 
+        FLOAT x;        
+        FLOAT y;
+        FLOAT z;
+      } XAXIS;
+       struct { 
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } YAXIS;
+      struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } ZAXIS;
+      struct {
+        FLOAT Y;
+        FLOAT X;
+        FLOAT Z;
+      } POSITION;
+    } TRANSFORMATION_MATRIX;   
+} POINT <name=Point_Name>;
+
+string Point_Name (POINT &point) {
+  return "Name: " + point.PointName;
+};
+
+typedef struct {  
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+       UINT Value;
+    } VERSION; 
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } NAME_STRING;
+  } HEADER <name="Section header">; 
+
+  struct { 
+     UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+     } NAMESTRING; 
+    BOOL DarkMap <name="DarkMap">;
+    BOOL CastShadows  <name="CastShadows">;
+  } SUBSECTION_HEADER <name="Object section header">; 
+
+struct {
+  UINT VertexCount;  
+
+  typedef struct {     
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+   } VERTEX <name="VERTEX">;
+
+  typedef struct (int arraySize) {
+    VERTEX array[arraySize];
+  } VERTEX_ARRAY; 
+
+  VERTEX_ARRAY VertexArray(VertexCount) <name="Object vertices array">; 
+
+} VERTICES <name="Object vertices section">;
+
+struct {
+
+UINT Count;
+
+typedef struct {
+  struct {
+      BOOL mn;
+      BOOL iUseDetailedDarkmap;
+      BOOL DetailTexture;
+      UINT MaterialIndex;
+      UINT isTextured;
+      if (isTextured) {
+        UINT TextureIndex;
+        //if (isTextured > 1) {
+        //  UINT mn;
+        //};
+        if (DetailTexture || isTextured > 1)  {
+           UINT DetailTextureIndex;
+        };
+      };
+      struct {
+        UINT MN;    
+        UINT SelfIlluminationMap;
+        UINT SpecularMap;
+        UINT BumpMap;
+        UINT ReflectionMap;
+        UINT MapCount;
+      } MAP;
+   } PARAMETERS;
+
+struct {
+  UINT FacesCount; 
+
+  typedef struct {     
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT MN;
+   } FacesNormals;
+
+  typedef struct (int arraySize) {
+    FacesNormals array[arraySize];
+  } POBFacesNormalsArray;
+  
+  POBFacesNormalsArray FacesNormalsArray(FacesCount);
+
+  typedef struct  {
+    UINT16 P1;
+    UINT16 P2;
+    UINT16 P3;
+  } POBFaceIndicies;
+
+  typedef struct (int arraySize) {
+    POBFaceIndicies array[arraySize];
+  } POBFaceIndiciesArray;
+  
+  POBFaceIndiciesArray FaceIndiciesArray(FacesCount);
+
+  typedef struct  {
+    UINT16 P1;
+    UINT16 P2;
+    UINT16 P3;
+  } TextureIndicies;
+
+  typedef struct (int arraySize) {
+    TextureIndicies array[arraySize];
+  } TextureIndiciesArray;
+  
+  TextureIndiciesArray PobTextureIndiciesArray(FacesCount);
+
+} Faces <name="Faces">;
+
+struct {  
+  UINT VerticiesCount;
+  UINT TextureCount;
+  
+  typedef struct   {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } POBNormalsCoordinates;
+ 
+  typedef struct (int arraySize) {
+   POBNormalsCoordinates array[arraySize];
+  } POBNormalsCoordinatesArray;
+
+  POBNormalsCoordinatesArray NormalsCoordinatesArray(VerticiesCount);
+ 
+  typedef struct   {
+    FLOAT U;
+    FLOAT V;
+  } POBTextureCoordinates;
+
+  typedef struct (int arraySize) {
+   POBTextureCoordinates array[arraySize];
+  } POBTextureCoordinatesArray;
+ 
+  if (TextureCount > 0) {
+    POBTextureCoordinatesArray TextureCoordinatesArray(VerticiesCount*TextureCount); 
+  }; 
+  typedef struct   {
+    FLOAT X;  // 1, 0.5, 
+    FLOAT Y;  // 1, 0.5,  
+    FLOAT Z;  // 1, 0.5, 
+    FLOAT W;  // 1
+  } NORMALS_COORDINATE; 
+
+  typedef struct (int arraySize) {
+   NORMALS_COORDINATE array[arraySize];
+  } NORMALS_COORDINATE_ARRAY; 
+
+  NORMALS_COORDINATE_ARRAY NormalsCoordinatArray(VerticiesCount); 
+} TEXTURE_VERTICIES <name="Texture data">;
+} OBJECT_DATA;
+
+typedef struct (int arraySize) {
+  OBJECT_DATA array[arraySize] <optimize=false>;
+} OBJECT_DATA_ARRAY; 
+
+OBJECT_DATA_ARRAY POBObjectsDataArray(Count) <name="Objects data array">; 
+} OBJECTSDATA <name="Objects data section">;
+//-----------------------------------------------------
+
+struct {
+
+  UINT Count;   
+  
+  typedef struct(int arraySize) {
+    POINT array[arraySize] <optimize=false>;
+  } POINT_ARRAY;
+  
+  POINT_ARRAY POBPointArray(Count) <name="Point array">;
+
+} Points <name="Points section">;
+
+
+  struct {
+     struct {
+      UINT VerticiesCount;
+
+      if (VerticiesCount > 0) {
+        typedef struct {     
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } SOVertice;
+
+        typedef struct (int arraySize) {
+          SOVertice array[arraySize];
+        } SOVerticiesArray; 
+
+        SOVerticiesArray SOVArray(VerticiesCount); 
+      };
+    } VERTICIES;
+
+    struct {
+      UINT FacesCount;
+
+      if (FacesCount > 0) {
+        typedef struct {     
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT mn;
+         } CollisionFaceNormals;
+
+        typedef struct (int arraySize) {
+          CollisionFaceNormals array[arraySize];
+        } CollisionFaceNormalsArray;
+
+        CollisionFaceNormalsArray POBCollisionFaceNormalsArray(FacesCount);
+      };
+    } FACES;
+
+  } CollisionObjects <name="Collision (non-rendered) objects section">;
+
+struct {
+  UINT ObjectsCount;
+
+  //UINT m2;
+  struct {   
+    UINT Count;
+    if (Count > 0) {     
+        typedef struct {
+          UINT Length;
+          char Name[Length]; // for example staticengineblock
+          BYTE FloorPolygon; // 2 - non colidable 2d, 10 - non colidable 3d 26 - 3
+          BYTE CarvingBoundary; // 1 - Carving Boundary  2 - cannot carve
+          BYTE MN; // 0
+          BYTE MN; // 0   
+          UINT SurfaceProperty; // 0 - 12
+        } POLYGON_PARAMETERS;
+ 
+        typedef struct (int arraySize) {
+          POLYGON_PARAMETERS array[arraySize] <optimize=false>;
+        } POLYGON_ARRAY;       
+
+        POLYGON_ARRAY MAPPolygonsArray(Count);
+    };
+  } POLYGON;
+ 
+   struct {
+      UINT Count; // 0
+      if (Count > 0) {  
+
+          typedef struct {
+            struct {
+              UINT Length;
+              char Name[Length]; // for example staticengineblock
+              BYTE FloorPolygon; // 2 - non colidable 2d, 10 - non colidable 3d 26 - 3
+              BYTE CarvingBoundary; // 1 - Carving Boundary  2 - cannot carve
+              BYTE MN; // 0
+              BYTE MN; // 0   
+              UINT SurfaceProperty; // 0 - 18
+            } POLYGON_PARAMS;
+           
+            UINT FCount;
+            typedef struct  {
+              UINT16 Point1;
+              UINT16 Point2;
+              UINT16 Point3;
+              UINT16 FaceValue;
+            } FIndicies;
+
+            typedef struct (int arraySize) {
+              FIndicies array[arraySize] <optimize=false>;
+            } FIndiciesArray;
+  
+            FIndiciesArray POBFIndiciesArray(FCount);       
+          } NonRendObject;
+          
+          typedef struct (int arraySize) {
+            NonRendObject array[arraySize] <optimize=false>;
+          } NonRendObjectArray;
+  
+          NonRendObjectArray POBNonRendObjectArray(Count);
+      };
+    } NONROBJECTS <name="Non-rendered objects section">; 
+  } OBJECTS;
+
+} GEOMETRY <name=ObjectName>;
+
+string ObjectName(GEOMETRY &geometry) {
+  return "Name: " + geometry.HEADER.NAME_STRING.Text + " ";
+} 
+
+struct {   //
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } GEOMETRYLIST_STRING;
+  } HEADER <name="GeometryList Header">;  
+
+  struct {   
+    UINT Count <name="Object Count">;
+    typedef struct (int arraySize) {
+      GEOMETRY array[arraySize] <optimize=false>;
+    } GEOMETRY_ARRAY; 
+    GEOMETRY_ARRAY GeometryArray(Count) <name="Object geometry data array">; 
+  } GEOMETRYDATA <name="Geometry data section">;
+} MAPGEOMETRYLIST <name="2. GeometryList Section">;
+
+//------------------------------------------------------
+//  PortalList Section
+//------------------------------------------------------
+
+struct {
+  struct { 
+    UINT SectionSize;
+    UINT mn;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength]; 
+      UINT number;
+    } VersionString;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];   
+    } GeometryListString;
+  } PortalListHeader <name="PortalList section header">; 
+
+  UINT Count;
+
+  typedef struct {
+      struct { 
+        UINT SectionSize;
+        UINT mn;
+    
+        struct {
+          UINT StringLength;
+          char String[StringLength]; 
+          UINT number;
+        } VersionString;
+    
+        struct {
+          UINT StringLength;
+          char String[StringLength];   
+        } GeometryListString;
+      } Header <name="Portal header">;
+
+   // BYTE PD[Header.SectionSize];
+    
+    struct {
+      UINT VerticeCount;
+      typedef struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;  
+      } Coordinates;
+      Coordinates CoordinatesArray[VerticeCount];      
+      UINT RoomNumber;
+      UINT OpositeRoomNumber; 
+      BYTE mn;
+    } PortalParams; 
+  } Portals;
+
+  typedef struct(int arraySize) {
+    Portals array[arraySize] <optimize=false>;
+  } PortalsArray;
+
+  PortalsArray MAPPortalsArray(Count);
+   
+} PortalList;
+
+//---------------------------
+//  OccluderList Section
+//------------------------------
+
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+      UINT number;
+    } VersionString;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } OccluderListString;
+  } OccluderListHeader <name="OccluderList section header">;
+
+  UINT Count;
+  if (Count > 0) {
+      typedef struct {
+          struct { 
+            UINT SectionSize;
+            UINT mn;
+        
+            struct {
+              UINT StringLength;
+              char String[StringLength]; 
+              UINT number;
+            } VersionString;
+        
+            struct {
+              UINT StringLength;
+              char String[StringLength];   
+            } GeometryListString;
+          } Header <name="Occluder header">;
+        
+         BYTE mnm[2];
+         UINT mn;        
+         BYTE mnk[3]; 
+        
+         UINT vertice_count;
+         typedef struct {
+           FLOAT X;
+           FLOAT Y;
+           FLOAT Z;
+         } Vertice;
+
+         Vertice verticeArray[count]; 
+    
+      } Occluder;
+    
+      typedef struct(int arraySize) {
+        Occluder array[arraySize] <optimize=false>;
+      } OccludersArray <optimize=false>;
+    
+      OccludersArray MAPOccluderArray(Count) <optimize=false>;
+  };  
+
+} OccluderList;
+
+
+//----------------------------------------------------------------
+// LightList Section
+//---------------------------------------------------------------
+
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+      UINT number;
+    } VersionString;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } LightListString;
+  } LightListHeader <name="OccluderList section header">;
+  
+
+  UINT Count;
+
+  struct {
+    typedef struct {
+      struct { 
+        UINT SectionSize;
+        UINT mn;
+    
+        struct {
+          UINT StringLength;
+          char String[StringLength]; 
+          UINT number;
+        } VersionString;
+    
+        struct {
+          UINT StringLength;
+          char String[StringLength];   
+        } GeometryListString;
+      } Header <name="Light header">;
+
+      //byte Data[Header.SectionSize];
+      UINT Count;
+      UINT LightType; // 0 - ambient, 6 - sun
+      FLOAT Angle;
+      FLOAT MN; // 0.3926991
+      FLOAT MN; // 0
+      FLOAT MN; // 0.5
+      FLOAT MN; // 0.5
+      FLOAT Atennuation;
+      FLOAT MN;
+
+      struct {  
+        FLOAT MN;
+        FLOAT MN;
+        FLOAT MN;
+        FLOAT MN;
+        FLOAT MN;
+        FLOAT MN;
+        FLOAT MN;
+      } direction;
+
+      struct { 
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } position;
+
+      FLOAT MN;  // 0
+      FLOAT MN; // 0    
+      FLOAT MN; // 0
+      FLOAT MN; // 0
+      FLOAT MN; // 0
+      FLOAT MN; // 0
+
+      BYTE AlwaysOn;
+      struct {
+        FLOAT Red;
+        FLOAT Green;
+        FLOAT Blue;
+      } Color;
+
+      FLOAT MN;
+      BYTE mn;  // 1
+      BYTE CastShadows;
+      BYTE mn;  // 0
+      BYTE Negative;
+      struct {
+        UINT StringLength;
+        char String[StringLength];
+      } NameString1;
+      struct {
+        UINT StringLength;
+        char String[StringLength];
+      } ProjectedTextureString;
+      UINT LinearAttenuation;
+      BYTE mn;  // 0
+      BYTE DecayOn;
+      FLOAT DecayStart;
+      BYTE DynLightActors;
+} Light;
+  
+    typedef struct(int arraySize) {
+      Light array[arraySize] <optimize=false>;
+    } LightsArray <optimize=false>;
+
+    LightsArray MAPLightsArray(Count) <optimize=false>;  
+  } Lights;
+} LightList;
+
+//----------------------------------------------------------------
+// VFogList Section
+//---------------------------------------------------------------
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+      UINT number;
+    } VersionString;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } FogListString;
+  } FogListHeader <name="FogList section header">;
+ 
+  UINT Count;
+} VFogList;
+
+//----------------------------------------------------------------
+// ObjectList section
+//---------------------------------------------------------------
+
+void NodesTree2(UINT NodeCount)
+{   
+  typedef struct { 
+      struct { 
+        UINT SectionSize;
+        UINT MN;
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+            UINT Value;
+        } VERSION;  
+    
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+        } ModeNameString;         
+      } HEADER;
+    
+        struct {
+          UINT Length; // 
+          char Text[Length]; // 
+        } OBJECT_PROPERTIES; 
+
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAXIS;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAXIS;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAXIS;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } POSITION;
+        } TRANSFORMATION_MATRIX;   
+
+      UINT SubeNodeCount;
+
+      struct { 
+        UINT SectionSize;
+        UINT MN;
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+            UINT Value;
+        } VERSION;  
+    
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+        } ModeNameString;         
+      } HEADER;
+
+        byte mn; 
+        struct {
+         FLOAT AAC;
+         if (AAC != 0) {
+           FLOAT A;
+           FLOAT A; 
+           FLOAT A;
+           FLOAT A;
+           FLOAT A; 
+           FLOAT A;
+           FLOAT A;
+           FLOAT A;
+           FLOAT A;
+           FLOAT A;
+           if (Abs(AAC) > 0.000000001) {
+           FLOAT A;
+           FLOAT A;
+           };  
+         }
+        } TransformationMatrix;
+
+    
+    
+      UINT SubeNodeCount;
+      //nodesTree(SubeNodeCount);
+    
+ 
+  } Node2;
+
+  typedef struct (int arraySize) {
+    Node2 array[arraySize] <optimize=false>;
+  } NodesArray2; 
+        
+  NodesArray2 POBNodesArray2(NodeCount);
+};
+
+
+
+void NodesTree(UINT NodeCount)
+{   
+  typedef struct { 
+      struct { 
+        UINT SectionSize;
+        UINT MN;
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+            UINT Value;
+        } VERSION;  
+    
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+        } NAME_STRING;         
+      } HEADER;
+    
+      if ((HEADER.VERSION.Value == 3) || (HEADER.VERSION.Value == 2))  {
+        BYTE MN; // 0
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAXIS;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAXIS;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAXIS;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } Position;
+        } TRANSFORMATION_MATRIX;   
+
+        UINT SideToPlayer;
+        UINT twoSided;
+        FLOAT mn3;
+        FLOAT mn4;
+        FLOAT Time1;   
+        FLOAT Time2; 
+        FLOAT mn4;
+        BYTE mn5;
+        BYTE mn6; 
+        UINT mn7;
+
+        BYTE mn8;
+        UINT mn7; 
+
+        struct {    
+            UINT Length; // 
+            char Text[Length]; //
+        } TrailProperties; 
+
+        struct { 
+          FLOAT Width;
+          FLOAT Length;
+        } SquareSize;
+
+        FLOAT mn11; 
+ 
+        FLOAT height;  
+
+        FLOAT speedmultiplier;
+        FLOAT sizemultiplier;   
+        FLOAT sizemultiplier2;  
+
+        FLOAT mn10;   
+        FLOAT mn4; 
+
+        FLOAT height2;
+ 
+        FLOAT height3;
+
+        FLOAT Size; 
+        FLOAT Size2; 
+
+        struct { 
+            FLOAT mn4; 
+            UINT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+    
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+            FLOAT mn4; 
+        } Params;
+
+        struct { 
+          UINT mn4; 
+          FLOAT Angle0;  
+          FLOAT Angle; 
+          FLOAT Angle1; 
+          FLOAT Angle2; 
+          FLOAT RotationSpeed; 
+          FLOAT mn4; 
+        } Rotation;
+
+        FLOAT mn4; 
+        FLOAT mn4; 
+        UINT mn; 
+        UINT mn4; 
+        UINT mn4; 
+
+        FLOAT speedmultiplier;  
+        FLOAT speed; 
+
+        UINT mn5;
+ 
+        FLOAT mcount; 
+        FLOAT LLL;
+ 
+        UINT mn4;
+        UINT Count;
+
+        if (HEADER.SectionSize <= 325) {       
+            BYTE isTextured;
+            struct {
+              UINT Length; // 
+              char Text[Length]; // 
+            } TextureFileName; 
+            UINT mn4;
+                if (mn4 > 0) {
+                  FLOAT mn5; 
+                  FLOAT mn4; 
+                  FLOAT LLL;  
+                  FLOAT mn5; 
+                  FLOAT mn4; 
+                  FLOAT LLL;  
+                  FLOAT mn5; 
+                  FLOAT mn4; 
+                }
+            UINT mn4;        
+        }
+        else {
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;
+          FLOAT LLL;   
+
+          UINT mn4;
+          UINT mn4;
+          FLOAT LLL;
+          UINT mn4;
+          NodesTree2(Count);
+        }
+
+      }
+      else {
+      if (HEADER.SectionSize == 1) { 
+        BYTE MM; //0
+      }
+      else
+      if (HEADER.MN == 53) {
+
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAxis;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAxis;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAxis;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } Position;
+        } TransformationMatrix;
+
+
+
+          UINT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;
+          FLOAT LLL; 
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;  
+          FLOAT mn5; 
+          FLOAT mn4; 
+          FLOAT LLL;
+          BYTE AA;
+
+
+       }
+            
+      else {
+  
+        struct {
+          UINT Length; // 
+          char Text[Length]; // 
+        } ObjectProperties;   
+
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAxis;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAxis;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAxis;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } Position;
+        } TransformationMatrix;
+
+    
+      if (HEADER.SectionSize - ObjectProperties.Length  > 53) {
+
+        struct {
+            struct {
+              UINT n1;
+              UINT n2;
+              UINT n3;
+              FLOAT n4; 
+              UINT16 n5;
+              UINT n6; 
+              UINT16 n7; 
+              UINT n8;  
+              BYTE n9;
+              BYTE n10; 
+              UBYTE A;     
+            } Prop;
+        
+            UINT PKeysCount;
+            
+            typedef struct {
+                UINT n1;
+                FLOAT n2;
+                FLOAT Time;
+                FLOAT X;          
+                FLOAT Y;
+                FLOAT Z;    
+            } PositionKey;   
+        
+            typedef struct (int arraySize) {
+              PositionKey array[arraySize] <optimize=false>;
+            } PositionKeysArray; 
+        
+             PositionKeysArray POBPositionKeysArray(PKeysCount);
+        
+            UINT RKeysCount;
+            typedef struct {
+                UINT n1;
+                UINT n2;
+                UINT n3;
+                FLOAT n4;          
+                FLOAT n5;
+                FLOAT n6; 
+                FLOAT n7;          
+                FLOAT n8;
+                FLOAT n9; 
+                FLOAT n10;
+            } RotationKey;
+        
+            typedef struct (int arraySize) {
+              RotationKey array[arraySize] <optimize=false>;
+            } RotationKeysArray; 
+        
+             RotationKeysArray POBRotationKeysArray(RKeysCount);
+        } NodeAnimation;  
+      };  
+      UINT SubeNodeCount;
+      NodesTree(SubeNodeCount);
+     };
+    };  
+  } NODE <name=NodeName>;
+
+  typedef struct (int arraySize) {
+    NODE array[arraySize] <optimize=false>;
+  } NODE_ARRAY; 
+        
+  NODE_ARRAY POBNodesArray(NodeCount) <name="Child nodes">;
+};
+
+string NodeName(NODE &node) {
+    return "Name: " + node.HEADER.NAME_STRING.Text ;
+}  
+
+struct {
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } OBJECTLIST_TRING;
+  } HEADER <name="ObjectList section header">;  
+
+  struct {
+    UINT NodeCount; 
+    struct {
+      UINT SectionSize;
+      UINT MN;
+      struct {    
+        UINT Length; // 
+        char Text[Length]; //
+        UINT Value;
+      } VERSION;  
+      struct {
+        UINT Length; // 
+        char Text[Length]; // 
+      } NAME_STRING;
+    } HEADER <name="Root node header">; 
+    NodesTree(NodeCount);
+  } NODE_TREE <name="Root node">;
+} OBJECTLIST <name="3. ObjectList section">;
+
+//----------------------------------------------------------------
+//  TransitionLineList section
+//---------------------------------------------------------------
+
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } RoomListString;
+  } RoomListHeader <name="RoomList section header">;
+
+  UINT Count;
+
+  typedef struct {
+    UINT MN; // 12
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+      UINT number;
+    } VersionString;
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+    } RoomNameString;
+
+    BYTE MM; // 0
+    UINT Mn; // 0
+    UINT MN; // 1
+
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+    } LevelNameString;
+
+    struct {
+      struct { 
+        FLOAT x;        
+        FLOAT y;
+        FLOAT z;
+      } XAxis;
+       struct { 
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } YAxis;
+      struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } ZAxis;
+      struct {
+        FLOAT Y;
+        FLOAT X;
+        FLOAT Z;
+      } Position;
+    } TransformationMatrix;  
+
+    FLOAT mn; // 0
+
+    struct {
+      FLOAT mn;
+      FLOAT mn;
+      FLOAT mn;
+      FLOAT mn;   
+      FLOAT mn;
+      FLOAT mn;
+    } Position;
+
+    UINT mn; // 1
+    FLOAT mn; // 1
+    BYTE mn; // 0
+    UINT mn; // 1
+    FLOAT mn; // 1
+    FLOAT mn; // 40
+    UINT mn;  //0
+    UINT mn; //0   
+  } Room;
+
+  Room MAPRoomsArray[Count] <optimize=false>; 
+  
+} RoomList;
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } TransitionListString;
+  } TransitionListHeader <name="TransitionList section header">;
+
+  UINT Count;
+} TransitionLineList;
+
+//----------------------------------------------------------------
+// PlanningLevelList section
+//---------------------------------------------------------------
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } PlanningListString;
+  } PlanningListHeader <name="PlanningList section header">;
+
+  UINT Count;
+  if (Count > 0) {
+    FLOAT mn; 
+    FLOAT mn; 
+    UINT RoomCount;
+
+    typedef struct { 
+      UINT StringLength;
+      char RoomNumberList[StringLength] ;
+    } RoomNumberString;    
+
+    typedef struct(int arraySize) {
+      RoomNumberString array[arraySize] <optimize=false>;
+    } RoomsArray ;
+
+    RoomsArray RoomsNumbersArray(RoomCount);
+  };
+} PlanningLevelList;
+
+
