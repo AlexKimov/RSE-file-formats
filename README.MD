@@ -9,8 +9,8 @@ Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment
 | *.chr        | CHR.bt        | 75%          | yes        |
 | *.map        | MAP.bt        | 30%          | yes        |
 | *.pob        | POB.bt        | 50%          | yes        |
-| *.qob        | QOB.bt        | 75%          | yes        |
-| *.rsb        | RSB.bt        | 95%          | yes        |
+| *.qob        | QOB.bt        | **90%**      | yes        |
+| *.rsb        | RSB.bt        | **95%**      | yes        |
 | *.anm        | ANM.bt        | 5%           | yes        |
 | *.bnf        | BNF.bt        | 0%           | no         |
 | *.sht        | SHT.bt        | 0%           | no         | 
