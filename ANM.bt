@@ -1,0 +1,86 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: ANM.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Ghost Recon BNF files
+// File Mask: *.anm
+//
+//   History: 
+//
+//------------------------------------------------
+
+struct {  
+ struct {
+    UINT Length; // 
+    char Text[Length]; // 
+  } BEGINPOB_STRING <name="File ID (Signature)">;
+ struct {
+    time_t CreateDate <name="File Creation Date">;
+    time_t ModifiedDate <name="File Modified Date">;
+  } DATETIME <name="File DATETIME">;
+  UINT Count;
+} ANM_HEADER <name="ANM Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+
+typedef  struct {
+  struct {  
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIAL_NAME_STRING <name="">; 
+  } HEADER <name="">;
+
+    struct {
+      UINT Count;
+      UINT MN;
+      UINT16 MN;
+      UINT16 MN;
+      UINT MN;
+      UINT MN;
+       FLOAT MN;
+      UINT MN;
+      UINT16 MN;
+      BYTE MN;
+      UINT MN;
+    } test;
+
+   UINT Count; // 6
+   typedef struct {
+      UINT nCount;  // 4
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+    } newtype;
+
+    typedef struct (int arraySize) {
+        newtype array[arraySize] <optimize=false>;
+    } newtype_ARRAY; 
+
+    newtype_ARRAY newtypeArray(Count) <name="">; 
+  } ANIMATION;
+
+  typedef struct (int arraySize) {
+      ANIMATION array[arraySize] <optimize=false>;
+  } ANIMATION_ARRAY; 
+
+  ANIMATION_ARRAY ANIMATIONArray(ANM_HEADER.Count) <name="">; 
+
+struct {
+  UINT Length;
+  char Text[Length]; 
+} ENDANM_STRING <name="ANM File End">;
