@@ -1,6 +1,6 @@
 ## About
 
-Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment.
+Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment. See more at [WIKI][https://github.com/AlexKimov/010Editor-Templates-GR/wiki] page. 
 
 ## Available file extensions (wip)
 
