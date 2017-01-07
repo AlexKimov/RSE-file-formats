@@ -15,7 +15,7 @@
 //   1. Exporting from 3ds Max with developers export plugin
 //   
 //    
-//   If 4 byte var stored in map file (int or float) is FFFFFFFF (hex) or 4294967295 (dec) it was unset in 3ds max.
+//   If 4 byte var stored in map file (int or float) is FFFFFFFF (hex) or 4294967295 (dec) then it was unset in 3ds max.
 //------------------------------------------------
 
 struct {
@@ -543,6 +543,41 @@ struct {   //
 //  PortalList Section
 //------------------------------------------------------
 
+ typedef struct {
+    struct { 
+      UINT SectionSize;
+      UINT mn; // 0
+      Check(mn, 0, "PortalList section header mn");
+      struct {
+         UINT Length;
+        char Text[Length]; 
+        UINT Value; // 2
+      } VERSION_STRING;
+      Check(VERSION_STRING.Value, 2, "PortalList section header VersionString");
+      struct {
+        UINT Length;
+        char Text[Length];   
+      } PORTAL_NAME_STRING;
+    } HEADER <name="Portal header">;    
+    struct {
+      UINT VertexCount;
+      typedef struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;  
+      } COORDINATES <name="Vertex Coordinates">;
+      COORDINATES CoordinatesArray[VertexCount];      
+      UINT RoomNumber;
+      UINT OpositeRoomNumber; 
+      BYTE mn; // 0
+      Check(mn, 0, "PortalList section header mn");
+    } PORTAL_PARAMS; 
+  } PORTAL <name=PortalName>;
+
+string PortalName(PORTAL &portal) {
+  return "Name: " + portal.HEADER.PORTAL_NAME_STRING.Text;
+};
+
 struct {
   struct { 
     UINT SectionSize;
@@ -557,47 +592,48 @@ struct {
     struct {
       UINT Length;
       char Text[Length];   
-    } GEOMETRYLIST_STRING;
+    } PORTALLIST_STRING;
   } PORTALLIST_HEADER <name="PortalList section header">; 
   UINT Count;
-  typedef struct {
-    struct { 
-      UINT SectionSize;
-      UINT mn; // 0
-      Check(mn, 0, "PortalList section header mn");
-      struct {
-         UINT Length;
-        char Text[Length]; 
-        UINT Value; // 8
-      } VERSION_STRING;
-      Check(VERSION_STRING.Value, 2, "PortalList section header VersionString");
-      struct {
-        UINT Length;
-        char Text[Length];   
-      } GEOMETRYLIST_STRING;
-    } Header <name="Portal header">;    
-    struct {
-      UINT VerticeCount;
-      typedef struct {
-        FLOAT x;
-        FLOAT y;
-        FLOAT z;  
-      } Coordinates;
-      Coordinates CoordinatesArray[VerticeCount];      
-      UINT RoomNumber;
-      UINT OpositeRoomNumber; 
-      BYTE mn;
-    } PORTALPARAMS; 
-  } PORTAL;
   typedef struct(int arraySize) {
     PORTAL array[arraySize] <optimize=false>;
   } PORTAL_ARRAY;
-  PORTAL_ARRAY MAPPORTAL_ARRAY(Count);   
-} PORTALLIST;
+  PORTAL_ARRAY MAPPORTAL_ARRAY(Count) <name="Portal Array">;   
+} PORTALLIST <name="3. PortalList section">;
 
 //------------------------------------------------------------
 //  OccluderList Section
 //------------------------------------------------------------
+
+typedef struct {
+     struct { 
+        UINT SectionSize;
+        UINT mn;        
+        struct {
+          UINT Length;
+          char Text[Length]; 
+          UINT Value;
+        } VERSION_STRING;        
+        struct {
+          UINT Length;
+          char Text[Length];   
+        } OCCLUDER_NAME_STRING;
+     } HEADER <name="Occluder header">;        
+     BYTE mnm[2];
+     UINT mn;        
+     BYTE mnk[3];         
+     UINT VertexCount;
+     typedef struct {
+       FLOAT X;
+       FLOAT Y;
+       FLOAT Z;
+     } OCCLUDER_VERTEX;
+     OCCLUDER_VERTEX VertexArray[VertexCount];     
+ } OCCLUDER <name=OccluderName>; 
+
+string OccluderName(OCCLUDER &occluder) {
+  return "Name: " + occluder.HEADER.OCCLUDER_NAME_STRING.Text;
+};
 
 struct {
    struct {
@@ -614,38 +650,13 @@ struct {
     } OCCLUDERLIST_STRING;
   } OCCLUDERLIST_HEADER <name="OccluderList section header">;
   UINT Count;
-  if (Count > 0) {
-      typedef struct {
-         struct { 
-            UINT SectionSize;
-            UINT mn;        
-            struct {
-              UINT Length;
-              char Text[Length]; 
-              UINT Value;
-            } VERSION_STRING;        
-            struct {
-              UINT Length;
-              char Text[Length];   
-            } GEOMETRYLIST_STRING;
-         } Header <name="Occluder header">;        
-         BYTE mnm[2];
-         UINT mn;        
-         BYTE mnk[3];         
-         UINT vertice_count;
-         typedef struct {
-           FLOAT X;
-           FLOAT Y;
-           FLOAT Z;
-         } Vertice;
-         Vertice verticeArray[count];     
-      } Occluder;    
+  if (Count > 0) {     
       typedef struct(int arraySize) {
-        Occluder array[arraySize] <optimize=false>;
+        OCCLUDER array[arraySize] <optimize=false>;
       } OCCLUDER_ARRAY;    
-      OCCLUDER_ARRAY MAPOCCLUDER_ARRAY(Count);
+      OCCLUDER_ARRAY OccluderArray(Count) <name="Occluder Array">;
   };  
-} OccluderList;
+} OccluderList <name="4. OccluderList section">;
 
 //----------------------------------------------------------------
 // LightList Section
@@ -752,7 +763,7 @@ struct {
     } LightsArray <optimize=false>;
     LightsArray MAPLightsArray(Count);  
   } Lights;
-} LightList;
+} LightList <name="5. LightList section">;
 
 //----------------------------------------------------------------
 // VFogList Section
@@ -762,21 +773,18 @@ struct {
    struct {
     UINT SectionSize;
     UINT mn;
-
     struct {
-      UINT StringLength;
-      char String[StringLength];
-      UINT number;
-    } VersionString;
-
+      UINT Length;
+      char Text[Length];
+      UINT value;
+    } VERSION_STRING;
     struct  { 
-      UINT StringLength;
-      char OccluderList[StringLength];
-    } FogListString;
-  } FogListHeader <name="FogList section header">;
- 
+      UINT Length;
+      char OccluderList[Length];
+    } FOGLIST_NAME_STRING;
+  } FOGLIST_HEADER <name="FogList section header">; 
   UINT Count;
-} VFogList;
+} VFogList <name="6. VFogList section">;
 
 //----------------------------------------------------------------
 // ObjectList section
@@ -872,11 +880,26 @@ void NodesTree2(UINT NodeCount)
   NodesArray2 MAPNodesArray2(NodeCount);
 };
 
-
-
-void NodesTree(UINT NodeCount)
+void NodesTree(UINT NodeCount, int rootnode)
 {   
-  typedef struct { 
+  typedef struct (int rootnode) {
+
+      if (rootnode) {
+        struct {
+          UINT SectionSize;
+          UINT MN;
+          struct {    
+             UINT Length; // 
+            char Text[Length]; //
+            UINT Value;
+          } VERSION;  
+          struct {
+            UINT Length; // 
+            char Text[Length]; // 
+          } NAME_STRING;
+         } HEADER <name="Root node header">; 
+      }; 
+
       struct { 
         UINT SectionSize;
         UINT MN;
@@ -1042,7 +1065,7 @@ void NodesTree(UINT NodeCount)
           UINT mn4;
           FLOAT LLL;
           UINT mn4;
-          NodesTree2(Count);
+          //NodesTree2(Count);
         }
 
       }
@@ -1103,7 +1126,7 @@ void NodesTree(UINT NodeCount)
        }
             
       else {
-  
+        
         struct {
           UINT Length; // 
           char Text[Length]; // 
@@ -1132,7 +1155,82 @@ void NodesTree(UINT NodeCount)
           } Position;
         } TransformationMatrix;
 
-    
+      if (HEADER.MN == 52) { 
+       struct { 
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } MN1;
+                    UINT Count1; 
+      typedef struct {
+
+       struct { 
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } MN1;
+        UINT Count2; 
+
+      typedef struct { 
+        //
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAxis;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAxis;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAxis;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } Position;
+        } TransformationMatrix;
+
+        // -------------------------
+
+        UINT Count;
+        if (Count > 2) { 
+           BYTE V[52];
+           UINT Count;
+        };
+        //
+        typedef struct {         
+          UINT Length;
+          char Name[Length];
+          FLOAT Count;
+        } LOD;
+        LOD lod[Count] <optimize=false>;
+        } nest;
+        typedef struct(int arraySize) {
+          nest array[arraySize] <optimize=false>;
+        } nestArray;
+        nestArray nest0(Count2) <optimize=false>;
+
+
+
+        } NN;
+        NN N1[Count1] <optimize=false>;
+        UINT Count4;  
+        break;
+      }
+      else {
+
       if (HEADER.SectionSize - ObjectProperties.Length  > 53) {
 
         struct {
@@ -1186,19 +1284,19 @@ void NodesTree(UINT NodeCount)
             } RotationKeysArray; 
         
              RotationKeysArray MAPRotationKeysArray(RKeysCount);
+          
         } NodeAnimation;  
+        };
       };  
       UINT SubeNodeCount;
-      NodesTree(SubeNodeCount);
+      NodesTree(SubeNodeCount, 0);
      };
     };  
   } NODE <name=NodeName>;
-
-  typedef struct (int arraySize) {
-    NODE array[arraySize] <optimize=false>;
-  } NODE_ARRAY; 
-        
-  NODE_ARRAY MAPNodesArray(NodeCount) <name="Child nodes">;
+  typedef struct (int arraySize, int rootnode) {
+    NODE array(rootnode)[arraySize] <optimize=false>;
+  } NODE_ARRAY;         
+  NODE_ARRAY MAPNodesArray(NodeCount, rootnode) <name="Child nodes">;
 };
 
 string NodeName(NODE &node) {
@@ -1217,29 +1315,16 @@ struct {
     struct {
       UINT Length; // 
       char Text[Length]; // 
-    } OBJECTLIST_TRING;
+    } OBJECTLIST_STRING;
   } HEADER <name="ObjectList section header">;  
 
   struct {
     UINT NodeCount; 
     if (NodeCount > 0) {
-      struct {
-        UINT SectionSize;
-        UINT MN;
-        struct {    
-          UINT Length; // 
-          char Text[Length]; //
-          UINT Value;
-        } VERSION;  
-        struct {
-          UINT Length; // 
-          char Text[Length]; // 
-        } NAME_STRING;
-      } HEADER <name="Root node header">; 
-        NodesTree(NodeCount);
+        NodesTree(NodeCount, 1);
       };
-  } NODE_TREE <name="Root node">;
-} OBJECTLIST <name="3. ObjectList section">;
+  } NODE_TREE <name="Nodes Tree">;
+} OBJECTLIST <name="7. ObjectList section">;
 
 //----------------------------------------------------------------
 //  RoomList section
@@ -1249,28 +1334,25 @@ struct {
    struct {
     UINT SectionSize;
     UINT mn;
-
     struct  { 
       UINT StringLength;
       char OccluderList[StringLength];
     } RoomListString;
-  } RoomListHeader <name="RoomList section header">;
+  } ROOMLIST_HEADER <name="RoomList section header">;
 
   UINT Count;
 
   typedef struct {
     UINT MN; // 12
-
     struct {
-      UINT StringLength;
-      char String[StringLength];
-      UINT number;
-    } VersionString;
-
+      UINT Length;
+      char String[Length];
+      UINT Value;
+    } VERSION_STRING;
     struct {
-      UINT StringLength;
-      char String[StringLength];
-    } RoomNameString;
+      UINT Length;
+      char String[Length];
+    } ROOMNAME_STRING;
 
     BYTE MM; // 0
     UINT Mn; // 0
@@ -1324,11 +1406,11 @@ struct {
     UINT mn;  //0
     UINT mn; //0
     
-  } Room;
+  } ROOM;
 
-  Room MAPRoomsArray[Count] <optimize=false>; 
+  ROOM roomsarray[Count] <optimize=false>; 
   
-} RoomList;
+} ROOMLIST <name="8. RoomList section">;
 
 //----------------------------------------------------------------
 // TransitionList section
@@ -1338,15 +1420,13 @@ struct {
   struct {
     UINT SectionSize;
     UINT mn;
-
     struct  { 
       UINT StringLength;
       char OccluderList[StringLength];
     } TransitionListString;
   } TransitionListHeader <name="TransitionList section header">;
-
   UINT Count;
-} TransitionLineList;
+} TransitionLineList <name="9. TransitionList section">;
 
 //----------------------------------------------------------------
 // PlanningLevelList section
@@ -1380,6 +1460,4 @@ struct {
 
     RoomsArray RoomsNumbersArray(RoomCount);
   };
-} PlanningLevelList;
-
-
+} PlanningLevelList <name="10. PlanningLevelList section">;
