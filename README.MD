@@ -1,6 +1,7 @@
 ## About
 
-Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment. **See more at [WIKI](https://github.com/AlexKimov/010Editor-Templates-GR/wiki) page**. 
+Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment. 
+**See more at [WIKI](https://github.com/AlexKimov/010Editor-Templates-GR/wiki) page**. 
 
 ## Available file extensions (wip)
 
@@ -18,7 +19,7 @@ Templates for Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment
 ## File description
 
 | File          | Description              | Information | 
-| :-----------: | :----------------------: | :----------------------------------------------------------------------: |
+| :-----------: | :----------------------- | :----------------------------------------------------------------------- |
 | *.chr         | Character 3D model file. | Geometry data, textures, materials, animation bones.                     | 
 | *.map         | Game level file          | Geometry data, textures, materials, animation, nodes groups, rooms, etc .|
 | *.pob         | 3D dynamic objects file  | Geometry data, textures, materials, animation.                           |
