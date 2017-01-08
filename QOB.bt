@@ -11,6 +11,11 @@
 //   2016.10 v0.2 initial release
 //------------------------------------------------
 
+typedef enum <ubyte> {
+    no,
+    yes
+} BOOL; // bool data type
+
 struct {   
  struct {
     UINT Length;  
@@ -19,118 +24,126 @@ struct {
 } QOB_FILE_HEADER <name="QOB Header", fgcolor=cBlack, bgcolor=0xccff66>;
 
 
-struct { 
-  // MaterailList section header 
-  struct { 
+typedef struct {
+  struct {
     UINT SectionSize;
-    UINT MN; // 8
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIAL_NAME_STRING <name="Material Name">; 
+  } HEADER <name="Material Section Header">;
+  struct { 
+    FLOAT Opacity;
+    FLOAT isFaceted;
+    struct {              
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } AMBIENT; 
+    struct {           
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } DIFFUSE;   
+    struct { 
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } SPECULAR;
+    FLOAT SpecularLevel; //o.o5
+    BOOL twoSide;
+  } PARAMETRES;
+} MATERIAL <name=MaterialName>;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
     struct {    
       UINT Length; 
-      char String[Length];
-      UINT number; // 3
-    } VERSION_STRING; 
+      char Text[Length]; 
+      UINT Value;
+   } VERSION; 
+    struct {    
+       UINT Length;  
+       char Text[Length]; 
+    } TEXTURENAME_STRING <name="Texture Name">; 
+  } HEADER <name="Textures section header">;
+
+  BOOL mn;
+
+  struct {    
+     UINT Length;  
+     char Text[Length]; 
+  } TEXTURE_FILENAME_STRING <name="Texture .rsb file name">; 
+  
+  struct { 
+    UINT AdvTransparencyType;  // 0 2 3
+    UINT isTiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+    FLOAT SelfIllumination; // 0
+  } PARAMETERS; 
+} TEXTURE <name=TextureName>;
+
+string MaterialName(MATERIAL &material) {
+  return "Name: " + material.HEADER.MATERIAL_NAME_STRING.Text + " ";
+} 
+
+string TextureName(TEXTURE &texture) {
+  return "FileName: " + texture.TEXTURE_FILENAME_STRING.Text + " ";
+} 
+
+struct {  
+  struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+    } VERSION; 
 
     struct {
-      UINT Length; 
-      char String[Length];
+      UINT Length; // 
+      char Text[Length]; // 
     } MATERIALLIST_STRING;
-  } SECTION_HEADER <name="1.0 MaterialList section header">;
-  
-  // Materials section 
+  } HEADER <name="1.0 MaterialList section header">;
+    
   struct {
-    UINT Count <name="Material Count">;
-    if (Count > 0) {
-        typedef struct {
-          struct {
-            UINT SectionSize;
-            UINT MN; // 2
-            struct {    
-              UINT Length; 
-              char String[Length];
-              UINT number;
-            } VERSION_STRING; // 2
-            struct {    
-               UINT Length; // 
-               char String[Length]; //
-            } MATERIAL_NAME_STRING <name="Material Name">; 
-          } SUBSECTION_HEADER <name="Material Section Header">;
-          struct { 
-            FLOAT Opacity;
-            UINT Faceted; // 3,
-            struct {              
-              FLOAT Red; 
-              FLOAT Green; 
-              FLOAT Blue; 
-              FLOAT mn; // 1
-            } AMBIENT; 
-            struct {           
-              FLOAT Red;
-              FLOAT Green; 
-              FLOAT Blue; 
-              FLOAT mn; // 1
-            } DIFFUSE;   
-            struct { 
-              FLOAT Red; 
-              FLOAT Green; 
-              FLOAT Blue; 
-              FLOAT mn; // 1
-            } SPECULAR;
-            FLOAT SpecularLevel; //o.o5
-            BYTE is2Sided;
-          } MATERIAL_PARAMETERS;
-        } MATERIAL <name="Material">;
-    
-        typedef struct (int arraySize) {
-          MATERIAL array[arraySize] <optimize=false>;
-        } MATERIAL_ARRAY; 
-    
-        MATERIAL_ARRAY MaterialArray(Count) <name="Materials Array">; 
-  };
-  } Materials <name="1.1 Materials section">;
-  
-  // Textures section 
+    UINT Count <name="Materials Count">;
+
+    typedef struct (int arraySize) {
+      MATERIAL array[arraySize] <optimize=false>;
+    } MATERIAL_ARRAY; 
+
+    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
+  } MATERIALS <name="1.1 Materials section">;
+
   struct {
-    UINT Count <name="Texture Count">;
-    if (Count > 0) {
-        typedef struct {
-          struct {
-            UINT SectionSize;
-            UINT MN; // 38
-            struct {    
-              UINT Length;  
-              char String[Length]; 
-              UINT number; // 2
-           } VERSION_STRING; 
-            struct {    
-               UINT Length;  
-               char String[Length]; 
-            } TextureNameString <name="Texture Name">; 
-          } SUBSECTION_HEADER <name="Textures section header">;
-     
-          BYTE MN; // 0
-          struct {    
-             UINT Length; // 
-             char String[Length]; //
-          } TEXTURE_FILE_NAME_STRING <name="Texture .rsb file name">; 
-          
-          struct { 
-            UINT AdvTransparencyType;  // 0 2 3
-            UINT isTiled; // 1 - u tiled, 2 - v tiled, 3 - both none
-            FLOAT SelfIllumination; // 0
-          } TEXTURE_PARAMETERS; 
-        } TEXTURE <name="Texture">;
-    
+    UINT Count <name="Textures Count">;
+     if (Count > 0) {
+
         typedef struct (int arraySize) {
           TEXTURE array[arraySize] <optimize=false>;
-        } TEXTURES_ARRAY; 
+        } TEXTURE_ARRAY; 
     
-        TEXTURES_ARRAY TextureArray(Count) <name="Texture Array">; 
-      };
+        TEXTURE_ARRAY TextureArray(Count) <name="Textures Array">; 
+    };
   } TEXTURES <name="1.2 Textures section">;
 
 } QOBMATERIALLIST <name="1. MaterialList section">;
 
-//------------------QOBGEOMETRYLIST--------------------// 
+//--------------------
+// QOBGEOMETRYLIST
+// --------------------
 
 struct {   
 
