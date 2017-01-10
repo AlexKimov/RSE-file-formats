@@ -137,16 +137,36 @@ int sizePIXEL( PIXEL &pixel )
             HEADER.RSB_BIT_INFO.alpha_bits)/8;
 } 
 
+typedef struct {    
+    ubyte B : 1 <name="WhiteBlack">;
+} BWPIXEL <name="Black and White Pixel">;
+
 typedef struct (int arraySize) {
-  PIXEL array[arraySize];
+  PIXEL array[arraySize] <optimize=false>;
 } PIXEL_ARRAY;
 
 PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <name="Pixel Array">;
 
-if (HEADER.version > 2) {
+if (HEADER.version > 2) {    
     struct{
        if (HEADER.version > 5) { 
          UINT mn6; // 
+
+         if (mn6 > 0 && HEADER.version == 9) { 
+           //UINT MMN; 
+           //typedef struct {
+           //  UINT SurfaceNameLength; 
+           //  char SurfaceName[SurfaceNameLength];
+           //  BWPIXEL BWPixelArray[804] <name="Black and White Pixel Array">;            
+           //} SURFACE_PROPERTY_CHANNEL;
+
+           //typedef struct (int arraySize) {
+           //  SURFACE_PROPERTY_CHANNEL array[arraySize] <optimize=false>;
+           //} SURFACE_PROPERTY_ARRAY;
+
+           //SURFACE_PROPERTY_ARRAY SurfacePropertyArray(mn6) <name="Surface Property Channels Array">;
+
+         };
        }; 
        BOOL AlphaBlending <name="AlphaBlending", comment="yes - use alpha channel">;
        BOOL AlphaTesting <name="AlphaTesting">;
@@ -157,7 +177,7 @@ if (HEADER.version > 2) {
        BOOL Compression <name="Compression">;   // unused
        BOOL Distortion <name="Distortion">;
        if (HEADER.version > 7) {
-          UINT Tags;
+          UINT GameProperties;
        }
        else {
           BYTE mn7;
@@ -199,7 +219,7 @@ if (HEADER.version > 2) {
        };
 
        BOOL Damaged <name="Damaged">;    
-       if (Damaged > 0) {
+       if (Damaged == yes) {
          UINT TextureNameLength; // 
          if (TextureNameLength > 0) {
              char DamagedTextureName[TextureNameLength];
