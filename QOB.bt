@@ -291,18 +291,18 @@ struct {
         
         QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount*TextureCount); 
           
-        typedef struct   {
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          FLOAT W;
-        } QOBCOORDINATE; 
-        
-        typedef struct (int arraySize) {
-           QOBCOORDINATE array[arraySize];
-        } QOBCOORDINATEARRAY; 
-        
-        QOBCOORDINATEARRAY CoordinatArray(VertexCount); 
+          typedef struct   {
+            FLOAT Red;  // 0..1 (0..255 in RGB)
+            FLOAT Green;  
+            FLOAT Blue;  
+            FLOAT MN;  
+            Check(MN, 1, " value");
+          } FACE_COLOR <name="Face RGB color">; 
+          typedef struct (int arraySize) {
+           FACE_COLOR array[arraySize] <optimize=false>;
+          } FACE_COLOR_ARRAY; 
+          FACE_COLOR_ARRAY CoordinatesArray(VerticiesCount) <name="Faces color array">; 
+
       } TEXTUREVERTICIES <name="Texture data">;   
     } GEOMETRY_OBJECT;
 

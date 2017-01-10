@@ -23,16 +23,15 @@ struct {
 } VARS <hidden=true>;
 
 void Check(int value, int number, string str) {
-  if (!VARS.check_enable) {
-    break;
-  };
-  local string s1, s2;
-  SPrintf( s1, "%d", (int)value );
-  SPrintf( s2, "%d", (int)number );
-  if (value != number) {
-    MessageBox( idYes, "Warning", str + ": " + s1 + " not " + s2);
-    break;
-  };  
+  if (VARS.check_enable) {
+    local string s1, s2;
+    SPrintf( s1, "%d", (int)value );
+    SPrintf( s2, "%d", (int)number );
+     if (value != number) {
+      MessageBox( idYes, "Warning", str + ": " + s1 + " not " + s2);
+      break;
+     }; 
+  }; 
 };
 
 typedef enum <ubyte> {
@@ -328,9 +327,9 @@ struct {
       BOOL DetailTexture;
       UINT MaterialIndex;
       UINT isTextured;
-      if (isTextured) {
+      if (isTextured == yes) {
         UINT TextureIndex;
-        if (DetailTexture || isTextured > 1)  {
+        if (DetailTexture == yes || isTextured > 1)  {
            UINT DetailTextureIndex;
         };
       };
