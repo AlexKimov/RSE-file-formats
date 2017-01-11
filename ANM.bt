@@ -14,15 +14,15 @@
 struct {  
  struct {
     UINT Length; // 
-    char Text[Length]; // 
-  } BEGINPOB_STRING <name="File ID (Signature)">;
+    char Text[Length]; // BeginANM.
+  } BEGINANM_STRING <name="File ID (Signature)">;
  struct {
     time_t CreateDate <name="File Creation Date">;
     time_t ModifiedDate <name="File Modified Date">;
   } DATETIME <name="File DATETIME">;
-  UINT Count;
 } ANM_HEADER <name="ANM Header", fgcolor=cBlack, bgcolor=0xccff66>;
 
+UINT Count;
 
 typedef  struct {
   struct {  
@@ -36,8 +36,8 @@ typedef  struct {
     struct {    
        UINT Length; // 
        char Text[Length]; //
-    } MATERIAL_NAME_STRING <name="">; 
-  } HEADER <name="">;
+    } MATERIAL_NAME_STRING; 
+  } HEADER <name="HEADER">;
 
     struct {
       UINT Count;
@@ -51,34 +51,34 @@ typedef  struct {
       UINT16 MN;
       BYTE MN;
       UINT MN;
-    } test;
+    } param;
 
-   UINT Count; // 6
+   UINT PointCount; // 6
    typedef struct {
-      UINT nCount;  // 4
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-    } newtype;
+            UINT x;        
+            FLOAT y;
+            FLOAT z;
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+            FLOAT y;
+     } TRANSFORMATION_MATRIX <name="MATRIX">;
 
     typedef struct (int arraySize) {
-        newtype array[arraySize] <optimize=false>;
-    } newtype_ARRAY; 
+        TRANSFORMATION_MATRIX array[arraySize] <optimize=false>;
+    } TRANSFORMATION_MATRIX_ARRAY; 
 
-    newtype_ARRAY newtypeArray(Count) <name="">; 
+   TRANSFORMATION_MATRIX_ARRAY TransformationMatrixArray(PointCount) <name="MATRIX Array">; 
   } ANIMATION;
 
   typedef struct (int arraySize) {
       ANIMATION array[arraySize] <optimize=false>;
   } ANIMATION_ARRAY; 
 
-  ANIMATION_ARRAY ANIMATIONArray(ANM_HEADER.Count) <name="">; 
+  ANIMATION_ARRAY AnimationArray(Count) <name="">; 
 
 struct {
   UINT Length;

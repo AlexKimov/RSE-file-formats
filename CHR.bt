@@ -349,4 +349,38 @@ struct {
   } BONE_ARRAY;
 
   BONE_ARRAY CHRBoneArray(21) <name="Bones array">;
+
+  struct {
+    struct {
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } SKIN; 
+    UINT MN;
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } BODY_NAME;
+   } Header <name = "Header">;   
+
+    UINT VertexCount;
+    typedef struct {
+      UINT VertexIndex;
+      UINT BonesCount;
+      if (BonesCount > 0) {
+        typedef struct {
+          UINT Length;  
+          char Text[Length];
+          FLOAT BoneWeight;  
+        } BONES;           
+        BONES BonesArray[BonesCount] <optimize=false>;
+      };     
+    } VERTEX_WEIGHT <name = "Vertex Weight" >;   
+    typedef struct (int arraySize) {
+      VERTEX_WEIGHT array[arraySize] <optimize=false>;
+    } VERTEX_WEIGHT_ARRAY;
+    VERTEX_WEIGHT_ARRAY VertexWeightArray(VertexCount) <name="Vertex Weight Array", optimize=false>;
+
+  } WEIGHT_TABLE <name="Weight Table">;
+  
 } Bones <name="3. Model bones section">;
