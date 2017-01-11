@@ -1,0 +1,52 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//       File: BNF.bt
+//    Authors: Alexander Evdokimov
+//    Version: 0.1
+//    Purpose: Ghost Recon BNF files
+//  File Mask: *.bnf
+//
+//   History: 
+//   
+//------------------------------------------------
+
+FLOAT MN;
+UINT Time; // ?
+UINT BonesCount;
+
+typedef struct {
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } BONE_NAME_STRING <name="">;
+
+    UINT MovementTime;
+    typedef struct {
+      UINT Time;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } MOVEMENT;
+    MOVEMENT MovementArray[MovementTime] <name="Movement Array">; 
+
+    UINT RotationTime;
+    typedef struct {
+      UINT Time;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      FLOAT Angle;
+    } ROTATION;
+    ROTATION RotationArray[RotationTime] <name="Rotation Array">; 
+} BONE_ANIMATION <name=BoneName>;
+
+string BoneName(BONE_ANIMATION &bone) {
+  return "Bone Name: " + bone.BONE_NAME_STRING.Text;
+};
+
+typedef struct (int arraySize) {
+    BONE_ANIMATION array[arraySize] <optimize=false>;
+} BONE_ANIMATION_ARRAY ; 
+
+BONE_ANIMATION_ARRAY AnimationArray(BonesCount) <name = "Bone Animation">; 
