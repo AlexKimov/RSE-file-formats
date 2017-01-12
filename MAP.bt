@@ -327,7 +327,7 @@ struct {
       BOOL DetailTexture;
       UINT MaterialIndex;
       UINT isTextured;
-      if (isTextured == yes) {
+      if (isTextured > 0) {
         UINT TextureIndex;
         if (DetailTexture == yes || isTextured > 1)  {
            UINT DetailTextureIndex;
@@ -789,96 +789,6 @@ struct {
 // ObjectList section
 //---------------------------------------------------------------
 
-void NodesTree2(UINT NodeCount)
-{   
-  typedef struct { 
-      struct { 
-        UINT SectionSize;
-        UINT MN;
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-            UINT Value;
-        } VERSION;  
-    
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-        } ModeNameString;         
-      } HEADER;
-    
-        struct {
-          UINT Length; // 
-          char Text[Length]; // 
-        } OBJECT_PROPERTIES; 
-
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAXIS;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAXIS;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAXIS;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } POSITION;
-        } TRANSFORMATION_MATRIX;   
-
-      UINT SubeNodeCount;
-
-      struct { 
-        UINT SectionSize;
-        UINT MN;
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-            UINT Value;
-        } VERSION;  
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-        } ModeNameString;         
-      } HEADER;
-        byte mn; 
-        struct {
-         FLOAT AAC;
-         if (AAC != 0) {
-           FLOAT A;
-           FLOAT A; 
-           FLOAT A;
-           FLOAT A;
-           FLOAT A; 
-           FLOAT A;
-           FLOAT A;
-           FLOAT A;
-           FLOAT A;
-           FLOAT A;
-           if (Abs(AAC) > 0.000000001) {
-           FLOAT A;
-           FLOAT A;
-           };  
-         }
-        } TransformationMatrix;    
-      UINT SubeNodeCount;
-      //nodesTree(SubeNodeCount); 
-  } Node2;
-  typedef struct (int arraySize) {
-    Node2 array[arraySize] <optimize=false>;
-  } NodesArray2;         
-  NodesArray2 MAPNodesArray2(NodeCount);
-};
-
 void NodesTree(UINT NodeCount, int rootnode)
 {   
   typedef struct (int rootnode) {
@@ -914,216 +824,9 @@ void NodesTree(UINT NodeCount, int rootnode)
         } NAME_STRING;         
       } HEADER;
     
-      if ((HEADER.VERSION.Value == 3) || (HEADER.VERSION.Value == 2))  {
-        BYTE MN; // 0
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAXIS;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAXIS;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAXIS;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } Position;
-        } TRANSFORMATION_MATRIX;   
-
-        UINT SideToPlayer;
-        UINT twoSided;
-        FLOAT mn3;
-        FLOAT mn4;
-        FLOAT Time1;   
-        FLOAT Time2; 
-        FLOAT mn4;
-        BYTE mn5;
-        BYTE mn6; 
-        UINT mn7;
-
-        BYTE mn8;
-        UINT mn7; 
-
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-        } TrailProperties; 
-
-        struct { 
-          FLOAT Width;
-          FLOAT Length;
-        } SquareSize;
-
-        FLOAT mn11; 
- 
-        FLOAT height;  
-
-        FLOAT speedmultiplier;
-        FLOAT sizemultiplier;   
-        FLOAT sizemultiplier2;  
-
-        FLOAT mn10;   
-        FLOAT mn4; 
-
-        FLOAT height2;
- 
-        FLOAT height3;
-
-        FLOAT Size; 
-        FLOAT Size2; 
-
-        struct { 
-            FLOAT mn4; 
-            UINT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-    
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-            FLOAT mn4; 
-        } Params;
-
-        struct { 
-          UINT mn4; 
-          FLOAT Angle0;  
-          FLOAT Angle; 
-          FLOAT Angle1; 
-          FLOAT Angle2; 
-          FLOAT RotationSpeed; 
-          FLOAT mn4; 
-        } Rotation;
-
-        FLOAT mn4; 
-        FLOAT mn4; 
-        UINT mn; 
-        UINT mn4; 
-        UINT mn4; 
-
-        FLOAT speedmultiplier;  
-        FLOAT speed; 
-
-        UINT mn5;
- 
-        FLOAT mcount; 
-        FLOAT LLL;
- 
-        UINT mn4;
-        UINT Count;
-
-        if (HEADER.SectionSize <= 325) {       
-            BYTE isTextured;
-            struct {
-              UINT Length; // 
-              char Text[Length]; // 
-            } TextureFileName; 
-            UINT mn4;
-                if (mn4 > 0) {
-                  FLOAT mn5; 
-                  FLOAT mn4; 
-                  FLOAT LLL;  
-                  FLOAT mn5; 
-                  FLOAT mn4; 
-                  FLOAT LLL;  
-                  FLOAT mn5; 
-                  FLOAT mn4; 
-                }
-            UINT mn4;        
-        }
-        else {
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;
-          FLOAT LLL;   
-
-          UINT mn4;
-          UINT mn4;
-          FLOAT LLL;
-          UINT mn4;
-          //NodesTree2(Count);
-        }
-
-      }
-      else {
       if (HEADER.SectionSize == 1) { 
         BYTE MM; //0
-      }
-      else
-      if (HEADER.MN == 53) {
-
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAxis;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAxis;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAxis;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } Position;
-        } TransformationMatrix;
-
-
-
-          UINT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;
-          FLOAT LLL; 
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;  
-          FLOAT mn5; 
-          FLOAT mn4; 
-          FLOAT LLL;
-          BYTE AA;
-
-
-       }
-            
+      }      
       else {
         
         struct {
@@ -1220,77 +923,15 @@ void NodesTree(UINT NodeCount, int rootnode)
           nest array[arraySize] <optimize=false>;
         } nestArray;
         nestArray nest0(Count2) <optimize=false>;
-
-
-
         } NN;
         NN N1[Count1] <optimize=false>;
         UINT Count4;  
         break;
-      }
-      else {
-
-      if (HEADER.SectionSize - ObjectProperties.Length  > 53) {
-
-        struct {
-            struct {
-              UINT n1;
-              UINT n2;
-              UINT n3;
-              FLOAT n4; 
-              UINT16 n5;
-              UINT n6; 
-              UINT16 n7; 
-              UINT n8;  
-              BYTE n9;
-              BYTE n10; 
-              UBYTE A; // ???
-            } Prop;
-        
-            UINT PKeysCount;
-            
-            typedef struct {
-                UINT n1;
-                FLOAT n2;
-                FLOAT Time;
-                FLOAT X;          
-                FLOAT Y;
-                FLOAT Z;    
-            } PositionKey;   
-        
-            typedef struct (int arraySize) {
-              PositionKey array[arraySize] <optimize=false>;
-            } PositionKeysArray; 
-        
-             PositionKeysArray MAPPositionKeysArray(PKeysCount);
-        
-            UINT RKeysCount;
-            typedef struct {
-                UINT n1;
-                UINT n2;
-                UINT n3;
-                FLOAT n4;          
-                FLOAT n5;
-                FLOAT n6; 
-                FLOAT n7;          
-                FLOAT n8;
-                FLOAT n9; 
-                FLOAT n10;
-            } RotationKey;
-        
-            typedef struct (int arraySize) {
-              RotationKey array[arraySize] <optimize=false>;
-            } RotationKeysArray; 
-        
-             RotationKeysArray MAPRotationKeysArray(RKeysCount);
-          
-        } NodeAnimation;  
-        };
       };  
       UINT SubeNodeCount;
       NodesTree(SubeNodeCount, 0);
      };
-    };  
+
   } NODE <name=NodeName>;
   typedef struct (int arraySize, int rootnode) {
     NODE array(rootnode)[arraySize] <optimize=false>;

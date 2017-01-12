@@ -273,18 +273,17 @@ struct {
         
         TEXTURE_UV_ARRAY TextureCoordinatesArray(VertexCount*TextureCount); 
           
-        typedef struct   {
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          FLOAT W;
-        } CHRCOORDINATE; 
-        
-        typedef struct (int arraySize) {
-           CHRCOORDINATE array[arraySize];
-        } CHRCOORDINATEARRAY; 
-        
-        CHRCOORDINATEARRAY CoordinatArray(VertexCount); 
+          typedef struct   {
+            FLOAT Red;  // 0..1 (0..255 in RGB)
+            FLOAT Green;  
+            FLOAT Blue;  
+            FLOAT MN;  
+          } FACE_COLOR <name="Face RGB color">; 
+          typedef struct (int arraySize) {
+           FACE_COLOR array[arraySize] <optimize=false>;
+          } FACE_COLOR_ARRAY; 
+          FACE_COLOR_ARRAY ColorMapArray(VertexCount) <name="Faces color array">;        
+
       } TEXTUREVERTICIES <optimize=false,name="Texture data">;   
     } GEOMETRY_OBJECT;
 
@@ -330,10 +329,12 @@ typedef struct {
     FLOAT Y;
     FLOAT Z;
   } POSITION;
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN; 
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT Angle; 
+  } ROTATION;
   FLOAT MN; // 0
   UINT Connections;  
 } BONE <name=BoneName>;
