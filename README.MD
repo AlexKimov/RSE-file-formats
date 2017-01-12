@@ -13,7 +13,7 @@ Templates for the Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertain
 | *.qob        | QOB.bt        | **90%**      | yes        |
 | *.rsb        | RSB.bt        | **95%**      | yes        |
 | *.anm        | ANM.bt        | 30%           | yes        |
-| *.bnm        | BNF.bt        | **90%**           | no         |
+| *.bmf        | BNF.bt        | **90%**           | no         |
 | *.sht        | SHT.bt        | 0%           | no         | 
 
 ## File description
