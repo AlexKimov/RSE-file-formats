@@ -13,7 +13,7 @@ Templates for the Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertain
 | *.qob        | QOB.bt        | **90%**      | yes        |
 | *.rsb        | RSB.bt        | **95%**      | yes        |
 | *.anm        | ANM.bt        | 30%           | yes        |
-| *.bnf        | BNF.bt        | **90%**           | no         |
+| *.bmf        | BNF.bt        | **90%**           | no         |
 | *.sht        | SHT.bt        | 0%           | no         | 
 
 ## File description
@@ -26,5 +26,5 @@ Templates for the Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertain
 | *.qob         | 3D static objects file   | Geometry data, textures, materials.                                      |
 | *.rsb         | Texture file             | Pixel data, texture properties.                                          |
 | *.anm         | Animation file           | Destruction Animation for *.pob files.                                   |
-| *.bnf         | Character animation file | Character animation data.                                                |
+| *.bnm         | Character animation file | Character animation data.                                                |
 | *.sht         | Map collision file       | Level collision data.                                                    |
