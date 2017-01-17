@@ -13,11 +13,12 @@
 //   
 //   Notes:
 //   1. When exporting from 3ds Max with developers export plugin:
-//   If 4 byte var stored in map file (int or float) is FFFFFFFF (hex) or 4294967295 (dec) then it was unset in 3ds max.
+//   If 4 byte var stored in map file (int or float) is FFFFFFFF (hex) or 4294967295 (dec) 
+//      then it wasn't set in 3ds max, so it's empty.
 //------------------------------------------------
 
 struct {
-  local byte check_enable = 0; // 1- enable value checking | 0 - disable
+  local byte check_enable = 0; // 1 - enable value checking | 0 - disable
 } VARS <hidden=true>;
 
 void Check(int value, int number, string str) {
@@ -787,7 +788,46 @@ struct {
 // ObjectList section
 //---------------------------------------------------------------
 
-struct {
+typedef struct {
+
+  typedef struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+        UINT Length; // 1
+        char Text[Length]; //
+        UINT Value;
+    } VERSION;  
+
+    struct {    
+        UINT Length; // 
+        char Text[Length]; //
+    } NAME_STRING;         
+  } FOHEADER;
+
+
+  typedef struct { 
+     struct { 
+        FLOAT x;        
+        FLOAT y;
+        FLOAT z;
+      } XAxis;
+       struct { 
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } YAxis;
+      struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } ZAxis;
+      struct {
+        FLOAT Y;
+        FLOAT X;
+        FLOAT Z;
+      } Position;
+  } TRANSFORMATION_MATRIX2;
   typedef struct {
       UINT DynamicsType; // 2 - Pbomb (Parray)
       FLOAT Duration;
@@ -824,7 +864,7 @@ struct {
       UINT AA; 
       BYTE MN; 
     } HEADER;
-    
+
     UINT ParticleSystemType; // 0 - blizzard, 1- snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
     struct { 
       UINT Length; // 
@@ -922,15 +962,67 @@ struct {
     } PARTICLE_TIMING;
     
     UINT MN;
-    
-    if (HEADER.A == 63) {
-      SPACE_WARPS SpaceWarps;
-    } 
+
+    if (particleType == 2) {
+      UINT FragmentsCount; 
+         
+      typedef struct {
+        struct {
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+         } Some;
+             UINT Count;
+         FOHEADER F1;
+         struct {
+              UINT Length;  
+              char Text[Length];  
+         } ObjectProperties;   
+         struct { 
+             struct { 
+                FLOAT x;        
+                FLOAT y;
+                FLOAT z;
+              } XAxis;
+               struct { 
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } YAxis;
+              struct {
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } ZAxis;
+              struct {
+                FLOAT Y;
+                FLOAT X;
+                FLOAT Z;
+              } Position;
+          } TRANSFORMATION_MATRIX;
+         UINT Count; 
+         FOHEADER F2;
+         BYTE A;
+      } FRAGMENT <name="Fragment object">;
+      struct { 
+        FRAGMENT frg[FragmentsCount] <optimize=false>;
+      } Array <name="Fragment object Array">;
+    }
     else {
       struct {
         UINT UseTotal; // * PercentageOfParticles
       } PARTICLE_QUANTITY;
-    
+
       BYTE MN; 
       if (MN > 0) {
           UINT Length;   
@@ -941,144 +1033,7 @@ struct {
         SPACE_WARPS SpaceWarps;
       }
     }
-} PARTICLE_PRIPERTIES;
-
-struct {
-      BYTE MN; 
-      UINT Y;
-      UINT SpawnOnDeath; // 1
-      FLOAT Z;
-      FLOAT Y;
-      FLOAT X;
-      FLOAT Z;
-      FLOAT Y;
-      BYTE X;
-      BYTE X;
-      BYTE DisplaUntil;
-      UINT AA; 
-    } prop;
-
-    UINT ParticleSystemType; // 1- snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    struct { 
-      UINT Length; // 
-      char Text[Length]; //
-    } Properties;
-
-    struct { 
-      FLOAT IconSize_Width;
-      FLOAT Length;
-      FLOAT Height;
-    } EMITTER_SIZE;
-
-    FLOAT X;
-    struct { 
-      FLOAT ParticleSpeed;
-      FLOAT Variation;
-    } PARTICLE_MOTION;
-
-    FLOAT Fade_Time;
-
-    struct {
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT Life;
-      FLOAT LifeVariation; 
-    } PARTICLE_TIMING;
-
-
-    FLOAT X;
-    struct{
-      FLOAT ParticleSize;
-      FLOAT ParticleVariation;
-    } ParticleSize ;
-    UINT UseRate;
-    UINT UseTotal;
-
-    struct {
-      FLOAT Type; // 1 -Random, 2-  User defined
-      FLOAT XAxis;
-      FLOAT XAxis;
-      FLOAT ZAxis;
-      FLOAT Variation;
-    } SpinAxisControl ;
-
-    FLOAT Z;
-    // 
-    struct {
-      FLOAT OffAxis;
-      FLOAT Spread;
-      FLOAT OffPlane;
-      FLOAT Spread;
-    } PARTICLE_FORMATION;
-    //
-    struct {        
-      FLOAT GrowFor;
-      FLOAT FadeFor;
-    } ParticleSize2;
-    FLOAT Y;
-    FLOAT X;
-
-    UINT Z; 
-
-    FLOAT X;
-    FLOAT X;
-    FLOAT Y;
-    FLOAT X;
-
-    FLOAT Tumble_TimbleRate;
-
-    struct {
-      FLOAT SpinTime;
-      FLOAT SpinVariation;
-      FLOAT Phase;
-    } SpinSpeedControls;
-
-    UINT particleType;
-
-    UINT SpawnType; // 2 instanced geometry
-    struct {
-      UINT Spawns;
-      UINT Spawns;
-    } SPAWN_EFFECTS; 
-
-    FLOAT Affects;
-    FLOAT EmiStrart; // time
-    FLOAT Variation;
-
-    FLOAT EmiStop; // time
-
-    UINT Z;
-
-    UINT UseTotal;
-    BYTE MN; 
-    if (MN > 0) {
-    UINT Length;   
-    char TextureName[Length];
-    } 
-    UINT A;
-    if (A > 0) {
-      struct {
-          UINT DynamicsType; // 2 - Pbomb (Parray)
-          FLOAT Duration;
-          FLOAT Strength;
-          FLOAT Range;
-          UINT ExplosionType; // 2 - Eponential
-
-          struct {
-            FLOAT X; // 0
-            FLOAT Y; // 0  
-            FLOAT X; // 1 
-          } Position; 
-
-          FLOAT MN;
-          FLOAT MN;
-          FLOAT MN;
-
-          UINT BlastSymmetry; // 1 - cylindrical
-          FLOAT StartTime;   
-          FLOAT Chaos;  
-      } SPACE_WARPS;      
-} PP;
+} PARTICLE_NODE_PROPERTIES;
 
 void NodesTree(UINT NodeCount, int rootnode)
 {   
@@ -1149,7 +1104,7 @@ void NodesTree(UINT NodeCount, int rootnode)
         } TransformationMatrix;
 
       if (HEADER.MN == 51) {
-       PP pp;
+       PARTICLE_NODE_PROPERTIES particlenode;
       }
       else   
       if (HEADER.MN == 50) { 

@@ -3,7 +3,7 @@
 //
 //      File: POB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.08
+//   Version: 0.4
 //   Purpose: Ghost Recon POB file 
 // File Mask: *.pob
 // 
@@ -417,6 +417,7 @@ struct {
           BYTE CarvingBoundary; // 1 - Carving Boundary  2 - cannot carve
           BYTE MN; // 0
           BYTE MN; // 0   
+          
           UINT SurfaceProperty; // 0 - 12
         } POLYGON_PARAMETERS;
  
@@ -579,12 +580,14 @@ typedef struct {
       BYTE MN; 
     } HEADER;
 
-    UINT ParticleSystemType; // 0 - blizzard, 1- snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    struct { 
-      UINT Length; // 
-      char Text[Length]; //
-    } Properties;
-    
+    UINT ParticleSystemType; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
+    if (ParticleSystemType != 3) {
+      struct { 
+        UINT Length; // 
+        char Text[Length]; //
+      } Properties;
+    }   
+ 
     struct { 
       FLOAT Width; // IconSize
       FLOAT Length; // 
@@ -731,6 +734,19 @@ typedef struct {
       struct { 
         FRAGMENT frg[FragmentsCount] <optimize=false>;
       } Array <name="Fragment object Array">;
+      UINT Count;
+      if (Count) {
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+         FLOAT MN;
+      };
     }
     else {
       struct {
@@ -747,7 +763,7 @@ typedef struct {
         SPACE_WARPS SpaceWarps;
       }
     }
-} PARTICLE_PROPERTIES;
+} PARTICLE_NODE_PROPERTIES;
 
 typedef struct {
     struct {
@@ -798,6 +814,28 @@ typedef struct {
     RotationKeysArray POBRotationKeysArray(RKeysCount);
 } ANIMATION_PROPERTIES;
 
+typedef struct{
+    UINT X;
+    UINT Y;
+    UINT Z;
+    UINT A;
+    FLOAT MN;          
+    FLOAT MN;
+    FLOAT MN; 
+    FLOAT MN;          
+    FLOAT MN;
+    FLOAT MN; 
+    FLOAT MN;          
+    FLOAT MN;
+    FLOAT MN; 
+    FLOAT MN;          
+    FLOAT MN;
+    FLOAT MN; 
+    FLOAT MN; 
+    FLOAT MN;
+    BYTE A;
+} LIGHT_NODE_PROPERTIES;
+
 void NodesTree(UINT NodeCount)
 {   
   typedef struct { 
@@ -814,7 +852,7 @@ void NodesTree(UINT NodeCount)
             UINT Length; // 
             char Text[Length]; //
         } NAME_STRING;         
-      } HEADER;
+      } HEADER <name = "Node header">;
 
      switch (HEADER.SectionSize) {
          case 1: 
@@ -822,11 +860,11 @@ void NodesTree(UINT NodeCount)
            break;
          default : 
         
-          if (HEADER.MN != 51) {
+          if (HEADER.MN != 51 && HEADER.MN != 53) {
                   struct {
                       UINT Length;  
                       char Text[Length];  
-                  } ObjectProperties;   
+                  } ObjectProperties <name = "Tagging properties">;   
           };
           struct { 
              struct { 
@@ -853,12 +891,16 @@ void NodesTree(UINT NodeCount)
 
          if (HEADER.MN != 47) {
              if (HEADER.MN == 51) {
-                 PARTICLE_PROPERTIES ParticleProperties <name="Particle properties">;
+                 PARTICLE_NODE_PROPERTIES ParticleProperties <name="Particle properties">;
+             }
+             else 
+             if (HEADER.MN == 53) {
+                 LIGHT_NODE_PROPERTIES SpotProperties <name="Spot properties">;
              }
              else {      
                  ANIMATION_PROPERTIES AnimationProperties <name="Animation properties">;  
              };
-         }
+         };
               
            UINT SubeNodeCount;
            if (SubeNodeCount > 0) {
@@ -875,8 +917,16 @@ void NodesTree(UINT NodeCount)
   NODE_ARRAY POBNodesArray(NodeCount) <name="Child nodes">;
 };
 
-string NodeName(NODE &node) {
-    return "Name: " + node.HEADER.NAME_STRING.Text ;
+string NodeName(NODE &node) { 
+    local string NodeType;
+    switch (node.HEADER.MN) {
+         case 46: NodeType = "Empty"; break;
+         case 47: NodeType = "Group"; break;
+         case 51: NodeType = "Light"; break;
+         case 53: NodeType = "Particle"; break;
+         default: NodeType = "Animation"; break;
+    };
+    return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
 }  
 
 struct {
