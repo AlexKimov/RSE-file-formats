@@ -1,7 +1,10 @@
 ## About
 
 010 Editor file templates for the Tom Clancy's Ghost Recon (2001) PC game by Red Storm Entertainment. Current available file templates are listed below.
-**Files descriptions [WIKI](https://github.com/AlexKimov/010Editor-Templates-GR/wiki) page**. 
+
+## Files descriptions 
+
+[see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki).
 
 ## Available file extensions (wip)
 
