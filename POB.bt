@@ -502,6 +502,301 @@ struct {
   char Text[Length]; // 
 } ENDMODEL_STRING <name="Model section end">;
 
+typedef struct {
+
+  typedef struct { 
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+        UINT Length; // 1
+        char Text[Length]; //
+        UINT Value;
+    } VERSION;  
+
+    struct {    
+        UINT Length; // 
+        char Text[Length]; //
+    } NAME_STRING;         
+  } FOHEADER;
+
+
+  typedef struct { 
+     struct { 
+        FLOAT x;        
+        FLOAT y;
+        FLOAT z;
+      } XAxis;
+       struct { 
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } YAxis;
+      struct {
+        FLOAT x;
+        FLOAT y;
+        FLOAT z;
+      } ZAxis;
+      struct {
+        FLOAT Y;
+        FLOAT X;
+        FLOAT Z;
+      } Position;
+  } TRANSFORMATION_MATRIX2;
+  typedef struct {
+      UINT DynamicsType; // 2 - Pbomb (Parray)
+      FLOAT Duration;
+      FLOAT Strength;
+      FLOAT Range;
+      UINT ExplosionType; // 2 - Eponential
+
+      struct {
+        FLOAT X; // 0
+        FLOAT Y; // 0  
+        FLOAT X; // 1 
+      } Position; 
+
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+
+      UINT BlastSymmetry; // 1 - cylindrical
+      FLOAT StartTime;   
+      FLOAT Chaos;  
+  } SPACE_WARPS;   
+        
+    struct {
+      BYTE A; 
+      UINT Y;
+      UINT SpawnOnDeath; // 1
+      FLOAT Z;
+      FLOAT Y;
+      FLOAT X;
+      FLOAT Z;
+      FLOAT Y;
+      BYTE X;
+      BYTE X;
+      UINT AA; 
+      BYTE MN; 
+    } HEADER;
+
+    UINT ParticleSystemType; // 0 - blizzard, 1- snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
+    struct { 
+      UINT Length; // 
+      char Text[Length]; //
+    } Properties;
+    
+    struct { 
+      FLOAT Width; // IconSize
+      FLOAT Length; // 
+      FLOAT Height; // 3D
+    } EMITTER_SIZE;
+    
+    struct { 
+      FLOAT ParticleSpeed; // Parray (units in sec) (Particle Motion Speed (units per frame) * 30)
+      FLOAT ParticleSpeedVariation; // %ParticleSpeed 
+    } PARTICLE_MOTION;
+    
+    struct {
+      FLOAT GrowFor; // Parray (Particle size Grow For / 30)     
+      FLOAT FadeFor; // Parray (Particle size Fade For / 30)
+    } PARTICLE_Size;
+    
+    struct {
+      FLOAT MN;
+      FLOAT MN;
+    } SOME;
+    
+    struct {
+      FLOAT Life;
+      FLOAT LifeVariation; 
+    } PARTICLE_TIMING;
+    
+    struct{
+      FLOAT ParticleSize;
+      FLOAT ParticleSizeVariation;
+    } PARTICLE_SIZE;
+    
+    struct {
+      FLOAT UseRate; // * 3
+      UINT UseTotal;
+    } PARTICLE_QUANTITY;
+    
+    struct {
+      UINT SpinAxisControlType; // 0 - Random, 2- user defined
+      FLOAT XAxis;
+      FLOAT YAxis;
+      FLOAT ZAxis;
+      FLOAT Variation;
+    } SpinAxisControl ;
+    
+    FLOAT MN; // 1  
+    FLOAT MN; // 0
+    // 
+    struct {
+      FLOAT OffAxis;
+      FLOAT Spread;
+      FLOAT OffPlane;
+      FLOAT Spread;
+    } PARTICLE_FORMATION;
+    //
+    struct {        
+      FLOAT GrowFor;
+      FLOAT FadeFor;
+    } ParticleSize2;
+    
+    FLOAT MN;
+    FLOAT MN;    
+    UINT MN;     
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+        
+    struct {
+      FLOAT SpinTime;
+      FLOAT SpinTimeVariation;
+      FLOAT Phase;
+      FLOAT PhaseVariation;
+    } SpinSpeedControls;
+    
+    UINT particleType; // 2 - object fragments
+    
+    UINT SpawnType; // 2 instanced geometry
+    struct {
+      UINT Spawns;
+      UINT Spawns;
+      FLOAT Spawn_Affects;
+    } SPAWN_EFFECTS; 
+    
+    FLOAT MN; // time
+    
+    struct {
+      FLOAT EmiStart; // time    
+      FLOAT EmiStop; // time
+    } PARTICLE_TIMING;
+    
+    UINT MN;
+
+    if (particleType == 2) {
+      UINT FragmentsCount; 
+         
+      typedef struct {
+        struct {
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+         } Some;
+             UINT Count;
+         FOHEADER F1;
+         struct {
+              UINT Length;  
+              char Text[Length];  
+         } ObjectProperties;   
+         struct { 
+             struct { 
+                FLOAT x;        
+                FLOAT y;
+                FLOAT z;
+              } XAxis;
+               struct { 
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } YAxis;
+              struct {
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } ZAxis;
+              struct {
+                FLOAT Y;
+                FLOAT X;
+                FLOAT Z;
+              } Position;
+          } TRANSFORMATION_MATRIX;
+         UINT Count; 
+         FOHEADER F2;
+         BYTE A;
+      } FRAGMENT <name="Fragment object">;
+      struct { 
+        FRAGMENT frg[FragmentsCount] <optimize=false>;
+      } Array <name="Fragment object Array">;
+    }
+    else {
+      struct {
+        UINT UseTotal; // * PercentageOfParticles
+      } PARTICLE_QUANTITY;
+
+      BYTE MN; 
+      if (MN > 0) {
+          UINT Length;   
+          char TextureName[Length];
+      } 
+      UINT A;
+      if (A > 0) {
+        SPACE_WARPS SpaceWarps;
+      }
+    }
+} PARTICLE_PROPERTIES;
+
+typedef struct {
+    struct {
+      UINT n1;
+      UINT n2;
+      UINT n3;
+      FLOAT n4; 
+      UINT16 n5;
+      UINT n6; 
+      UINT16 n7; 
+      UINT n8;  
+      BYTE n9;
+      BYTE n10; 
+      UBYTE A;     
+    } Prop;
+    
+    UINT PKeysCount;
+    
+    typedef struct {
+        UINT n1;
+        FLOAT n2;
+        FLOAT Time;
+        FLOAT X;          
+        FLOAT Y;
+        FLOAT Z;    
+    } PositionKey;       
+    typedef struct (int arraySize) {
+      PositionKey array[arraySize] <optimize=false>;
+    } PositionKeysArray;     
+     PositionKeysArray POBPositionKeysArray(PKeysCount);
+    
+    UINT RKeysCount;
+    typedef struct {
+        UINT X;
+        UINT Y;
+        UINT Z;
+        FLOAT Angle;          
+        FLOAT n5;
+        FLOAT n6; 
+        FLOAT n7;          
+        FLOAT n8;
+        FLOAT n9; 
+        FLOAT n10;
+    } RotationKey;    
+    typedef struct (int arraySize) {
+      RotationKey array[arraySize] <optimize=false>;
+    } RotationKeysArray;     
+    RotationKeysArray POBRotationKeysArray(RKeysCount);
+} ANIMATION_PROPERTIES;
 
 void NodesTree(UINT NodeCount)
 {   
@@ -510,7 +805,7 @@ void NodesTree(UINT NodeCount)
         UINT SectionSize;
         UINT MN;
         struct {    
-            UINT Length; // 
+            UINT Length; // 1
             char Text[Length]; //
             UINT Value;
         } VERSION;  
@@ -525,97 +820,52 @@ void NodesTree(UINT NodeCount)
          case 1: 
            BYTE Empty;
            break;
-         case 125:
-           BYTE NM[125];
-           break;
          default : 
-              struct {
-                    UINT Length;  
-                    char Text[Length];  
-              } ObjectProperties;   
-              struct {
-                 struct { 
-                    FLOAT x;        
-                    FLOAT y;
-                    FLOAT z;
-                  } XAxis;
-                   struct { 
-                    FLOAT x;
-                    FLOAT y;
-                    FLOAT z;
-                  } YAxis;
-                  struct {
-                    FLOAT x;
-                    FLOAT y;
-                    FLOAT z;
-                  } ZAxis;
-                  struct {
-                    FLOAT Y;
-                    FLOAT X;
-                    FLOAT Z;
-                  } Position;
-              } TransformationMatrix;
         
-            
-              if (HEADER.SectionSize - ObjectProperties.Length  > 53) {
-        
-                struct {
-                    struct {
-                      UINT n1;
-                      UINT n2;
-                      UINT n3;
-                      FLOAT n4; 
-                      UINT16 n5;
-                      UINT n6; 
-                      UINT16 n7; 
-                      UINT n8;  
-                      BYTE n9;
-                      BYTE n10; 
-                      UBYTE A;     
-                    } Prop;
-                
-                    UINT PKeysCount;
-                    
-                    typedef struct {
-                        UINT n1;
-                        FLOAT n2;
-                        FLOAT Time;
-                        FLOAT X;          
-                        FLOAT Y;
-                        FLOAT Z;    
-                    } PositionKey;   
-                
-                    typedef struct (int arraySize) {
-                      PositionKey array[arraySize] <optimize=false>;
-                    } PositionKeysArray; 
-                
-                     PositionKeysArray POBPositionKeysArray(PKeysCount);
-                
-                    UINT RKeysCount;
-                    typedef struct {
-                        UINT X;
-                        UINT Y;
-                        UINT Z;
-                        FLOAT Angle;          
-                        FLOAT n5;
-                        FLOAT n6; 
-                        FLOAT n7;          
-                        FLOAT n8;
-                        FLOAT n9; 
-                        FLOAT n10;
-                    } RotationKey;
-                
-                    typedef struct (int arraySize) {
-                      RotationKey array[arraySize] <optimize=false>;
-                    } RotationKeysArray; 
-                
-                     RotationKeysArray POBRotationKeysArray(RKeysCount);
-                } NodeAnimation;  
-              };  
-              UINT SubeNodeCount;
-              NodesTree(SubeNodeCount);
-           break;
-       }    
+          if (HEADER.MN != 51) {
+                  struct {
+                      UINT Length;  
+                      char Text[Length];  
+                  } ObjectProperties;   
+          };
+          struct { 
+             struct { 
+                FLOAT x;        
+                FLOAT y;
+                FLOAT z;
+              } XAxis;
+               struct { 
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } YAxis;
+              struct {
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } ZAxis;
+              struct {
+                FLOAT Y;
+                FLOAT X;
+                FLOAT Z;
+              } Position;
+          } TRANSFORMATION_MATRIX;
+
+         if (HEADER.MN != 47) {
+             if (HEADER.MN == 51) {
+                 PARTICLE_PROPERTIES ParticleProperties <name="Particle properties">;
+             }
+             else {      
+                 ANIMATION_PROPERTIES AnimationProperties <name="Animation properties">;  
+             };
+         }
+              
+           UINT SubeNodeCount;
+           if (SubeNodeCount > 0) {
+               NodesTree(SubeNodeCount);
+           } 
+         } 
+   
   } NODE <name=NodeName>;
 
   typedef struct (int arraySize) {
