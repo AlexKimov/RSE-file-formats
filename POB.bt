@@ -3,7 +3,7 @@
 //
 //      File: POB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.4
+//   Version: 0.6
 //   Purpose: Ghost Recon POB file 
 // File Mask: *.pob
 // 
@@ -795,12 +795,25 @@ typedef struct {
     UINT PKeysCount;
     
     typedef struct {
-        UINT n1;
-        FLOAT n2;
-        FLOAT Time;
-        FLOAT X;          
-        FLOAT Y;
-        FLOAT Z;    
+        UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
+        if (ControllerType == 3) {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z;  
+        }
+        else {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z; 
+
+            FLOAT Tension;  
+            FLOAT Contunioty;
+            FLOAT Bias;         
+        }  
     } PositionKey;       
     typedef struct (int arraySize) {
       PositionKey array[arraySize] <optimize=false>;
@@ -809,16 +822,18 @@ typedef struct {
     
     UINT RKeysCount;
     typedef struct {
-        UINT X;
-        UINT Y;
-        UINT Z;
-        FLOAT Angle;          
-        FLOAT n5;
-        FLOAT n6; 
-        FLOAT n7;          
-        FLOAT n8;
-        FLOAT n9; 
-        FLOAT n10;
+        UINT ControllerType; // 4 - Linear Rotation
+        if (ControllerType == 4) {
+            UINT n2; // 0
+            FLOAT Time;
+            UINT MN;        
+            UINT MN;
+            UINT MN; 
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z; 
+            FLOAT Angel;
+        }
     } RotationKey;    
     typedef struct (int arraySize) {
       RotationKey array[arraySize] <optimize=false>;
