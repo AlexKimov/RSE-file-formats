@@ -40,45 +40,73 @@ typedef  struct {
   } HEADER <name="HEADER">;
 
     struct {
-      UINT Count;
-      UINT MN;
-      UINT16 MN;
-      UINT16 MN;
-      UINT MN;
-      UINT MN;
-       FLOAT MN;
-      UINT MN;
-      UINT16 MN;
-      BYTE MN;
-      UINT MN;
-    } param;
+      UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+      UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
 
-   UINT PointCount; // 6
-   typedef struct {
-            UINT x;        
-            FLOAT y;
-            FLOAT z;
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-            FLOAT y;
-     } TRANSFORMATION_MATRIX <name="MATRIX">;
+      UINT n3;
+      FLOAT n4; 
+      UINT16 n5;
+      UINT n6; 
+      UINT16 n7; 
+      UINT n8;  
+      BYTE n9;
+      BYTE n10; 
+      UBYTE A;     
+    } HEADER;
 
+    UINT PKeysCount;    
+    typedef struct {                         
+        UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
+        if (ControllerType == 3) {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z;  
+        }
+        else {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z; 
+
+            FLOAT Tension;  
+            FLOAT Contunioty;
+            FLOAT Bias;         
+        }    
+    } PositionKey;       
     typedef struct (int arraySize) {
-        TRANSFORMATION_MATRIX array[arraySize] <optimize=false>;
-    } TRANSFORMATION_MATRIX_ARRAY; 
+      PositionKey array[arraySize] <optimize=false>;
+    } PositionKeysArray;     
+     PositionKeysArray POBPositionKeysArray(PKeysCount);
 
-   TRANSFORMATION_MATRIX_ARRAY TransformationMatrixArray(PointCount) <name="MATRIX Array">; 
-  } ANIMATION;
+    UINT RKeysCount;
+    typedef struct {
+        UINT ControllerType;
+        UINT MN; //0
+        FLOAT Time;
+
+        FLOAT MN;          
+        FLOAT MN;
+        FLOAT MN;
+ 
+        FLOAT x;          
+        FLOAT y;
+        FLOAT z; 
+        FLOAT Angle;
+    } RotationKey;    
+    typedef struct (int arraySize) {
+      RotationKey array[arraySize] <optimize=false>;
+    } RotationKeysArray;     
+    RotationKeysArray POBRotationKeysArray(RKeysCount); 
+  } ANIMATION <name="Animation properties">;
 
   typedef struct (int arraySize) {
       ANIMATION array[arraySize] <optimize=false>;
   } ANIMATION_ARRAY; 
 
-  ANIMATION_ARRAY AnimationArray(Count) <name="">; 
+  ANIMATION_ARRAY AnimationArray(Count) <name="Animation properties array">; 
 
 struct {
   UINT Length;
