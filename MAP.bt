@@ -3,7 +3,7 @@
 //
 //      File: MAP.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.2
+//   Version: 0.5
 //   Purpose: Ghost Recon MAP file 
 // File Mask: *.map
 // 
@@ -865,12 +865,14 @@ typedef struct {
       BYTE MN; 
     } HEADER;
 
-    UINT ParticleSystemType; // 0 - blizzard, 1- snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    struct { 
-      UINT Length; // 
-      char Text[Length]; //
-    } Properties;
-    
+    UINT ParticleSystemType; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
+    if (ParticleSystemType != 3) {
+      struct { 
+        UINT Length; // 
+        char Text[Length]; //
+      } Properties;
+    }   
+ 
     struct { 
       FLOAT Width; // IconSize
       FLOAT Length; // 
@@ -962,9 +964,15 @@ typedef struct {
     } PARTICLE_TIMING;
     
     UINT MN;
-
+    struct {
+        UINT UseTotal; // * PercentageOfParticles
+    } PARTICLE_QUANTITY;
+    BYTE isTextured; 
+    if (isTextured) {
+          UINT Length;   
+          char TextureName[Length];
+    } 
     if (particleType == 2) {
-      UINT FragmentsCount; 
          
       typedef struct {
         struct {
@@ -1015,25 +1023,167 @@ typedef struct {
          BYTE A;
       } FRAGMENT <name="Fragment object">;
       struct { 
-        FRAGMENT frg[FragmentsCount] <optimize=false>;
+        FRAGMENT frg[PARTICLE_QUANTITY.UseTotal] <optimize=false>;
       } Array <name="Fragment object Array">;
     }
     else {
-      struct {
-        UINT UseTotal; // * PercentageOfParticles
-      } PARTICLE_QUANTITY;
-
-      BYTE MN; 
-      if (MN > 0) {
-          UINT Length;   
-          char TextureName[Length];
-      } 
       UINT A;
       if (A > 0) {
         SPACE_WARPS SpaceWarps;
       }
     }
 } PARTICLE_NODE_PROPERTIES;
+
+typedef struct {         
+   UINT Length;
+   char Name[Length];
+   FLOAT SwitchDist;
+} TREE_MODEL_NAME <name=TreeName>; 
+
+string TreeName(TREE_MODEL_NAME &tree ) {
+  return "(LOD)Model Name: " + tree.Name;
+};
+
+typedef struct {
+  struct { 
+      struct {  
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } point1;
+      struct { 
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } point2;
+  } FOREST_SQUARE;
+  UINT GroupsCount; 
+
+  typedef struct {
+   struct {
+      struct {  
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } point1;
+      struct { 
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } point2;
+    } FOREST_SQUARE;
+
+    UINT TreesCount;
+    typedef struct { 
+        struct {
+          struct { 
+            FLOAT x;        
+            FLOAT y;
+            FLOAT z;
+          } XAxis;
+           struct { 
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } YAxis;
+          struct {
+            FLOAT x;
+            FLOAT y;
+            FLOAT z;
+          } ZAxis;
+          struct {
+            FLOAT Y;
+            FLOAT X;
+            FLOAT Z;
+          } Position;
+        } TransformationMatrix;
+    
+        // -------------------------
+    
+        UINT LODModelNameCount;
+        if (LODModelNameCount > 2) { 
+           BYTE V[56];
+        };
+        //
+        TREE_MODEL_NAME Treename[LODModelNameCount] <optimize=false>;
+    } Tree ;
+    typedef struct(int arraySize) {
+      Tree array[arraySize] <optimize=false>;
+    } TREE_ARRAY <name="Tree array">;
+    TREE_ARRAY TreeArray(TreesCount) <optimize=false>;
+  } FOREST_ARRAY <name="Forest">;
+  FOREST_ARRAY ForestArray[GroupsCount] <optimize=false>;
+} FOREST_NODE_PROPERTIES;
+
+typedef struct {
+    struct {
+
+      UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+      UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+      UINT n3;
+
+      FLOAT n4; 
+      UINT16 n5;
+      UINT n6; 
+      UINT16 n7; 
+      UINT n8;  
+      BYTE n9;
+      BYTE n10; 
+      UBYTE A;     
+    } Prop;
+
+    UINT PKeysCount;
+    
+    typedef struct {
+        UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
+        if (ControllerType == 3) {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z;  
+        }
+        else {
+            FLOAT n2; // 0
+            FLOAT Time;
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z; 
+
+            FLOAT Tension;  
+            FLOAT Contunioty;
+            FLOAT Bias;         
+        }  
+    } PositionKey;   
+
+    typedef struct (int arraySize) {
+      PositionKey array[arraySize] <optimize=false>;
+    } PositionKeysArray; 
+
+     PositionKeysArray POBPositionKeysArray(PKeysCount);
+
+    UINT RKeysCount;
+    typedef struct {
+        UINT ControllerType; // 4 - Linear Rotation
+        if (ControllerType == 4) {
+            UINT n2; // 0
+            FLOAT Time;
+            UINT MN;        
+            UINT MN;
+            UINT MN; 
+            FLOAT X;          
+            FLOAT Y;
+            FLOAT Z; 
+            FLOAT Angel;
+        }
+    } RotationKey;
+
+    typedef struct (int arraySize) {
+      RotationKey array[arraySize] <optimize=false>;
+    } RotationKeysArray; 
+
+     RotationKeysArray POBRotationKeysArray(RKeysCount);
+ } ANIMATION_NODE_PROPERTIES;  
 
 void NodesTree(UINT NodeCount, int rootnode)
 {   
@@ -1104,137 +1254,21 @@ void NodesTree(UINT NodeCount, int rootnode)
         } TransformationMatrix;
 
       if (HEADER.MN == 51) {
-       PARTICLE_NODE_PROPERTIES particlenode;
+        PARTICLE_NODE_PROPERTIES particlenode <name="Particle node properties">;
       }
       else   
       if (HEADER.MN == 50) { 
-         struct {
-            struct {
-              UINT n1;
-              UINT n2;
-              UINT n3;
-              FLOAT n4; 
-              UINT16 n5;
-              UINT n6; 
-              UINT16 n7; 
-              UINT n8;  
-              BYTE n9;
-              BYTE n10; 
-              UBYTE A;     
-            } Prop;
-        
-            UINT PKeysCount;
-            
-            typedef struct {
-                UINT n1;
-                FLOAT n2;
-                FLOAT Time;
-                FLOAT X;          
-                FLOAT Y;
-                FLOAT Z;    
-            } PositionKey;   
-        
-            typedef struct (int arraySize) {
-              PositionKey array[arraySize] <optimize=false>;
-            } PositionKeysArray; 
-        
-             PositionKeysArray POBPositionKeysArray(PKeysCount);
-        
-            UINT RKeysCount;
-            typedef struct {
-                UINT n1;
-                UINT n2;
-                FLOAT Time;
-                FLOAT n3;          
-                FLOAT n5;
-                FLOAT n6; 
-                FLOAT X;          
-                FLOAT Y;
-                FLOAT Z; 
-                FLOAT Angel;
-            } RotationKey;
-        
-            typedef struct (int arraySize) {
-              RotationKey array[arraySize] <optimize=false>;
-            } RotationKeysArray; 
-        
-             RotationKeysArray POBRotationKeysArray(RKeysCount);
-         } NodeAnimation;  
-      };
-   
+        ANIMATION_NODE_PROPERTIES animation  <name="Animation node properties">;
+      }
+      else   
       if (HEADER.MN == 52) { 
-       struct { 
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-        } MN1;
-                    UINT Count1; 
-      typedef struct {
-
-       struct { 
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-        } MN1;
-        UINT Count2; 
-
-      typedef struct { 
-        //
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAxis;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAxis;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAxis;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } Position;
-        } TransformationMatrix;
-
-        // -------------------------
-
-        UINT Count;
-        if (Count > 2) { 
-           BYTE V[52];
-           UINT Count;
-        };
-        //
-        typedef struct {         
-          UINT Length;
-          char Name[Length];
-          FLOAT Count;
-        } LOD;
-        LOD lod[Count] <optimize=false>;
-        } nest;
-        typedef struct(int arraySize) {
-          nest array[arraySize] <optimize=false>;
-        } nestArray;
-        nestArray nest0(Count2) <optimize=false>;
-        } NN;
-        NN N1[Count1] <optimize=false>;
-        UINT Count4;  
-        break;
+        FOREST_NODE_PROPERTIES forest <name="Forest node properties">;
       };  
+     
       UINT SubeNodeCount;
-      NodesTree(SubeNodeCount, 0);
+      if (SubeNodeCount > 0) {
+        NodesTree(SubeNodeCount, 0);
+      }
      };
 
   } NODE <name=NodeName>;
@@ -1245,7 +1279,16 @@ void NodesTree(UINT NodeCount, int rootnode)
 };
 
 string NodeName(NODE &node) {
-    return "Name: " + node.HEADER.NAME_STRING.Text ;
+    local string NodeType;
+    switch (node.HEADER.MN) {
+         case 46: NodeType = "Empty"; break;
+         case 47: NodeType = "Group"; break;
+         case 50: NodeType = "Animation"; break;
+         case 51: NodeType = "Particle"; break;
+         case 52: NodeType = "Forest"; break;
+         case 53: NodeType = "Light"; break;
+    };
+    return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
 }  
 
 struct {
@@ -1267,144 +1310,187 @@ struct {
     UINT NodeCount; 
     if (NodeCount > 0) {
         NodesTree(NodeCount, 1);
-      };
+    };
   } NODE_TREE <name="Nodes Tree">;
 } OBJECTLIST <name="7. ObjectList section">;
 
 //----------------------------------------------------------------
 //  RoomList section
 //---------------------------------------------------------------
-//
-//struct {
-//   struct {
-//    UINT SectionSize;
-//    UINT mn;
-//    struct  { 
-//      UINT StringLength;
-//      char OccluderList[StringLength];
-//    } RoomListString;
-//  } ROOMLIST_HEADER <name="RoomList section header">;
-//
-//  UINT Count;
-//
-//  typedef struct {
-//    UINT MN; // 12
-//    struct {
-//      UINT Length;
-//      char String[Length];
-//      UINT Value;
-//    } VERSION_STRING;
-//    struct {
-//      UINT Length;
-//      char String[Length];
-//    } ROOMNAME_STRING;
-//
-//    BYTE MM; // 0
-//    UINT Mn; // 0
-//    UINT MN; // 1
-//
-//    struct {
-//      UINT StringLength;
-//      char String[StringLength];
-//    } LevelNameString;
-//
-//    struct {
-//      struct { 
-//        FLOAT x;        
-//        FLOAT y;
-//        FLOAT z;
-//      } XAxis;
-//       struct { 
-//        FLOAT x;
-//        FLOAT y;
-//        FLOAT z;
-//      } YAxis;
-//      struct {
-//        FLOAT x;
-//        FLOAT y;
-//        FLOAT z;
-//      } ZAxis;
-//      struct {
-//        FLOAT Y;
-//        FLOAT X;
-//        FLOAT Z;
-//      } Position;
-//    } TransformationMatrix;  
-//
-//    FLOAT mn; // 0
-//
-//    struct {
-//      FLOAT mn;
-//      FLOAT mn;
-//      FLOAT mn;
-//      FLOAT mn;   
-//      FLOAT mn;
-//      FLOAT mn;
-//    } Position;
-//
-//    UINT mn; // 1
-//    FLOAT mn; // 1
-//    BYTE mn; // 0
-//    UINT mn; // 1
-//    FLOAT mn; // 1
-//    FLOAT mn; // 40
-//    UINT mn;  //0
-//    UINT mn; //0
-//    
-//  } ROOM;
-//
-//  ROOM roomsarray[Count] <optimize=false>; 
-//
-//} ROOMLIST <name="8. RoomList section">;
+
+typedef struct {
+    struct {
+        UINT MN; // 12
+        struct {
+          UINT Length;
+          char String[Length];
+          UINT Value;
+        } VERSION_STRING;
+        struct {
+          UINT Length;
+          char Text[Length];
+        } ROOMNAME_STRING;
+    } HEADER ;
+    
+    BYTE MM; // 0
+    UINT Mn; // 0
+    UINT ShermanLevelCount; 
+
+    typedef struct {
+        struct {
+          UINT StringLength;
+          char String[StringLength];
+        } LevelNameString;
+        UINT ACount;
+        typedef struct {
+            struct {
+              struct { 
+                FLOAT x;        
+                FLOAT y;
+                FLOAT z;
+              } XAxis;
+               struct { 
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } YAxis;
+              struct {
+                FLOAT x;
+                FLOAT y;
+                FLOAT z;
+              } ZAxis;
+              struct {
+                FLOAT Y;
+                FLOAT X;
+                FLOAT Z;
+              } Position;
+            } TransformationMatrix;  
+            struct {
+                FLOAT X;
+                FLOAT Y;
+                FLOAT Z;
+                FLOAT X;
+                FLOAT Y;
+                FLOAT Z;
+            } Size;
+        } somr;
+        somr ss[ACount]; 
+
+        UINT A;
+        FLOAT arr[A]; // 1
+        BYTE mn; // 0
+    } SHERMAN_LEVEL;
+
+    struct {
+      SHERMAN_LEVEL ShermansArray[ShermanLevelCount] <optimize=false>; 
+    } ROOMARRAY <name="Shermanlevel array">;
+
+    UINT A; // 1
+    FLOAT mn; // 1
+    typedef struct { 
+      FLOAT mn; // 40
+      UINT mn;  //0
+    } some;
+    some s[A];
+    UINT mn; //0
+} ROOM <name=RoomName>;
+
+string RoomName(ROOM &room) {
+  return room.HEADER.ROOMNAME_STRING.Text;
+
+}
+
+struct {
+   struct {
+    UINT SectionSize;
+    UINT mn;
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } RoomListString;
+  } ROOMLIST_HEADER <name="RoomList section header">;
+
+  UINT Count;
+
+  struct {
+    ROOM roomsarray[Count] <optimize=false>; 
+  } ROOMARRAY <name="Rooms array">;
+
+} ROOMLIST <name="8. RoomList section">;
 //
 //
 //
 ////----------------------------------------------------------------
 //// TransitionList section
 ////---------------------------------------------------------------
-//
-//struct {
-//  struct {
-//    UINT SectionSize;
-//    UINT mn;
-//    struct  { 
-//      UINT StringLength;
-//      char OccluderList[StringLength];
-//    } TransitionListString;
-//  } TransitionListHeader <name="TransitionList section header">;
-//  UINT Count;
-//} TransitionLineList <name="9. TransitionList section">;
-//
+
+struct {
+  struct {
+    UINT SectionSize;
+    UINT mn;
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } TransitionListString;
+  } TransitionListHeader <name="TransitionList section header">;
+  UINT Count;
+  typedef struct {   
+    struct {
+      UINT StringLength;
+      char String[StringLength];
+    } TRANSITION_NAME_STRING; 
+    struct {
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } P1;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } P2;
+    } Size;        
+  } TRANSITIONLIST;
+  typedef struct(int arraySize) {
+      TRANSITIONLIST array[arraySize] <optimize=false>;
+  } TRANSITIONLIST_ARRAY ;
+  TRANSITIONLIST_ARRAY TransitionListArray(Count); 
+} TransitionLineList <name="9. TransitionList section">;
+
 ////----------------------------------------------------------------
 //// PlanningLevelList section
 ////---------------------------------------------------------------
-//
-//struct {
-//   struct {
-//    UINT SectionSize;
-//    UINT mn;
-//
-//    struct  { 
-//      UINT StringLength;
-//      char OccluderList[StringLength];
-//    } PlanningListString;
-//  } PlanningListHeader <name="PlanningList section header">;
-//
-//  UINT Count;
-//  if (Count > 0) {
-//    FLOAT mn; 
-//    FLOAT mn; 
-//    UINT RoomCount;
-//
-//    typedef struct { 
-//      UINT StringLength;
-//      char RoomNumberList[StringLength] ;
-//    } RoomNumberString;    
-//
-//    typedef struct(int arraySize) {
-//      RoomNumberString array[arraySize] <optimize=false>;
-//    } RoomsArray ;
-//
-//    RoomsArray RoomsNumbersArray(RoomCount);
-//  };
-//} PlanningLevelList <name="10. PlanningLevelList section">;
+
+struct {
+  struct {
+    UINT SectionSize;
+    UINT mn;
+
+    struct  { 
+      UINT StringLength;
+      char OccluderList[StringLength];
+    } PlanningListString;
+  } PlanningListHeader <name="PlanningList section header">;
+
+  UINT Count;
+  if (Count > 0) {
+    typedef struct { 
+        FLOAT mn; 
+        FLOAT mn; 
+        UINT RoomCount;
+    
+        typedef struct { 
+          UINT StringLength;
+          char RoomNumberList[StringLength] ;
+        } RoomNumberString;    
+    
+        typedef struct(int arraySize) {
+          RoomNumberString array[arraySize] <optimize=false>;
+        } RoomsArray ;
+    
+        RoomsArray RoomsNumbersArray(RoomCount);
+    } Arr;
+    Arr arv[Count] <optimize=false>; 
+  };
+} PlanningLevelList <name="10. PlanningLevelList section">;
