@@ -543,26 +543,47 @@ typedef struct {
         FLOAT Z;
       } Position;
   } TRANSFORMATION_MATRIX2;
+
   typedef struct {
-      UINT DynamicsType; // 2 - Pbomb (Parray)
-      FLOAT Duration;
-      FLOAT Strength;
-      FLOAT Range;
-      UINT ExplosionType; // 2 - Eponential
+      UINT DynamicsType; // 0 - ?, 2 - Pbomb (Parray)
+      switch (DynamicsType) {
+        case 0:    
+          struct {
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN;  
+            FLOAT MN; 
+            FLOAT MN; 
+          } Some;
+          break;
+        case 2: 
+          struct {
+              FLOAT Duration;
+              FLOAT Strength;
+              FLOAT Range;
+              UINT ExplosionType; // 2 - Eponential
+        
+              struct {
+                FLOAT X; // 0
+                FLOAT Y; // 0  
+                FLOAT X; // 1 
+              } Position; 
+        
+              FLOAT MN;
+              FLOAT MN;
+              FLOAT MN;
+        
+              UINT BlastSymmetry; // 1 - cylindrical
+              FLOAT StartTime;   
+              FLOAT Chaos;  
+           } PBOMB;
+           break;
+      }
 
-      struct {
-        FLOAT X; // 0
-        FLOAT Y; // 0  
-        FLOAT X; // 1 
-      } Position; 
-
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-
-      UINT BlastSymmetry; // 1 - cylindrical
-      FLOAT StartTime;   
-      FLOAT Chaos;  
   } SPACE_WARPS;   
         
     struct {
@@ -581,12 +602,12 @@ typedef struct {
     } HEADER;
 
     UINT ParticleSystemType; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    if (ParticleSystemType != 3) {
+    //if (ParticleSystemType != 3) {
       struct { 
         UINT Length; // 
         char Text[Length]; //
       } Properties;
-    }   
+   // }   
  
     struct { 
       FLOAT Width; // IconSize
@@ -699,7 +720,7 @@ typedef struct {
             FLOAT MN;  
             FLOAT MN; 
          } Some;
-             UINT Count;
+         UINT Count;
          FOHEADER F1;
          struct {
               UINT Length;  
@@ -734,19 +755,10 @@ typedef struct {
       struct { 
         FRAGMENT frg[FragmentsCount] <optimize=false>;
       } Array <name="Fragment object Array">;
-      UINT Count;
-      if (Count) {
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-         FLOAT MN;
-      };
+      UINT A;
+      if (A > 0) {
+        SPACE_WARPS SpaceWarps;
+      }
     }
     else {
       struct {
@@ -922,9 +934,10 @@ string NodeName(NODE &node) {
     switch (node.HEADER.MN) {
          case 46: NodeType = "Empty"; break;
          case 47: NodeType = "Group"; break;
-         case 51: NodeType = "Light"; break;
-         case 53: NodeType = "Particle"; break;
-         default: NodeType = "Animation"; break;
+         case 50: NodeType = "Animation"; break;
+         case 51: NodeType = "Particle"; break;
+         case 52: NodeType = "Tree"; break;
+         case 53: NodeType = "Light"; break;
     };
     return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
 }  
