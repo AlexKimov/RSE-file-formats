@@ -3,16 +3,16 @@
 //
 //       File: BNF.bt
 //    Authors: Alexander Evdokimov
-//    Version: 0.1
-//    Purpose: Ghost Recon BNF files
-//  File Mask: *.bnf
+//    Version: 0.5
+//    Purpose: Ghost Recon BMF files
+//  File Mask: *.bmf
 //
 //   History: 
 //   
 //------------------------------------------------
 
 FLOAT MN;
-UINT Time; // ?
+UINT Time;
 UINT BonesCount;
 
 typedef struct {

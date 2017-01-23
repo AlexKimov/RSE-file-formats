@@ -19,8 +19,8 @@ typedef enum <ubyte> {
 
 struct {  
  struct {
-    UINT Length; // 
-    char Text[Length]; // 
+  UINT Length; // 
+  char Text[Length]; // 
   } BEGINPOB_STRING <name="POB File ID (Signature)">;
  struct {
     time_t CreateDate <name="POB File Creation Date">;
@@ -503,6 +503,19 @@ struct {
   char Text[Length]; // 
 } ENDMODEL_STRING <name="Model section end">;
 
+//------------------
+// ObjectList
+//------------------
+
+typedef enum <UINT> {
+    Blizzard, 
+    Snow, 
+    Spray, 
+    SuperSpray, 
+    PArray, 
+    PCloud
+} PARTICLE_SYSTEM_TYPE;
+
 typedef struct {
 
   typedef struct { 
@@ -545,19 +558,21 @@ typedef struct {
   } TRANSFORMATION_MATRIX2;
 
   typedef struct {
-      UINT DynamicsType; // 0 - ?, 2 - Pbomb (Parray)
+      UINT DynamicsType; // 0 - Gravitation, 2 - Pbomb (Parray)
       switch (DynamicsType) {
         case 0:    
           struct {
             FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN; 
+            FLOAT PbombStrength; 
+            FLOAT GravDelay;  
+            FLOAT MN; // 0
+            UINT MN; // 0  
+            UINT MN; // 0  
+            struct {
+              FLOAT Y;   
+              FLOAT Z;
+            } GravRotation; 
+            FLOAT GravitaionForceStrength; 
           } Some;
           break;
         case 2: 
@@ -566,64 +581,62 @@ typedef struct {
               FLOAT Strength;
               FLOAT Range;
               UINT ExplosionType; // 2 - Eponential
-        
+              //
               struct {
-                FLOAT X; // 0
-                FLOAT Y; // 0  
-                FLOAT X; // 1 
+                FLOAT X; 
+                FLOAT Y;   
+                FLOAT Z;  
               } Position; 
-        
-              FLOAT MN;
-              FLOAT MN;
-              FLOAT MN;
-        
+              //
+              struct {
+                FLOAT X; 
+                FLOAT Y;   
+                FLOAT Z;  
+              } Rotation; 
+              //
               UINT BlastSymmetry; // 1 - cylindrical
               FLOAT StartTime;   
               FLOAT Chaos;  
-           } PBOMB;
-           break;
-      }
-
+          } Pbomb;
+          break;
+      };
   } SPACE_WARPS;   
         
-    struct {
-      BYTE A; 
-      UINT Y;
-      UINT SpawnOnDeath; // 1
-      FLOAT Z;
-      FLOAT Y;
-      FLOAT X;
-      FLOAT Z;
-      FLOAT Y;
-      BYTE X;
-      BYTE X;
-      UINT AA; 
-      BYTE MN; 
-    } HEADER;
+  struct {
+      UINT MN; // 1
+      UINT SpawnOnDeath;
+      FLOAT MN;
+      FLOAT AnimationStartTicks;
+      FLOAT AnimationLengthTicks;
+      FLOAT TicksPerFrame;
+      FLOAT MN; // 0 
+      BYTE MN; // 1
+      BYTE MN; // 1
+      BYTE MN; // 
+      UINT MN; // 0
+   } HEADER;
 
-    UINT ParticleSystemType; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    //if (ParticleSystemType != 3) {
-      struct { 
-        UINT Length; // 
-        char Text[Length]; //
-      } Properties;
-   // }   
+   PARTICLE_SYSTEM_TYPE ParticleSystemType <name="Particle System">; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
+   struct { 
+     UINT Length; // 
+     char Text[Length]; //
+   } PROPERTIES;  
  
-    struct { 
-      FLOAT Width; // IconSize
-      FLOAT Length; // 
-      FLOAT Height; // 3D
-    } EMITTER_SIZE;
+   struct { 
+     FLOAT Width; // IconSize
+     FLOAT Length; // 
+     FLOAT Height; // 3D
+   } EMITTER_SIZE;
     
-    struct { 
+   struct { 
       FLOAT ParticleSpeed; // Parray (units in sec) (Particle Motion Speed (units per frame) * 30)
       FLOAT ParticleSpeedVariation; // %ParticleSpeed 
-    } PARTICLE_MOTION;
+   } PARTICLE_MOTION;
     
-    struct {
+   struct {
       FLOAT GrowFor; // Parray (Particle size Grow For / 30)     
       FLOAT FadeFor; // Parray (Particle size Fade For / 30)
-    } PARTICLE_Size;
+   } PARTICLE_Size;
     
     struct {
       FLOAT MN;
@@ -646,35 +659,32 @@ typedef struct {
     } PARTICLE_QUANTITY;
     
     struct {
-      UINT SpinAxisControlType; // 0 - Random, 2- user defined
+      UINT SpinAxisControlType; // 0 - Random, 1 - direction of travel, 2- user defined
       FLOAT XAxis;
       FLOAT YAxis;
       FLOAT ZAxis;
       FLOAT Variation;
-    } SpinAxisControl ;
+    } SPIN_AXIS_CONTROL ;
     
-    FLOAT MN; // 1  
-    FLOAT MN; // 0
-    // 
+    FLOAT MN; 
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;      
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;      
+    FLOAT MN;
+    FLOAT MN;
+    
+    UINT ParticleMotionType; // 0 - dir vector, 1 - random Direction
+     
     struct {
       FLOAT OffAxis;
       FLOAT Spread;
       FLOAT OffPlane;
       FLOAT Spread;
-    } PARTICLE_FORMATION;
-    //
-    struct {        
-      FLOAT GrowFor;
-      FLOAT FadeFor;
-    } ParticleSize2;
-    
-    FLOAT MN;
-    FLOAT MN;    
-    UINT MN;     
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
+    } SUPERSPRAY_PARTICLE_FORMATION;
         
     struct {
       FLOAT SpinTime;
@@ -683,42 +693,50 @@ typedef struct {
       FLOAT PhaseVariation;
     } SpinSpeedControls;
     
-    UINT particleType; // 2 - object fragments
+    UINT particleType; // 0 - standard, 2 - object fragments
     
-    UINT SpawnType; // 2 instanced geometry
     struct {
+      UINT SpawnType; // 3 - spawn on death, 4 - spawn trails
       UINT Spawns;
-      UINT Spawns;
-      FLOAT Spawn_Affects;
-    } SPAWN_EFFECTS; 
-    
-    FLOAT MN; // time
+    } PARTICLE_SPAWNING_EFFECTS; 
+
+    FLOAT AnimationStartSeconds;
+    FLOAT AnimationLengthSeconds;    
+    FLOAT AnimationStartSeconds; // time
     
     struct {
       FLOAT EmiStart; // time    
       FLOAT EmiStop; // time
     } PARTICLE_TIMING;
     
-    UINT MN;
+    UINT HideEmitter; // 1 - true
 
     if (particleType == 2) {
       UINT FragmentsCount; 
          
       typedef struct {
         struct {
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
+            struct {
+              FLOAT X;  
+              FLOAT Y; 
+              FLOAT Z;
+            } Position; 
+
+              FLOAT MN;  
+              FLOAT MN; 
+              FLOAT MN; 
+              FLOAT MN;  
+
+            struct {
+              FLOAT Y; 
+              FLOAT Z;  
+            } ForceVector;  
+ 
+            FLOAT Speed; 
+
+            FLOAT MN; // 0 
+            FLOAT MN; // 0 
+            FLOAT MN; // 5
          } Some;
          UINT Count;
          FOHEADER F1;
@@ -765,13 +783,13 @@ typedef struct {
         UINT UseTotal; // * PercentageOfParticles
       } PARTICLE_QUANTITY;
 
-      BYTE MN; 
-      if (MN > 0) {
+      BYTE isTextured; 
+      if (isTextured) {
           UINT Length;   
           char TextureName[Length];
       } 
-      UINT A;
-      if (A > 0) {
+      UINT SPACEWARPS;
+      if (SPACEWARPS) {
         SPACE_WARPS SpaceWarps;
       }
     }
@@ -842,25 +860,53 @@ typedef struct {
 } ANIMATION_PROPERTIES;
 
 typedef struct{
-    UINT X;
-    UINT Y;
-    UINT Z;
-    UINT A;
-    FLOAT MN;          
-    FLOAT MN;
-    FLOAT MN; 
-    FLOAT MN;          
-    FLOAT MN;
-    FLOAT MN; 
-    FLOAT MN;          
-    FLOAT MN;
-    FLOAT MN; 
-    FLOAT MN;          
-    FLOAT MN;
-    FLOAT MN; 
-    FLOAT MN; 
-    FLOAT MN;
-    BYTE A;
+    UINT LightType; // 1 - directional, 2 - omni, 5 - spot, 6 - , 8 - free directional light
+    struct {         
+      FLOAT Red; // 0..1 , 0..255
+      FLOAT Green; // 0..1 , 0..255 
+      FLOAT Blue; // 0..1 , 0..255
+    } Color;
+    FLOAT MN;  // 1
+    struct {         
+      FLOAT Red; // 0..1 , 0..255
+      FLOAT Green; // 0..1 , 0..255 
+      FLOAT Blue; // 0..1 , 0..255
+    } Color;
+          
+    FLOAT MN; // 1
+    struct {         
+      FLOAT Red; // 0..1 , 0..255
+      FLOAT Green; // 0..1 , 0..255 
+      FLOAT Blue; // 0..1 , 0..255
+    } Color;
+    FLOAT MN;  // 1
+    FLOAT Multiplier;  
+    struct {        
+      FLOAT HotSpotSize;
+      FLOAT FalloffSize; 
+    } SpotLight_Params;
+    struct {
+      FLOAT Start;
+      FLOAT End;
+    } Far_Attenuation; 
+    BYTE ShadowsOff;
+
+    if (LightType == 8) {
+      FLOAT MN; // 0
+      UINT lighttype; // 2 - omni, 1 - directional, 0 - spot 
+      UINT MN;  // 0
+      UINT MN;  // 0
+      UINT MN; // 1
+      FLOAT AspectRatio;
+      struct {
+        FLOAT Width; // Width * AspectRatio 
+        FLOAT Length; // HotSpotSize;
+      } RectangilarBeamSize;
+      struct {
+        UINT Length;
+        char TextureFileName[Length]; 
+      } ProjectorMap;
+     } 
 } LIGHT_NODE_PROPERTIES;
 
 void NodesTree(UINT NodeCount)
@@ -887,12 +933,13 @@ void NodesTree(UINT NodeCount)
            break;
          default : 
         
-          if (HEADER.MN != 51 && HEADER.MN != 53) {
-                  struct {
-                      UINT Length;  
-                      char Text[Length];  
-                  } ObjectProperties <name = "Tagging properties">;   
+          if (HEADER.MN != 51 && HEADER.MN != 53 && HEADER.MN != 54) {
+              struct {
+                  UINT Length;  
+                  char Text[Length];  
+              } ObjectProperties <name = "Tagging properties">;   
           };
+          if (HEADER.MN == 51) { BYTE MN; };
           struct { 
              struct { 
                 FLOAT x;        
@@ -917,16 +964,23 @@ void NodesTree(UINT NodeCount)
           } TRANSFORMATION_MATRIX;
 
          if (HEADER.MN != 47) {
-             if (HEADER.MN == 51) {
+            switch (HEADER.MN) {
+               case 48: 
+                 UINT Count;
+                 break;
+               case 50: 
+                 ANIMATION_PROPERTIES AnimationProperties <name="Particle properties">;
+                 break;
+               case 51:
                  PARTICLE_NODE_PROPERTIES ParticleProperties <name="Particle properties">;
-             }
-             else 
-             if (HEADER.MN == 53) {
-                 LIGHT_NODE_PROPERTIES SpotProperties <name="Spot properties">;
-             }
-             else {      
-                 ANIMATION_PROPERTIES AnimationProperties <name="Animation properties">;  
-             };
+                 break;
+               case 53:
+                 LIGHT_NODE_PROPERTIES LightProperties <name="Light properties">;
+                 break;
+               case 54: 
+                 LIGHT_NODE_PROPERTIES LightProperties <name="ProjectedMap Light properties">;
+                 break;
+            };
          };
               
            UINT SubeNodeCount;
@@ -947,12 +1001,15 @@ void NodesTree(UINT NodeCount)
 string NodeName(NODE &node) { 
     local string NodeType;
     switch (node.HEADER.MN) {
-         case 46: NodeType = "Empty"; break;
+         case 46: NodeType = "Helper Point"; break;
          case 47: NodeType = "Group"; break;
+         case 48: NodeType = "Billboard"; break;
+         case 49: NodeType = "LOD"; break;
          case 50: NodeType = "Animation"; break;
          case 51: NodeType = "Particle"; break;
-         case 52: NodeType = "Tree"; break;
+         case 52: NodeType = "Forest"; break;
          case 53: NodeType = "Light"; break;
+         case 54: NodeType = "ProjectedMapLight"; break;
     };
     return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
 }  

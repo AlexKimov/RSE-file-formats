@@ -698,7 +698,6 @@ struct {
         } GeometryListString;
       } Header <name="Light header">;
 
-      //byte Data[Header.SectionSize];
       UINT Count;
       UINT LightType; // 0 - ambient, 6 - sun
       FLOAT Angle;
@@ -758,7 +757,7 @@ struct {
 } Light;  
     typedef struct(int arraySize) {
       Light array[arraySize] <optimize=false>;
-    } LightsArray <optimize=false>;
+    } LightsArray;
     LightsArray MAPLightsArray(Count);  
   } Lights;
 } LightList <name="5. LightList section">;
@@ -838,7 +837,7 @@ typedef struct {
       struct {
         FLOAT X; // 0
         FLOAT Y; // 0  
-        FLOAT X; // 1 
+        FLOAT Z; // 1 
       } Position; 
 
       FLOAT MN;

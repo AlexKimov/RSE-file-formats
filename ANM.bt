@@ -36,7 +36,7 @@ typedef  struct {
     struct {    
        UINT Length; // 
        char Text[Length]; //
-    } MATERIAL_NAME_STRING; 
+    } NAME_STRING; 
   } HEADER <name="HEADER">;
 
     struct {
