@@ -11,8 +11,8 @@
 | File         | File Name     | Progress     | Available  |
 | :----------: | :-----------: | :----------: | :--------: |
 | *.chr        | CHR.bt        | **90%**      | yes        |
-| *.map        | MAP.bt        | 70%          | yes        |
-| *.pob        | POB.bt        | 80%          | yes        |
+| *.map        | MAP.bt        | **88%**          | yes        |
+| *.pob        | POB.bt        | **89%**          | yes        |
 | *.qob        | QOB.bt        | **90%**      | yes        |
 | *.rsb        | RSB.bt        | **95%**      | yes        |
 | *.anm        | ANM.bt        | **90%**      | yes        |
