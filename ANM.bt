@@ -36,27 +36,28 @@ typedef  struct {
     struct {    
        UINT Length; // 
        char Text[Length]; //
-    } NAME_STRING; 
+    } NAME_STRING <name="Vehicle node name">; 
   } HEADER <name="HEADER">;
 
     struct {
       UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
       UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
 
-      UINT n3;
-      FLOAT n4; 
-      UINT16 n5;
-      UINT n6; 
-      UINT16 n7; 
-      UINT n8;  
-      BYTE n9;
-      BYTE n10; 
-      UBYTE A;     
-    } HEADER;
+      UINT MN; // 0
+      UINT16 MN; // 0
+      UINT16 MN; // 65535
+      UINT16 MN; // 32639
+      UINT16 MN; // 128
+      FLOAT TicksinSecond; // 4800 
+      UINT MN; // 0 
+      BYTE MN; // 1
+      BYTE MN; // 1
+      UBYTE A; // ?    
+    } PROPERTIES;
 
     UINT PKeysCount;    
     typedef struct {                         
-        UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
+        UINT ControllerType; // 3 - Linear Position, 4 - ?, 5 - TCB Position
         if (ControllerType == 3) {
             FLOAT n2; // 0
             FLOAT Time;
@@ -83,14 +84,14 @@ typedef  struct {
 
     UINT RKeysCount;
     typedef struct {
-        UINT ControllerType;
+        UINT ControllerType; // 4 - Linear rotation
         UINT MN; //0
         FLOAT Time;
 
-        FLOAT MN;          
-        FLOAT MN;
-        FLOAT MN;
- 
+        FLOAT MN; // 0         
+        FLOAT MN; // 0  
+        FLOAT MN; // 0  
+        // transformation matrix rotation in local space (quaternions)
         FLOAT x;          
         FLOAT y;
         FLOAT z; 
@@ -100,13 +101,17 @@ typedef  struct {
       RotationKey array[arraySize] <optimize=false>;
     } RotationKeysArray;     
     RotationKeysArray POBRotationKeysArray(RKeysCount); 
-  } ANIMATION <name="Animation properties">;
+} ANIMATION <name=ObjectName>;
 
-  typedef struct (int arraySize) {
-      ANIMATION array[arraySize] <optimize=false>;
-  } ANIMATION_ARRAY; 
-
-  ANIMATION_ARRAY AnimationArray(Count) <name="Animation properties array">; 
+string ObjectName (ANIMATION &animation) {
+  return "Object name: " + animation.HEADER.NAME_STRING.Text;
+};
+    
+typedef struct (int arraySize) {
+    ANIMATION array[arraySize] <optimize=false>;
+} ANIMATION_ARRAY; 
+    
+ANIMATION_ARRAY AnimationArray(Count) <name="Object animations array">; 
 
 struct {
   UINT Length;
