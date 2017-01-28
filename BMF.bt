@@ -11,9 +11,9 @@
 //   
 //------------------------------------------------
 
-FLOAT MN;
-UINT Time;
-UINT BonesCount;
+FLOAT Time; // animation time in seconds
+UINT FramesCount; //
+UINT BonesCount;  // 21 bones for a character animation
 
 typedef struct {
     struct {
@@ -21,24 +21,26 @@ typedef struct {
       char Text[Length]; // 
     } BONE_NAME_STRING <name="">;
 
-    UINT MovementTime;
+    UINT PositionKeysCount;
     typedef struct {
-      UINT Time;
+      UINT Time; // in Ticks
+      // position (x,y,z)
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
     } MOVEMENT;
-    MOVEMENT MovementArray[MovementTime] <name="Movement Array">; 
+    MOVEMENT MovementArray[PositionKeysCount] <name="Movement Array">; 
 
-    UINT RotationTime;
+    UINT RotationKeysCount;
     typedef struct {
-      UINT Time;
+      UINT Time; // in Ticks
+      // local transformation matrix rotation (quats)
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
       FLOAT Angle;
     } ROTATION;
-    ROTATION RotationArray[RotationTime] <name="Rotation Array">; 
+    ROTATION RotationArray[RotationKeysCount] <name="Rotation Array">; 
 } BONE_ANIMATION <name=BoneName>;
 
 string BoneName(BONE_ANIMATION &bone) {
