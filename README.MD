@@ -8,7 +8,7 @@
 
 ## Available file extensions (wip)
 
-| File         | File Name     | Progress     | Available  |
+| File         | File Name     | Progress     | Availability  |
 | :----------: | :-----------: | :----------: | :--------: |
 | .chr        | CHR.bt        | **95%**      | yes        |
 | .map        | MAP.bt        | **88%**          | yes        |
@@ -17,7 +17,7 @@
 | .rsb        | RSB.bt        | **95%**      | yes        |
 | .anm        | ANM.bt        | **95%**      | yes        |
 | .bnf        | BNF.bt        | **95%**      | yes        |
-| .sht        | SHT.bt        | 0%           | no         | 
+| .sht        | SHT.bt        | 0%           |          | 
 
 ## Files description
 
