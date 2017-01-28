@@ -10,14 +10,14 @@
 
 | File         | File Name     | Progress     | Available  |
 | :----------: | :-----------: | :----------: | :--------: |
-| *.chr        | CHR.bt        | **90%**      | yes        |
-| *.map        | MAP.bt        | **88%**          | yes        |
-| *.pob        | POB.bt        | **89%**          | yes        |
-| *.qob        | QOB.bt        | **90%**      | yes        |
-| *.rsb        | RSB.bt        | **95%**      | yes        |
-| *.anm        | ANM.bt        | **95%**      | yes        |
-| *.bnf        | BNF.bt        | **95%**      | yes        |
-| *.sht        | SHT.bt        | 0%           | no         | 
+| .chr        | CHR.bt        | **95%**      | yes        |
+| .map        | MAP.bt        | **88%**          | yes        |
+| .pob        | POB.bt        | **89%**          | yes        |
+| .qob        | QOB.bt        | **90%**      | yes        |
+| .rsb        | RSB.bt        | **95%**      | yes        |
+| .anm        | ANM.bt        | **95%**      | yes        |
+| .bnf        | BNF.bt        | **95%**      | yes        |
+| .sht        | SHT.bt        | 0%           | no         | 
 
 ## Files description
 
