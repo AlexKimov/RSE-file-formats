@@ -3,7 +3,7 @@
 //
 //      File: MAP.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.5
+//   Version: 0.8
 //   Purpose: Ghost Recon MAP file 
 // File Mask: *.map
 // 
@@ -1120,7 +1120,6 @@ typedef struct {
       UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
       UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
       UINT n3;
-
       FLOAT n4; 
       UINT16 n5;
       UINT n6; 

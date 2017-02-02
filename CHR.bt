@@ -35,7 +35,7 @@ typedef struct {
   } HEADER <name="Section header">;
   struct { 
     FLOAT Opacity;
-    FLOAT Faceted;
+    UINT Faceted;
     struct {              
       FLOAT Red; //
       FLOAT Green; //
@@ -56,7 +56,7 @@ typedef struct {
     } Specular;
     FLOAT SpecularLevel; //o.o5
     BYTE twoSided;
-  } PARAMETERS;
+  } Properties;
 } MATERIAL <name=MaterialName>;
 
 typedef struct {
@@ -278,7 +278,7 @@ struct {
             FLOAT Red;  // 0..1 (0..255 in RGB)
             FLOAT Green;  
             FLOAT Blue;  
-            FLOAT MN;  
+            FLOAT MN; // 
           } FACE_COLOR <name="Face RGB color">; 
           typedef struct (int arraySize) {
            FACE_COLOR array[arraySize] <optimize=false>;
@@ -314,7 +314,7 @@ struct {
     
 typedef struct { 
   struct {
-    UINT MN; 
+    UINT ID; 
     struct {    
        UINT Length; 
        char Text[Length]; 
@@ -358,7 +358,7 @@ struct {
       UINT Length;  
       char Text[Length];  
     } SKIN; 
-    UINT MN;
+    UINT MN; // 1
     struct {
       UINT Length;  
       char Text[Length];  

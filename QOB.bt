@@ -296,12 +296,12 @@ struct {
             FLOAT Green;  
             FLOAT Blue;  
             FLOAT MN;  
-            Check(MN, 1, " value");
+            //Check(MN, 1, " value");
           } FACE_COLOR <name="Face RGB color">; 
           typedef struct (int arraySize) {
            FACE_COLOR array[arraySize] <optimize=false>;
           } FACE_COLOR_ARRAY; 
-          FACE_COLOR_ARRAY CoordinatesArray(VerticiesCount) <name="Faces color array">; 
+          FACE_COLOR_ARRAY CoordinatesArray(VertexCount) <name="Faces color array">; 
 
       } TEXTUREVERTICIES <name="Texture data">;   
     } GEOMETRY_OBJECT;

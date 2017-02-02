@@ -3,7 +3,7 @@
 //
 //      File: POB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.6
+//   Version: 0.8
 //   Purpose: Ghost Recon POB file 
 // File Mask: *.pob
 // 
@@ -327,18 +327,19 @@ struct {
   if (TextureCount > 0) {
     POBTextureCoordinatesArray TextureCoordinatesArray(VerticiesCount*TextureCount); 
   }; 
+
   typedef struct   {
-    FLOAT X;  // 1, 0.5, 
-    FLOAT Y;  // 1, 0.5,  
-    FLOAT Z;  // 1, 0.5, 
-    FLOAT W;  // 1
-  } NORMALS_COORDINATE; 
-
+    FLOAT Red;  // 0..1 (0..255 in RGB)
+    FLOAT Green;  
+    FLOAT Blue;  
+    FLOAT MN;  
+    //Check(MN, 1, " value");
+  } FACE_COLOR <name="Face RGB color">; 
   typedef struct (int arraySize) {
-   NORMALS_COORDINATE array[arraySize];
-  } NORMALS_COORDINATE_ARRAY; 
-
-  NORMALS_COORDINATE_ARRAY NormalsCoordinatArray(VerticiesCount); 
+   FACE_COLOR array[arraySize] <optimize=false>;
+  } FACE_COLOR_ARRAY; 
+  FACE_COLOR_ARRAY CoordinatesArray(VerticiesCount) <name="Faces color array">; 
+ 
 } TEXTURE_VERTICIES <name="Texture data">;
 } OBJECT_DATA;
 
@@ -348,6 +349,7 @@ typedef struct (int arraySize) {
 
 OBJECT_DATA_ARRAY POBObjectsDataArray(Count) <name="Objects data array">; 
 } OBJECTSDATA <name="Objects data section">;
+
 //-----------------------------------------------------
 
 struct {
@@ -413,7 +415,7 @@ struct {
         typedef struct {
           UINT Length;
           char Name[Length]; // for example staticengineblock
-          BYTE FloorPolygon; // 2 - non colidable 2d, 10 - non colidable 3d 26 - 3
+          BYTE Properties; // 2 - non colidable 2d, 10 - non colidable 3d 26 - 3
           BYTE CarvingBoundary; // 1 - Carving Boundary  2 - cannot carve
           BYTE MN; // 0
           BYTE MN; // 0   
@@ -665,7 +667,7 @@ typedef struct {
       FLOAT ZAxis;
       FLOAT Variation;
     } SPIN_AXIS_CONTROL ;
-    
+    //
     FLOAT MN; 
     FLOAT MN;
     FLOAT MN;
@@ -676,9 +678,9 @@ typedef struct {
     FLOAT MN;      
     FLOAT MN;
     FLOAT MN;
-    
+    //
     UINT ParticleMotionType; // 0 - dir vector, 1 - random Direction
-     
+    // 
     struct {
       FLOAT OffAxis;
       FLOAT Spread;
@@ -797,8 +799,8 @@ typedef struct {
 
 typedef struct {
     struct {
-      UINT n1;
-      UINT n2;
+      UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+      UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
       UINT n3;
       FLOAT n4; 
       UINT16 n5;
