@@ -169,7 +169,10 @@ struct {
         char Text[Length];  
       } NAME_STRING;
     } SECTION_HEADER <name="Section header">; 
-    UINT16 mn; // 0
+
+    BYTE DarkMapped <name="DarkMapped">; // 
+    BYTE CastShadows  <name="CastShadows">;
+
     struct {
       UINT VertexCount;  
       typedef struct {     
@@ -182,6 +185,7 @@ struct {
       } VERTEX_ARRAY;     
       VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
     } VERTICES <name="Vertices section">;
+
     UINT Count;  //
     typedef struct {
       struct {
@@ -213,7 +217,7 @@ struct {
             FLOAT X;
             FLOAT Y;
             FLOAT Z;
-            FLOAT MN;
+            FLOAT DistanceOriginFace;
            } FACE_NORMALS;
     
           typedef struct (int arraySize) {
