@@ -122,11 +122,11 @@ struct {
 
 BitfieldDisablePadding();
 
-typedef struct {    
+typedef struct {   
+    ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
     ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
     ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
     ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
-    ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">;
 } PIXEL <name="Pixel", size=sizePIXEL>;
 
 int sizePIXEL( PIXEL &pixel )
@@ -169,15 +169,12 @@ if (HEADER.version > 2) {
        BOOL Animation <name="Animation">;
        BOOL Scrolling <name="Scrolling">;
        BOOL Tiled <name="Tiled">;   // unused
-       BOOL Compression <name="Compression">;   // unused
-       BOOL Distortion <name="Distortion">;
+       BOOL Compression <name="Compression">;   // unused       
+       //
        if (HEADER.version > 7) {
-          UINT GameProperties;
-       }
-       else {
-          BYTE mn7;
-          UINT16 mn8;
+         BOOL Distortion <name="Distortion">;
        };
+       UINT GameProperties;
     
        SOURCE_FUNCTION_PARAMETER SourceFunction <name="Source Function">;
        DESTINATION_FUNCTION_PARAMETER DestinationFunction <name="Destination Function">;
