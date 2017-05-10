@@ -1110,7 +1110,7 @@ typedef struct {
       Tree array[arraySize] <optimize=false>;
     } TREE_ARRAY <name="Tree array">;
     TREE_ARRAY TreeArray(TreesCount) <optimize=false>;
-  } FOREST_ARRAY <name="Forest">;
+  } FOREST_ARRAY <name="Foliage">;
   FOREST_ARRAY ForestArray[GroupsCount] <optimize=false>;
 } FOREST_NODE_PROPERTIES;
 
