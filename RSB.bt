@@ -8,6 +8,7 @@
  
 //   History: 
 //
+//   2017.05 v0.9 RSB version 0 added
 //   2017.01 v0.8 95% ready release
 //      New: 
 //      - new structures, enums, names to vars, 
@@ -102,39 +103,60 @@ typedef enum <uint> {
 struct {
   UINT version; // *.rsb file version
   UINT width <name="Texture Width">; // texture width
-  UINT height <name="Texture Height">; // texture height
-  if (version > 7) { 
-    UINT mn1;  
-    UINT16 mn2; 
-    BYTE mn3;
-  }; 
-  struct {
-     UINT red_bits;
-     UINT green_bits;
-     UINT blue_bits;
-     UINT alpha_bits;
-  } RSB_BIT_INFO;
-  if (version == 9) { 
-    UINT mn4; // 
-    UINT mn5; //
-  };  
+  UINT height <name="Texture Height">; // texture height  
+  if (version == 0) {
+    UINT Unknown; 
+  }
+  else {
+    if (version > 7) { 
+      UINT mn1;  
+      UINT16 mn2; 
+      BYTE mn3;
+    }; 
+    struct {
+       UINT red_bits;
+       UINT green_bits;
+       UINT blue_bits;
+       UINT alpha_bits;
+    } RSB_BIT_INFO;
+    if (version == 9) { 
+      UINT mn4; // 
+      UINT mn5; //
+    };  
+  }
 } HEADER <name="File Header">;
 
-BitfieldDisablePadding();
+if (HEADER.version == 0) {   
+  BYTE A[1024];
+};
+
+BitfieldDisablePadding(); 
 
 typedef struct {   
+  if (HEADER.version == 0) {   
+    ubyte Red   : 3 <name="Red">;
+    ubyte Green : 3 <name="Green">;
+    ubyte Blue  : 2 <name="Blue">;
+  } 
+  else {
     ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
     ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
     ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
-    ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
+    ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">; 
+  }
 } PIXEL <name="Pixel", size=sizePIXEL>;
 
 int sizePIXEL( PIXEL &pixel )
 {
+  if (HEADER.version == 0) {
+    return 1;
+  } 
+  else {
     return (HEADER.RSB_BIT_INFO.red_bits + 
             HEADER.RSB_BIT_INFO.green_bits + 
             HEADER.RSB_BIT_INFO.blue_bits + 
             HEADER.RSB_BIT_INFO.alpha_bits)/8;
+  }
 } 
 
 //typedef struct {    
@@ -147,6 +169,24 @@ typedef struct (int arraySize) {
 
 PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <name="Pixel Array">;
 
+if (HEADER.version == 0) {
+  struct {
+     UINT red_bits;
+     UINT green_bits;
+     UINT blue_bits;
+     UINT alpha_bits;
+  } RSB_BIT_INFO2 <name="Bit mask">;
+  typedef struct {   
+    ubyte Alpha : RSB_BIT_INFO2.red_bits <name="Alpha">; 
+    ubyte Red   : RSB_BIT_INFO2.green_bits <name="Red">;
+    ubyte Green : RSB_BIT_INFO2.blue_bits <name="Green">;
+    ubyte Blue  : RSB_BIT_INFO2. alpha_bits <name="Blue">; 
+  } PIXEL2 <name="Pixel2", optimize=false>;
+  typedef struct (int arraySize) {
+    PIXEL2 array[arraySize] <optimize=false>;
+  } PIXEL_ARRAY2;
+  PIXEL_ARRAY2 PixelArray2(HEADER.width*HEADER.height) <name="Pixel Array 2">;
+} 
 if (HEADER.version > 2) {    
     struct{
        if (HEADER.version > 5) { 
