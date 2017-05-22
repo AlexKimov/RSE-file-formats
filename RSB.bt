@@ -31,6 +31,15 @@ typedef enum <ubyte> {
 } BOOL; // bool data type
 
 typedef enum <uint> {
+  DXT1,
+  DXT2,
+  DXT3,
+  DXT4,
+  DXT5,
+  none = 4294967295
+} DXT_TYPE; 
+
+typedef enum <uint> {
   sZero, 
   sOne, 
   sSource_Alpha, 
@@ -135,7 +144,7 @@ struct {
     } RSB_BIT_INFO;
     if (version >= 9) { 
       UINT mn; // 
-      UINT DXT <name="DXT type">; // DXT compression type 0 - DXT1
+      DXT_TYPE dxtType <name="DXT type">; // DXT compression type 0 - DXT1
     };  
   }
 } HEADER <name="File Header">;
@@ -155,22 +164,29 @@ typedef struct {
     ubyte Blue  : 2 <name="Blue">;
   } 
   else {
-    if (HEADER.DXT == 0) {
-      struct {
-        ubyte Alpha : 5 <name="Alpha">; 
-        ubyte Red   : 6 <name="Red">;
-        ubyte Green : 5 <name="Green">; 
-      } Color1;     
-      struct {
-        ubyte Alpha : 5 <name="Alpha">; 
-        ubyte Red   : 6 <name="Red">;
-        ubyte Green : 5 <name="Green">; 
-      } Color2;  
-      struct {
-        for (i = 0; i < 16; ++i) {
-          ubyte PixelIndex : 2 <name="Pixel Index">; 
-        }
-      } INDEX_TABLE;        
+    if (HEADER.dxtType >= 0 && HEADER.dxtType < 5 ) {
+        struct {
+            for (i = 0; i < 16; ++i) {
+              ubyte AlphaIndex : 4 <name="Alpha Index">; 
+            };
+        } AlphaChannel <name="Alpha Channel Data">;
+        struct {
+          struct {
+            ubyte Alpha : 5 <name="Alpha">; 
+            ubyte Red   : 6 <name="Red">;
+            ubyte Green : 5 <name="Green">; 
+           } Color1;     
+          struct {
+            ubyte Alpha : 5 <name="Alpha">; 
+            ubyte Red   : 6 <name="Red">;
+            ubyte Green : 5 <name="Green">; 
+          } Color2;  
+          struct {
+            for (i = 0; i < 16; ++i) {
+              ubyte PixelIndex : 2 <name="Pixel Index">; 
+            };
+          } INDEX_TABLE;
+        } COLOR_DATA <name="Color Data">;
     }
     else {
       ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
@@ -178,7 +194,7 @@ typedef struct {
       ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
       ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">; 
     };
-  }
+  };
 } PIXEL <name="Pixel", size=sizePIXEL>;
 
 int sizePIXEL( PIXEL &pixel )
@@ -187,8 +203,12 @@ int sizePIXEL( PIXEL &pixel )
     return 1;
   } 
   else {
-    if (HEADER.DXT == 0) { 
+    if (HEADER.dxtType == 0) { 
       return 8; 
+    }
+    else
+    if (HEADER.dxtType > 0 && HEADER.dxtType < 5 ) { 
+      return 16; 
     }
     else {
     return (HEADER.RSB_BIT_INFO.red_bits + 
@@ -207,7 +227,7 @@ typedef struct (int arraySize) {
   PIXEL array[arraySize] <optimize=false>;
 } PIXEL_ARRAY;
 
-if (HEADER.DXT == 0) { 
+if (HEADER.dxtType >= 0 && HEADER.dxtType < 5) { 
   PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height/16) <name="Pixel Array (DXT compression)", optimize=false>;
 }
 else {
@@ -234,9 +254,22 @@ if ((HEADER.version == 0) & (!type1)) {
 
   PIXEL_ARRAY2 PixelArray(HEADER.width*HEADER.height) <name="Pixel Array 24">;
 } 
+
+typedef struct {
+  struct {
+    local int height = HEADER.height, width = HEADER.width;
+  } variables <hidden=true>;
+  for (i = 0; i < RSB_PROPERTIES.MapsCount; ++i)
+    {
+       variables.height = variables.height/2; 
+       variables.width = variables.width/2;
+       PIXEL_ARRAY MipMapArray(variables.height*variables.width) <name="Mip Map">;      
+    };
+} MIP_MAPS <name="MipMaps">;
+
 if (HEADER.version > 2) {    
     struct{
-       if (HEADER.version > 5) { 
+       if ((HEADER.version > 5) && (HEADER.version < 10)) { 
          UINT SurfaceChannelsCount; // 
 
        if (SurfaceChannelsCount > 0) {            
@@ -249,6 +282,12 @@ if (HEADER.version > 2) {
            //char 8BIM[5]; 
          };
        }; 
+      
+      if (HEADER.version > 9) {
+         UINT Count;
+         UINT MN[Count];
+         UINT MN;
+       };
 
        BOOL AlphaBlending <name="AlphaBlending", comment="yes - use alpha channel">;
        BOOL AlphaTesting <name="AlphaTesting">;
@@ -310,16 +349,9 @@ if (HEADER.version > 2) {
        };      
     } RSB_PROPERTIES <name="Texture Properties">;
 
-  if (RSB_PROPERTIES.MapsCount > 0) {
-     
-    struct {
-      local int height = HEADER.height, width = HEADER.width;
-      for (i = 0; i < RSB_PROPERTIES.MapsCount; ++i)
-      {
-        height = height/2; 
-        width = width/2;
-        PIXEL_ARRAY MipMapArray(height*width) <name="MipMap">;      
-      };
-     } MipMaps <name="Mip Maps">;
+  if (RSB_PROPERTIES.MapsCount > 0) {     
+    MIP_MAPS MipMaps;
   };
-};  
+}; 
+
+ 
