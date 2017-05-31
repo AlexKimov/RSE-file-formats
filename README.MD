@@ -11,15 +11,16 @@
 | №     | Game | Year | Formats |
 | :--- | :-- | :------ | :------ |
 | 1 | Rainbow six Lockdown | 2005 | rsb |
-| 2 | The Sum of All Fears | 2002 | chr, map, pob, qob, rsb, anm, bnf  |
-| 3 | Ghost Recon | 2001 - 2003 | rsb  |
-| 4 | Rogue Spear | 1999 - 2001  | rsb |
-| 5 | Freedom First Resistance  | 2000  | rsb |
-| 6 | Bang Gunship Elite |  2000 | rsb  |
-| 7 | Shadow Watch  | 2000  | rsb  |
-| 8 | Force 21  | 1999  | rsb  |
-| 9 | Dominant Species  |  1998 | rsb  |
-| 10 | Rainbow six | 1998 |  rsb  |
+| 2 | Ghost Recon 2 | 2004 | xpr |
+| 3 | The Sum of All Fears | 2002 | chr, map, pob, qob, rsb, anm, bnf  |
+| 4 | Ghost Recon | 2001 - 2003 | rsb  |
+| 5 | Rogue Spear | 1999 - 2001  | rsb |
+| 6 | Freedom First Resistance  | 2000  | rsb |
+| 7 | Bang Gunship Elite |  2000 | rsb  |
+| 8 | Shadow Watch  | 2000  | rsb  |
+| 9 | Force 21  | 1999  | rsb  |
+| 10 | Dominant Species  |  1998 | rsb  |
+| 11 | Rainbow six | 1998 |  rsb  |
 
 ## Available file extensions (wip)
 
