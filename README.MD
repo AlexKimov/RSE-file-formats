@@ -6,7 +6,7 @@
 
 [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki).
 
-## Games formats
+## Games
 
 | №     | Game | Year | Formats |
 | :--- | :-- | :------ | :------ |
@@ -37,13 +37,14 @@
 
 ## Files description
 
-| File          | Description              | Game folder | Information | 
+| File          | Description              | Information | 
 | :-----------: | :----------------------- | :-- | :----------------------------------------------------------------------- |
-| .chr         | Character 3D model file. | Characters | Geometry data, textures, materials, character animation bones.           | 
-| .map         | Game level file          | Map | Geometry data, textures, materials, animation data, nodes, etc .|
-| .pob         | 3D dynamic objects file  | Model | Geometry data, textures, materials, animation data.                           |
-| .qob         | 3D static objects file   | Model | Geometry data, textures, materials.                                      |
-| .rsb         | Texture file             |  | Pixel data, texture properties.                                          |
-| .anm         | Animation file           | Motion | Destruction Animation for *.pob files.                                   |
-| .bnf         | Character animation file | Motion | Character animation data.                                                |
-| .sht         | Map collision file       | Map | Level collision data.                                                    |
+| .anm         | Animation file            | Animation data for the *.pob files.     |
+| .bnf         | Character animation file  | Character animation data.      |
+| .chr         | Character 3D model file.  | Geometry data, textures, materials, character animation bones.           | 
+| .map         | Game level file           | Geometry data, textures, materials, animation data, nodes, etc .|
+| .pob         | 3D dynamic objects file   | Geometry data, textures, materials, animation data.                           |
+| .qob         | 3D static objects file    | Geometry data, textures, materials.                                      |
+| .rsb         | Texture file               | Pixel data, texture properties.                                          |                              |
+| .sht         | Map collision file        | Level collision data.   |
+| .xpr         | Texture file  | |
