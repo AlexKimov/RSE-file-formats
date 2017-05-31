@@ -4,7 +4,7 @@
 //      File: RSB.bt
 //   Authors: Alexander Evdokimov
 //   Version: 0.8
-//   Purpose: Ghost Recon RSB file
+//   Purpose: Red storm bitmap (RSB) file
  
 //   History: 
 //   2017.05 v1.1 RSB with DXT1 compression and mipmaps added
@@ -24,6 +24,7 @@
 
 local uint type1 = 0; // 1 - some early RSE Games
 local int i;
+local int DXT = 0;
 
 typedef enum <ubyte> {
     no,
@@ -114,19 +115,28 @@ typedef enum <uint> {
  unset = 4294967295
 } SURFACE_TYPE ; 
 
+typedef struct {
+  UINT red_bits;
+  UINT green_bits;
+  UINT blue_bits;
+  UINT alpha_bits;
+} RSB_BIT_INFO;  
+
 struct {
   UINT version; // *.rsb file version
+  /* 
+    0 - 1 games released before Ghost Recon: 
+    Dominant Species, Bang Gunship Elite, Force 21, Shadow Watch, Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
+    0 - 9 Ghost Recon + addons (PC + consoles)), The Summ of All Fears
+    9 - 11 Rainbow Six LockDown.
+  */
+
   UINT width <name="Texture Width">; // texture width
   UINT height <name="Texture Height">; // texture height  
   if (version == 0)  {
     UINT Unknown;     
     if (type1) {
-      struct {
-         UINT red_bits;
-         UINT green_bits;
-         UINT blue_bits;
-         UINT alpha_bits;
-      } RSB_BIT_INFO;  
+      RSB_BIT_INFO BitInfo;  
     }  
   }
   else {
@@ -136,16 +146,14 @@ struct {
       BYTE mn2;
       BYTE mn3;
     }; 
-    struct {
-       UINT red_bits;
-       UINT green_bits;
-       UINT blue_bits;
-       UINT alpha_bits;
-    } RSB_BIT_INFO;
+    RSB_BIT_INFO BitInfo;  
     if (version >= 9) { 
       UINT mn; // 
       DXT_TYPE dxtType <name="DXT type">; // DXT compression type 0 - DXT1
-    };  
+      if ((dxtType >= 0) & (dxtType < 5)) {
+        DXT = 1;
+      };
+   };  
   }
 } HEADER <name="File Header">;
 
@@ -164,12 +172,23 @@ typedef struct {
     ubyte Blue  : 2 <name="Blue">;
   } 
   else {
-    if (HEADER.dxtType >= 0 && HEADER.dxtType < 5 ) {
-        struct {
-            for (i = 0; i < 16; ++i) {
-              ubyte AlphaIndex : 4 <name="Alpha Index">; 
-            };
-        } AlphaChannel <name="Alpha Channel Data">;
+    if (DXT == 1 ) {
+        if (HEADER.dxtType != 0) {
+          struct {
+            if (HEADER.dxtType < 3) {
+              for (i = 0; i < 16; ++i) {
+                ubyte AlphaIndex : 4 <name="Alpha Index">; 
+              }
+            }
+            else {
+               ubyte Alpha1;
+               ubyte Alpha2; 
+               for (i = 0; i < 16; ++i) {
+                ubyte AlphaIndex : 3 <name="Alpha Index">; 
+              } 
+            }            
+          } AlphaChannel <name="Alpha Channel Data">;
+        };
         struct {
           struct {
             ubyte Alpha : 5 <name="Alpha">; 
@@ -189,10 +208,20 @@ typedef struct {
         } COLOR_DATA <name="Color Data">;
     }
     else {
-      ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
-      ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
-      ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
-      ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">; 
+      if HEADER.RSB_BIT_INFO.alpha_bits + HEADER.RSB_BIT_INFO.red_bits + HEADER.RSB_BIT_INFO.green_bits + HEADER.RSB_BIT_INFO.blue_bits == 32) {
+       // ARGB order
+        ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
+        ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
+        ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
+        ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
+      } 
+      else {
+        // BGR order
+        ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
+        ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
+        ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
+        ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
+      };
     };
   };
 } PIXEL <name="Pixel", size=sizePIXEL>;
@@ -203,12 +232,14 @@ int sizePIXEL( PIXEL &pixel )
     return 1;
   } 
   else {
-    if (HEADER.dxtType == 0) { 
-      return 8; 
-    }
-    else
-    if (HEADER.dxtType > 0 && HEADER.dxtType < 5 ) { 
-      return 16; 
+    if (DXT == 1) { 
+      if (HEADER.dxtType == 0) { 
+        return 8; 
+      }
+      else
+     if (HEADER.dxtType > 0 && HEADER.dxtType < 5 ) { 
+        return 16; 
+      }
     }
     else {
     return (HEADER.RSB_BIT_INFO.red_bits + 
@@ -219,23 +250,17 @@ int sizePIXEL( PIXEL &pixel )
   }
 } 
 
-//typedef struct {    
-//    ubyte B : 1 <name="WhiteBlack">;
-//} BWPIXEL <name="Black and White Pixel">;
-
 typedef struct (int arraySize) {
   PIXEL array[arraySize] <optimize=false>;
 } PIXEL_ARRAY;
 
-if (HEADER.dxtType >= 0 && HEADER.dxtType < 5) { 
-  PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height/16) <name="Pixel Array (DXT compression)", optimize=false>;
-}
-else {
+if (DXT == 1) {
+    PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height/16) <name="Pixel Array (DXT compression)", optimize=false>;
+} else {
   PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <name="Pixel Array", optimize=false>;
 };
 
 if ((HEADER.version == 0) & (!type1)) { 
-
     struct {
        UINT red_bits;
        UINT green_bits;
@@ -272,6 +297,7 @@ if (HEADER.version > 2) {
        if ((HEADER.version > 5) && (HEADER.version < 10)) { 
          UINT SurfaceChannelsCount; // 
 
+       // surface channel section
        if (SurfaceChannelsCount > 0) {            
            UINT size;
            BYTE SurfaceChannelsData[size];
@@ -279,7 +305,6 @@ if (HEADER.version > 2) {
              BYTE DATA[30];
            } DataItem; 
            DataItem Array[SurfaceChannelsCount] <optimize=false>;  
-           //char 8BIM[5]; 
          };
        }; 
       
@@ -289,7 +314,7 @@ if (HEADER.version > 2) {
          UINT MN;
        };
 
-       BOOL AlphaBlending <name="AlphaBlending", comment="yes - use alpha channel">;
+       BOOL AlphaBlending <name="AlphaBlending", comment="">;
        BOOL AlphaTesting <name="AlphaTesting">;
        BOOL Sampling <name="Sampling">;
        BOOL Animation <name="Animation">;
@@ -332,8 +357,8 @@ if (HEADER.version > 2) {
        } ANIMATION <name="Animation">; 
 
        if (HEADER.version > 4) {        
-         UINT MapsCount;   // unused
-         UINT SubsamplingPriority;  // unused
+         UINT MapsCount;   
+         UINT SubsamplingPriority;  
        };
 
        BOOL Damaged <name="Damaged">;    
@@ -349,9 +374,11 @@ if (HEADER.version > 2) {
        };      
     } RSB_PROPERTIES <name="Texture Properties">;
 
-  if (RSB_PROPERTIES.MapsCount > 0) {     
-    MIP_MAPS MipMaps;
-  };
+  if (HEADER.version > 4) {
+    if (RSB_PROPERTIES.MapsCount > 0) {     
+      MIP_MAPS MipMaps;
+    }
+  }
 }; 
 
  
