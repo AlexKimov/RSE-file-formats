@@ -1,0 +1,188 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: RSB.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.8
+//   Purpose: Red storm XPR file
+
+//   History: 
+//   2017.05 v0.1 first release
+//------------------------------------------------
+
+  struct {    
+    local int size1 = 0, size2 = 0;
+    local float i = 0; 
+    local int width = 0, height = 0; 
+  } vars <hidden = true>;
+
+  BitfieldDisablePadding();
+
+  struct {
+    char XPRO[5]; // id
+    UINT Size <name="Size?">;
+    UINT16 B;
+    UINT16 C;
+    UINT D;
+    UINT E;
+    BYTE F[3];
+    BYTE TN;
+    BYTE Type; 
+    unsigned byte height: 4; 
+    unsigned byte width: 4; 
+    BYTE MipMapLevel <name="MipMapLevel">;
+  } HEADER <name="File Header">;
+
+  Printf("Type %d - DXT1\n", HEADER.Type);
+
+  BYTE BOffset[2020] <hidden=true>;
+
+  struct {
+    local int i = 0;
+    local int texelsize = 16;
+  } var <hidden = true>;
+
+
+  typedef struct {
+      ubyte Red   : 5 <name="Red">;
+      ubyte Green : 6 <name="Green">;
+      ubyte Blue  : 5 <name="Blue">; 
+  } COLOR <optimize=false>;
+
+  typedef struct {
+      for(var.i = 0; var.i < 16; var.i++ ) {
+        ubyte C: 2 <name="Pixel">;
+      }
+  } COLOR_INDICIES <optimize=false>;   
+
+  typedef struct { 
+    switch (HEADER.Type) { 
+      case 5: {
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies; 
+      }; break; // +
+      case 6: {
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies; 
+      }; break;
+      case 7: {
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies; 
+      }; break;
+      case 12: {
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies; 
+      }; break; // +
+      case 14: {
+        struct {
+           UINT64 A;
+        } Alpha;
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies; 
+      }; break; // +
+      case 15: { // DXT5
+        struct {
+           UINT64 A;
+        } Alpha;
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies;
+      }; break;
+      case 25: {
+        struct {
+           UINT64 A;
+        } Alpha;
+        COLOR color_0;
+        COLOR color_1;
+        COLOR_INDICIES ColorIndicies;
+      }; break;
+    }
+  } Texel <name="Texel",optimize=false>;
+
+  typedef struct (int arraySize) {
+    Texel array[arraySize] <optimize=false>;
+  } Texel_ARRAY;
+
+  struct {
+  switch (HEADER.Size) {
+    case 16: vars.width = 32; vars.height = 32;  break;      // 8*2
+    case 24: vars.width = 64; vars.height = 64;  break;      // 8*3
+    case 32: vars.width = 64; vars.height = 64;  break;      // 8*4
+
+    case 40: vars.width = 128; vars.height = 64;  break;     // 8*5 ???
+
+    case 56: vars.width = 128; vars.height = 128;  break;     // 8*6
+    case 72: vars.width = 128; vars.height = 128;  break;    // 8*9 18kb
+
+    case 80: vars.width = 128; vars.height = 128;  break;    // 8*9 20kb
+
+    case 96: vars.width = 128; vars.height = 128;  break;    // 8*12 24kb
+
+    case 136: vars.width = 128; vars.height = 128;  break;    // 8*17
+    case 184: vars.width = 128; vars.height = 128;  break;    // 8*23
+    case 264: vars.width = 128; vars.height = 128;  break;    // 8*33
+    case 352: vars.width = 128; vars.height = 128;  break;    // 8*44
+    case 520: vars.width = 128; vars.height = 128;  break;    // 8*65
+    case 696: vars.width = 128; vars.height = 128;  break;    // 8*87
+
+    case 1032: vars.width = 256; vars.height = 512; break;   // 8*129 
+
+    case 1040: vars.width = 512; vars.height = 1024; break;   // 8*129 
+
+    case 1096: {
+      vars.width = 512; vars.height = 512; 
+
+      break;   // 8*129 
+     };
+    case 1376: // 8*172
+     { 
+       if (HEADER.Type == 15) {
+         vars.width = 512; vars.height = 512;   
+       }
+       else {
+         vars.width = 512; vars.height = 1024;  
+       };
+       break; 
+     }
+    case 2056: vars.width = 1024; vars.height = 512; break;   // 8*172
+    case 2744: vars.width = 512; vars.height = 1024; break;   // 8*343
+    case 4104: vars.width = 1024; vars.height = 512; break;  // 8*513
+    case 5472: vars.width = 2048; vars.height = 1024; break; // 8*684 
+    case 6152: vars.width = 2048; vars.height = 1024; break; // 8*769 
+  };
+
+  Texel_ARRAY TexelArray(vars.width*vars.height/var.texelsize) <name="Pixel Array",optimize=false>;
+
+  Printf("Size %d*%d\n", vars.width, vars.height);
+  } IMAGE_DATA <name="Image data">;
+
+ if (HEADER.MipMapLevel > 0) {
+struct {
+    vars.size1 = vars.height/2;
+    vars.size2 = vars.width/2;
+    for( vars.i = HEADER.MipMapLevel - 1; vars.i >= 0; vars.i-- )
+      {
+       Printf("%d*%d\n", vars.size1, vars.size2);
+      
+      if (vars.size1*vars.size2 >= 16) {
+        Texel_ARRAY TexelArray(vars.size1*vars.size2/var.texelsize) <name="Pixel Array", optimize=false>;
+      } 
+      else {
+        Texel_ARRAY TexelArray(1) <name="Pixel Array", optimize=false>;
+      };
+      if (vars.size1 > 1) {
+        vars.size1 = vars.size1 - vars.size1/2;
+      }
+      if (vars.size2 > 1) {
+        vars.size2 = vars.size2 - vars.size2/2;
+      }
+      } 
+} MIP_MAPS <name="Mip Maps data">;
+  }
+
+  //BYTE EOffset[656] <hidden=true>;
