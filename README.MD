@@ -1,6 +1,6 @@
 ## About
 
-010 Editor file templates for the Tom Clancy's Ghost Recon (2001) PC and The Sum of all Fears (2002) games by Red Storm Entertainment. Current available file templates are listed below.
+010 Editor file templates for the games by Red Storm Entertainment. Current available file templates are listed below.
 
 ## File format specifications
 
