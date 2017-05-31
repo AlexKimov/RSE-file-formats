@@ -24,28 +24,14 @@
 
 ## Available file extensions (wip)
 
-| File        | File Name     | Progress     | Availability |
-| :---------: | :-----------: | :----------: | :----------: |
-| .anm        | ANM.bt        | **95%**      | yes          |
-| .bnf        | BNF.bt        | **95%**      | yes          |
-| .chr        | CHR.bt        | **95%**      | yes          |
-| .map        | MAP.bt        | **70%**      | yes          |
-| .pob        | POB.bt        | **90%**      | yes          |
-| .qob        | QOB.bt        | **95%**      | yes          |
-| .rsb        | RSB.bt        | **95%**      | yes          |
-| .xpr        | XPR.bt        | **75%**      | yes          |
-| .sht        | SHT.bt        | **0%**           | wip          | 
-
-## Files description
-
-| File          | Description              | Information | 
-| :-----------: | :-----------------------  | :----------------------------------------------------------------------- |
-| .anm         | Animation file            | Animation data for the *.pob files.     |
-| .bnf         | Character animation file  | Character animation data.      |
-| .chr         | Character 3D model file.  | Geometry data, textures, materials, character animation bones.           | 
-| .map         | Game level file           | Geometry data, textures, materials, animation data, nodes, etc .|
-| .pob         | 3D dynamic objects file   | Geometry data, textures, materials, animation data.                           |
-| .qob         | 3D static objects file    | Geometry data, textures, materials.                                      |
-| .rsb         | Texture file               | Pixel data, texture properties.                                          |                              |
-| .sht         | Map collision file        | Level collision data.   |
-| .xpr         | Texture file  | |
+| File        | File Name     | Progress     | Availability | Description |
+| :---------: | :-----------: | :----------: | :----------: | ----------: |
+| .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
+| .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
+| .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
+| .map        | MAP.bt        | **70%**      | yes          | Game level |
+| .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
+| .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
+| .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
+| .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
+| .sht        | SHT.bt        | **0%**           | wip          | Collision data |
