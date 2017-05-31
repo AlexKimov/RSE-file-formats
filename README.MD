@@ -25,7 +25,7 @@
 ## Available file extensions (wip)
 
 | File        | File Name     | Progress     | Availability | Description |
-| :---------: | :-----------: | :----------: | :----------: | ----------: |
+| :---------: | :-----------: | :----------: | :----------: | :----------: |
 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
 | .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
