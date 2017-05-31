@@ -6,18 +6,33 @@
 
 [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki).
 
+## Games formats
+
+| №     | Game | Year | Formats |
+| :--- | :-- | :------ | :------ |
+| 1 | Rainbow six Lockdown | 2005 | rsb |
+| 2 | The Sum of All Fears | 2002 | chr,map,pob,qob,rsb,anm,bnf  |
+| 3 | Ghost Recon | 2001 - 2003 | rsb  |
+| 4 | Rogue Spear | 1999 - 2001  | rsb |
+| 5 | Freedom First Resistance  | 2000  | rsb |
+| 6 | Bang Gunship Elite |  2000 | rsb  |
+| 7 | Shadow Watch  | 2000  | rsb  |
+| 8 | Force 21  | 1999  | rsb  |
+| 9 | Dominant Species  |  1998 |
+| 10 | Rainbow six | 1998 |  rsb  |
+
 ## Available file extensions (wip)
 
-| File         | File Name     | Progress     | Availability  |
-| :----------: | :-----------: | :----------: | :--------: |
-| .chr        | CHR.bt        | **95%**      | yes        |
-| .map        | MAP.bt        | **88%**          | yes        |
-| .pob        | POB.bt        | **92%**          | yes        |
-| .qob        | QOB.bt        | **92%**      | yes        |
-| .rsb        | RSB.bt        | **95%**      | yes        |
-| .anm        | ANM.bt        | **95%**      | yes        |
-| .bnf        | BNF.bt        | **95%**      | yes        |
-| .sht        | SHT.bt        | 0%           |          | 
+| File        | File Name     | Progress     | Availability |
+| :---------: | :-----------: | :----------: | :----------: |
+| .chr        | CHR.bt        | **95%**      | yes          |
+| .map        | MAP.bt        | **88%**      | yes          |
+| .pob        | POB.bt        | **92%**      | yes          |
+| .qob        | QOB.bt        | **92%**      | yes          |
+| .rsb        | RSB.bt        | **95%**      | yes          |
+| .anm        | ANM.bt        | **95%**      | yes          |
+| .bnf        | BNF.bt        | **95%**      | yes          |
+| .sht        | SHT.bt        | 0%           | wip          | 
 
 ## Files description
 
