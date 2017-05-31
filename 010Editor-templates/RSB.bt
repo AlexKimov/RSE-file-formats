@@ -16,10 +16,6 @@
 //      - speed optimization for pixel structure   
 //   2016.10 v0.6 initial release
 //
-//   TODO:
-//      - testing
-//   Still not supported:
-//      - Surface property channels, mip-maps, dxt1 compression 
 //------------------------------------------------
 
 local uint type1 = 0; // 1 - some early RSE Games
