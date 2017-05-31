@@ -38,7 +38,7 @@
 ## Files description
 
 | File          | Description              | Information | 
-| :-----------: | :----------------------- | :-- | :----------------------------------------------------------------------- |
+| :-----------: | :-----------------------  | :----------------------------------------------------------------------- |
 | .anm         | Animation file            | Animation data for the *.pob files.     |
 | .bnf         | Character animation file  | Character animation data.      |
 | .chr         | Character 3D model file.  | Geometry data, textures, materials, character animation bones.           | 
