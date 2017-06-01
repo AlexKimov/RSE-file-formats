@@ -1,0 +1,26 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+
+UINT Count; 
+struct {
+  UINT Count; 
+  FLOAT A[75];
+}A[Count] <optimize=false>;
+
+UINT Length;
+char B[Length];
+UINT A;
+UINT B;
+UINT C;
+FLOAT A2[3];
