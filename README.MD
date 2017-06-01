@@ -24,20 +24,20 @@
 
 ## Available file extensions (wip)
 
-| File        | File Name     | Progress     | Availability | Description |
-| :---------: | :-----------: | :----------: | :----------: | :----------: |
-| .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
-| .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
-| .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
-| .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
-| .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
-| .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
-| .map        | MAP(gr).bt        | **70%**      | yes          | Ghost recon level |
-| .map        | MAP(rs).bt        | **50%**      | yes          | Rainbow six level |
-| .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
-| .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
-| .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
-| .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
-| .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
-| .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
-| .sht        | SHT.bt        | **0%**           | wip          | Collision data |
+| № | File        | File Name     | Progress     | Availability | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
+| 2 | .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
+| 3 | .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
+| 4 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
+| 5 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
+| 6 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
+| 7 | .map        | MAP(gr).bt        | **70%**      | yes          | Ghost recon level |
+| 8 | .map        | MAP(rs).bt        | **50%**      | yes          | Rainbow six level |
+| 9 | .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
+| 10 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
+| 11 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
+| 12 | .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
+| 13 | .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
+| 14 | .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
+| 15 | .sht        | SHT.bt        | **0%**           | wip          | Collision data |
