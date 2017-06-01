@@ -20,7 +20,7 @@
 | 8 | Shadow Watch  | 2000  | .rsb  |
 | 9 | Force 21  | 1999  | .rsb  |
 | 10 | Dominant Species  |  1998 | .rsb  |
-| 11 | Rainbow six | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map  |
+| 11 | Rainbow six | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
 ## Available file extensions (wip)
 
@@ -31,7 +31,9 @@
 | .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
-| .map        | MAP.bt        | **70%**      | yes          | Game level |
+| .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
+| .map        | MAP(gr).bt        | **70%**      | yes          | Ghost recon level |
+| .map        | MAP(rs).bt        | **50%**      | yes          | Rainbow six level |
 | .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
