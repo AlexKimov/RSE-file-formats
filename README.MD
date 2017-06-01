@@ -20,13 +20,14 @@
 | 8 | Shadow Watch  | 2000  | .rsb  |
 | 9 | Force 21  | 1999  | .rsb  |
 | 10 | Dominant Species  |  1998 | .rsb  |
-| 11 | Rainbow six | 1998 |  .rsb, .crp  |
+| 11 | Rainbow six | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map  |
 
 ## Available file extensions (wip)
 
 | File        | File Name     | Progress     | Availability | Description |
 | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
+| .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
 | .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
@@ -35,4 +36,6 @@
 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
 | .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
+| .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
+| .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
 | .sht        | SHT.bt        | **0%**           | wip          | Collision data |
