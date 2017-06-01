@@ -1,0 +1,61 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT16 Height <name="Height">; 
+  UINT16 Width <name="Width">;  
+  UBYTE MM; 
+  UBYTE MN; 
+  UBYTE MN; 
+  UBYTE MN; 
+  UINT16 Depth;
+  UBYTE UI; 
+  UINT16 UI; 
+  UINT16 TilesCount <name="Tiles">; 
+  UINT16 UI; 
+  UINT16 TilesCount <name="Tiles">; 
+  UINT16 UI;
+
+  UINT16 H <name="Tile height">; 
+  UINT16 W <name="Tile width">;  
+  UINT DataSize <name="Data size">; 
+} HEADER;
+
+BitfieldDisablePadding(); 
+
+struct {
+  typedef struct {
+    ubyte Red   : 5 <name="Red">;
+    ubyte Green : 6 <name="Green">;
+    ubyte Blue  : 5 <name="Blue">;
+    ubyte Alpha  : 0 <name="Blue">;
+  } PIXEL <name="Pixel">;  
+
+  PIXEL PixelArray[HEADER.Height*HEADER.Width];
+
+  struct {
+    local int height = HEADER.Height, width = HEADER.Width, i;
+  } variables <hidden=true>;
+
+  if (HEADER.MM == 0) {
+    while (variables.height >= 1 || variables.width >= 1)
+      {
+        variables.height = variables.height/2; 
+         variables.width = variables.width/2;
+    
+         struct {
+           PIXEL MipMapArray[variables.height*variables.width];      
+         } MM <name="Mip Map">;
+      };
+  };
+} PIXEl_DATA <name="Pixel data">;
