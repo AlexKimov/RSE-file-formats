@@ -1,14 +1,15 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: CRP.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Rainbow six CRP files
+// File Mask: *.crp
+//
 //   History: 
+//
+//   2017.06 v0.1 initial release
 //------------------------------------------------
 
 struct {
@@ -32,7 +33,7 @@ struct {
     } COORDINATES_ARRAY <name="Vertex cordinates array">;
   } BODYP <name="Body part">;
   BODYP BodyParts[18] <optimize=false>;
-} BODY <name="MN">;
+} BODY <name="Verticies">;
 
 //-------------------------------------------------
 
@@ -69,6 +70,7 @@ struct {
   UINT TextureCount <name="Number of textures">;
   TEXTURE Textures[TextureCount] <optimize=false>;
 } TEXTURES <name="Textures">;
+
 //-------------------------------------------------
 
 struct {
@@ -78,51 +80,51 @@ struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } INDEXIES1;  
+    } INDEXIES1 <name="Face index">;  
     struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } INDEXIES2;  
+    } INDEXIES2 <name="Texture coordinates index">;  
     UINT MN;
     UINT MN;
-  } TT;
-  TT TTA[Count] <optimize=false>;
-} TC <name="Indixies">;
+  } PINDEX <name="Index">;
+  PINDEX IArray[Count] <optimize=false>;
+} INDIXIES <name="Indixies">;
 
 //-------------------------------------------------
 struct {
   UINT Count <name="count">;
   typedef struct {
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-  } VV;
-  VV VVA[Count] <optimize=false>;
-} N <name="Verticies">;
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+  } MN;
+  MN NArray[Count] <optimize=false>;
+} N <name="MN">;
 
 //-------------------------------------------------
 struct {
-  UINT Count <name="count">;
+  UINT FaceCount <name="Polygon count">;
   typedef struct {
     struct {    
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-    } NORMALS;   
+      FLOAT U;
+      FLOAT V;
+    } TEX_COORDINATES;   
     struct {
-      FLOAT MN;
-      FLOAT MN;
-    } TEX_COORDINATES;
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+    } NORMALS;
     struct {
-      UINT MN;
-      UINT MN;
-      UINT MN;
+      UINT Red;
+      UINT Green;
+      UINT Blue;
+      UINT Alpha;
     } COLOR;
-    UINT MN;
-  } MM;
-  MM MMA[Count] <optimize=false>;
-} M <name="Normals">;
+  } Face <name="Polygon">;
+  Face FaceArray[FaceCount] <optimize=false>;
+} POLYGONS <name="Polygons">;
 
 //-------------------------------------------------
 
