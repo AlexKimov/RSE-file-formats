@@ -1,0 +1,30 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+  UINT BoneCount;
+  BYTE C[10];
+  typedef struct {
+    FLOAT M1[30];
+
+
+    struct {
+      UINT Length;
+      char MN[Length];
+    } BONENAME;
+    UINT Count;
+    BYTE E;
+    FLOAT A[11];
+  } Bone;
+
+  Bone BoneArray[BoneCount] <optimize=false, name="Bones">;
+  

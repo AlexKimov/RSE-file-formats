@@ -1,0 +1,31 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef struct {
+  UINT Count;
+
+  typedef struct {
+    BYTE A1;
+    BYTE B1;
+    BYTE C1;
+    BYTE D1;
+  } S;
+
+  typedef struct (int size) {
+    S A[size];
+  } S1;
+
+  S1 SA(Count) <optimize=false>;
+} D;
+
+D SD[21] <optimize=false>;
