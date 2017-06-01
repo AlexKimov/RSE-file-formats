@@ -1,0 +1,129 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  typedef struct {
+    UINT VertexCount <name="Vertex count">;
+  
+    struct {
+      typedef struct {
+        UINT A;
+      } INDEX;
+      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
+     } INDEX_ARRAY <name="Vertex index array">;
+
+    struct {
+      typedef struct {
+        FLOAT P1;
+        FLOAT P2;
+        FLOAT P3;
+      } COORDINATES;
+      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
+    } COORDINATES_ARRAY <name="Vertex cordinates array">;
+  } BODYP <name="Body part">;
+  BODYP BodyParts[18] <optimize=false>;
+} BODY <name="MN">;
+
+//-------------------------------------------------
+
+typedef struct {
+    UINT Length;
+    char Name[Length];   
+    struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+      UINT P4; 
+      BYTE P5;
+    } PROPERTIES;  
+} TEXTURE <name=textureName>;
+
+string textureName(TEXTURE & texture) {
+  return texture.Name;
+};
+
+struct {
+  FLOAT P;
+  UINT Length;
+  char Name[Length];
+  //
+  struct {
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+  } T_PROPERTIES; 
+  //
+  UINT TextureCount <name="Number of textures">;
+  TEXTURE Textures[TextureCount] <optimize=false>;
+} TEXTURES <name="Textures">;
+//-------------------------------------------------
+
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES1;  
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES2;  
+    UINT MN;
+    UINT MN;
+  } TT;
+  TT TTA[Count] <optimize=false>;
+} TC <name="Indixies">;
+
+//-------------------------------------------------
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+  } VV;
+  VV VVA[Count] <optimize=false>;
+} N <name="Verticies">;
+
+//-------------------------------------------------
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+    struct {    
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+    } NORMALS;   
+    struct {
+      FLOAT MN;
+      FLOAT MN;
+    } TEX_COORDINATES;
+    struct {
+      UINT MN;
+      UINT MN;
+      UINT MN;
+    } COLOR;
+    UINT MN;
+  } MM;
+  MM MMA[Count] <optimize=false>;
+} M <name="Normals">;
+
+//-------------------------------------------------
+
+  UINT Count <name="count">;
