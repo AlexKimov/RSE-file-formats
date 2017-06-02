@@ -10,11 +10,12 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-
-FLOAT A;
-UINT Length;
-char Path[Length];
-FLOAT AA[6];
+struct {
+   FLOAT A;
+ UINT Length;
+  char Path[Length];
+  FLOAT AA[6];
+} HEADER <name="Header">;
 
 //-------------------------------------
 
@@ -24,7 +25,7 @@ struct {
     UINT Length;
     char Name[Length];
   } Textures[Count] <optimize=false>;
-} TEXTURES;
+} TEXTURES <name="Textures">;
 
 //-------------------------------------
 
@@ -40,12 +41,12 @@ struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } INDEXIES2 <name="Texture coordinates index">;  
+    } INDEXES2 <name="Texture coordinates index">;  
     UINT MN;
     UINT MN;
   } PINDEX <name="Index">;
   PINDEX IArray[Count] <optimize=false>;
-} INDIXIES <name="Indixies">;
+} INDEXES <name="Indexes">;
 
 //-------------------------------------------------
 struct {
@@ -56,7 +57,7 @@ struct {
       FLOAT P3;
   } MN;
   MN NArray[Count] <optimize=false>;
-} N <name="MN">;
+} N <name="Texture coordinates">;
 
 //-------------------------------------------------
 struct {
@@ -103,4 +104,4 @@ struct {
   char Name[Length]; 
   FLOAT P[9];
   };
-} MN3;
+} MN3 <name="">;
