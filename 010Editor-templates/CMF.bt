@@ -55,9 +55,9 @@ struct {
       FLOAT P1;
       FLOAT P2;
       FLOAT P3;
-  } MN;
-  MN NArray[Count] <optimize=false>;
-} N <name="Texture coordinates">;
+  } VERTEX;
+  VERTEX VertexArray[Count] <optimize=false>;
+} VERTEXES <name="Vertex coordinates">;
 
 //-------------------------------------------------
 struct {
