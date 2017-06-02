@@ -90,7 +90,7 @@ struct {
     UINT MN;
   } PINDEX <name="Index">;
   PINDEX IArray[Count] <optimize=false>;
-} INDIXIES <name="Indixies">;
+} INDIXIES <name="Indexes">;
 
 //-------------------------------------------------
 struct {
