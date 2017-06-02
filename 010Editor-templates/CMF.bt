@@ -1,0 +1,106 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+FLOAT A;
+UINT Length;
+char Path[Length];
+FLOAT AA[6];
+
+//-------------------------------------
+
+struct {
+  UINT Count;
+  struct {
+    UINT Length;
+    char Name[Length];
+  } Textures[Count] <optimize=false>;
+} TEXTURES;
+
+//-------------------------------------
+
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES1 <name="Face index">;  
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES2 <name="Texture coordinates index">;  
+    UINT MN;
+    UINT MN;
+  } PINDEX <name="Index">;
+  PINDEX IArray[Count] <optimize=false>;
+} INDIXIES <name="Indixies">;
+
+//-------------------------------------------------
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+  } MN;
+  MN NArray[Count] <optimize=false>;
+} N <name="MN">;
+
+//-------------------------------------------------
+struct {
+  UINT FaceCount <name="Polygon count">;
+  typedef struct {
+    struct {    
+      FLOAT U;
+      FLOAT V;
+    } TEX_COORDINATES;   
+    struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+    } NORMALS;
+    struct {
+      UINT Red;
+      UINT Green;
+      UINT Blue;
+      UINT Alpha;
+    } COLOR;
+  } Face <name="Polygon">;
+  Face FaceArray[FaceCount] <optimize=false>;
+} POLYGONS <name="Polygons">;
+
+//-------------------------------------------------
+
+struct {
+  UINT Count1;
+  if (Count1 == 1) {
+    UINT Count2;
+    struct {
+      UINT A;
+    } MN1[Count2] <optimize=false>;
+  };
+
+  UINT Count; 
+  struct {
+      UINT A;
+  } MN2[Count] <optimize=false>;
+
+  UINT Count; 
+  if (Count == 1) {
+  UINT Length;
+  char Name[Length]; 
+  FLOAT P[9];
+  };
+} MN3;
