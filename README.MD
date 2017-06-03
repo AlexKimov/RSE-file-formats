@@ -11,16 +11,17 @@
 | №     | Game | Platform | Year | Formats |
 | :--- | :-- | :------ | :------ | :------ |
 | 1 | Rainbow six Lockdown | PC | 2005 | .rsb |
-| 2 | Ghost Recon 2 | PC | 2004  | .xpr |
-| 3 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
-| 4 | Ghost Recon | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
-| 5 | Rogue Spear | PC |1999 - 2001  | .rsb |
-| 6 | Freedom First Resistance  | PC | 2000  | .rsb |
-| 7 | Bang Gunship Elite | PC | 2000 | .rsb  |
-| 8 | Shadow Watch  | PC | 2000  | .rsb  |
-| 9 | Force 21  | PC | 1999  | .r16  |
-| 10 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
-| 11 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
+| 2 | Ghost Recon 2 | XBOX | 2004  | .xpr |
+| 3 | Tom Clancy's Ghost Recon Island Thunder | XBOX | 2002  | .rsb |
+| 4 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
+| 5 | Ghost Recon (Desrt Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
+| 6 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
+| 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map |
+| 8 | Bang Gunship Elite | PC | 2000 | .rsb  |
+| 9 | Shadow Watch  | PC | 2000  | .rsb  |
+| 10 | Force 21  | PC | 1999  | .r16  |
+| 11 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
+| 12 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
 ## Available file extensions (wip)
 
@@ -35,11 +36,12 @@
 | 7 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
 | 8 | .map        | MAP(gr).bt        | **70%**      | yes          | Ghost recon level |
 | 9 | .map        | MAP(rs).bt        | **50%**      | yes          | Rainbow six level |
-| 10 | .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
-| 11 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
-| 12 | .r16        | R16.bt        | **85%**      | yes          | Texture file |
-| 13 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
-| 14 | .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
-| 15 | .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
-| 16 | .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
-| 17 | .sht        | SHT.bt        | **0%**           | wip          | Collision data |
+| 10 | .map        | MAP(rsp).bt        | **70%**      | yes          | Rogue Spear level |
+| 11 | .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
+| 12 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
+| 13 | .r16        | R16.bt        | **85%**      | yes          | Texture file |
+| 14 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
+| 15 | .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
+| 16 | .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
+| 17 | .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
+| 18 | .sht        | SHT.bt        | **0%**           | wip          | Collision data |
