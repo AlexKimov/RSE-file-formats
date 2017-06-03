@@ -1,0 +1,131 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: CRP.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Dominant Species CRP files
+// File Mask: *.crp
+//
+//   History: 
+//
+//   2017.06 v0.1 initial release
+//------------------------------------------------
+
+struct {
+  typedef struct {
+    UINT VertexCount <name="Vertex count">;
+  
+    struct {
+      typedef struct {
+        UINT A;
+      } INDEX;
+      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
+     } INDEX_ARRAY <name="Vertex index array">;
+
+    struct {
+      typedef struct {
+        FLOAT P1;
+        FLOAT P2;
+        FLOAT P3;
+      } COORDINATES;
+      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
+    } COORDINATES_ARRAY <name="Vertex cordinates array">;
+  } BODYP <name="Body part">;
+  BODYP BodyParts[22] <optimize=false>;
+} BODY <name="Verticies">;
+
+//-------------------------------------------------
+
+typedef struct {
+    UINT Length;
+    char Name[Length];   
+    struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+      UINT P4; 
+      BYTE P5;
+    } PROPERTIES;  
+} TEXTURE <name=textureName>;
+
+string textureName(TEXTURE & texture) {
+  return texture.Name;
+};
+
+struct {
+  FLOAT P;
+  UINT Length;
+  char Name[Length];
+  //
+  struct {
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+  } T_PROPERTIES; 
+  //
+  UINT TextureCount <name="Number of textures">;
+  TEXTURE Textures[TextureCount] <optimize=false>;
+} TEXTURES <name="Textures">;
+
+//-------------------------------------------------
+
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES1 <name="Face index">;  
+    struct {
+      UINT I1;
+      UINT I2;
+      UINT I3;
+    } INDEXIES2 <name="Texture coordinates index">;  
+    UINT MN;
+    UINT MN;
+  } PINDEX <name="Index">;
+  PINDEX IArray[Count] <optimize=false>;
+} INDIXIES <name="Indixies">;
+
+//-------------------------------------------------
+struct {
+  UINT Count <name="count">;
+  typedef struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+  } MN;
+  MN NArray[Count] <optimize=false>;
+} N <name="MN">;
+
+//-------------------------------------------------
+struct {
+  UINT FaceCount <name="Polygon count">;
+  typedef struct {
+    struct {    
+      FLOAT U;
+      FLOAT V;
+    } TEX_COORDINATES;   
+    struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+    } NORMALS;
+    struct {
+      UINT Red;
+      UINT Green;
+      UINT Blue;
+      UINT Alpha;
+    } COLOR;
+  } Face <name="Polygon">;
+  Face FaceArray[FaceCount] <optimize=false>;
+} POLYGONS <name="Polygons">;
+
+//-------------------------------------------------
+
+  UINT Count <name="count">;
