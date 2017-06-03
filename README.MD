@@ -33,15 +33,16 @@
 | 4 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
 | 5 | .cmf        | CMF.bt        | **50%**      | yes          | Character 3D model |
 | 6 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
-| 7 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
-| 8 | .map        | MAP(gr).bt        | **70%**      | yes          | Ghost recon level |
-| 9 | .map        | MAP(rs).bt        | **50%**      | yes          | Rainbow six level |
-| 10 | .map        | MAP(rsp).bt        | **70%**      | yes          | Rogue Spear level |
-| 11 | .pob        | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
-| 12 | .qob        | QOB.bt        | **95%**      | yes          | Static 3D objects |
-| 13 | .r16        | R16.bt        | **85%**      | yes          | Texture file |
-| 14 | .rsb        | RSB.bt        | **95%**      | yes          | Texture file |
-| 15 | .xpr        | XPR.bt        | **75%**      | yes          | Texture file |
-| 16 | .skl        | SKL.bt        | **10%**           | yes          | Skeletal animation data |
-| 17 | .sob        | SOB.bt        | **30%**           | yes          | Static 3D objects |
-| 18 | .sht        | SHT.bt        | **0%**           | wip          | Collision data |
+| 7 | .crp        | CRP(ds).bt    | **70%**      | yes          | Dominant Species's character 3D model |
+| 8 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
+| 9 | .map        | MAP(gr).bt    | **70%**      | yes          | Ghost recon level |
+| 10 | .map       | MAP(rs).bt    | **50%**      | yes          | Rainbow six level |
+| 11 | .map       | MAP(rsp).bt   | **70%**      | yes          | Rogue Spear level |
+| 12 | .pob       | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
+| 13 | .qob       | QOB.bt        | **95%**      | yes          | Static 3D objects |
+| 14 | .r16       | R16.bt        | **85%**      | yes          | Texture file |
+| 15 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
+| 16 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
+| 17 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
+| 18 | .sob       | SOB.bt        | **30%**      | yes          | Static 3D objects |
+| 19 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
