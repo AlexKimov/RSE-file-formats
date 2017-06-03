@@ -27,6 +27,29 @@ void Check(int value, int number, string str) {
   }; 
 };
 
+typedef struct {
+  struct { 
+    FLOAT x;        
+    FLOAT y;
+    FLOAT z;
+  } XAxis;
+  struct { 
+    FLOAT x;
+    FLOAT y;
+    FLOAT z;
+  } YAxis;
+  struct {
+    FLOAT x;
+    FLOAT y;
+    FLOAT z;
+  } ZAxis;
+  struct {
+     FLOAT Y;
+     FLOAT X;
+     FLOAT Z;
+  } Position;
+} TRANSFORMATION_MATRIX;  
+
 typedef enum <ubyte> {
   no,
   yes
@@ -188,36 +211,6 @@ string PPName(POLYGON_PROPERTIES &polygonproperties) {
   return "Name: " + polygonproperties.Name;
 } 
 
-typedef struct {
-    UINT Length;
-    char PointName[Length];
-    struct {
-      struct { 
-        FLOAT x;        
-        FLOAT y;
-        FLOAT z;
-      } XAXIS;
-       struct { 
-        FLOAT x;
-        FLOAT y;
-        FLOAT z;
-      } YAXIS;
-      struct {
-        FLOAT x;
-        FLOAT y;
-        FLOAT z;
-      } ZAXIS;
-      struct {
-        FLOAT Y;
-        FLOAT X;
-        FLOAT Z;
-      } POSITION;
-    } TRANSFORMATION_MATRIX;   
-} POINT <name=Point_Name>;
-
-string Point_Name (POINT &point) {
-  return "Name: " + point.PointName;
-};
 
 typedef struct {  
   struct { 
@@ -264,31 +257,7 @@ struct {
 struct {
   UINT Count;
   typedef struct {
-
   UINT MN;
-  
-  struct {
-     // BOOL mn;
-    //  BOOL UseDetailedDarkmap;
-    //  BOOL DetailTexture;
-     // UINT MaterialIndex;
-      //UINT Count;
-      //if (isTextured > 0) {
-     //   UINT TextureIndex;
-     //   if (DetailTexture == yes || isTextured > 1)  {
-     //      UINT DetailTextureIndex;
-    //    };
-    //  };
-     // struct {
-     //   UINT MN; // 1 
-     //   UINT SelfIlluminationMap;
-     //   UINT SpecularMap;
-     //   UINT BumpMap;
-    //    UINT ReflectionMap;
-     //   UINT MapCount;
-     // } MAP;
-   } PARAMETERS;
-
   struct {
     UINT FaceCount; 
     typedef struct {     
@@ -368,20 +337,7 @@ typedef struct (int arraySize) {
 
 OBJECT_DATA_ARRAY MAPObjectsDataArray(Count) <name="Objects data array">; 
 } OBJECTS_DATA <name="Objects data section">;
-  
-  // List of used taged HPs (3ds Max Helper Points) like special effects (e.g. water splashes), 
-  // dynamic grass (foliage setup)
-  struct {
-    UINT Count;  
-    //Check(MN, 0, "Points Count"); 
-    if (Count) {    
-       typedef struct(int arraySize) {
-       POINT array[arraySize] <optimize=false>;
-       } POINT_ARRAY;  
-       POINT_ARRAY MAPPointArray(Count) <name="Point array">;
-    }
-  } Points <name="Points section">;
-
+ 
   struct {
       UINT VerticiesCount;
       if (VerticiesCount > 0) {
@@ -413,43 +369,33 @@ OBJECT_DATA_ARRAY MAPObjectsDataArray(Count) <name="Objects data array">;
 
   // Objects tagging properties 
   struct {
-    UINT ObjectsCount;
+       UINT FCount;
+       typedef struct  {
+         UINT16 p1;
+         UINT16 p2;
+         UINT16 p3;
+         UINT16 FIndex;
+         UINT16 p1;
+         UINT16 p2;
+         UINT16 p3;
+         UINT16 FIndex;
+       } NRO_FACE_INDICIES <name="Face Indicies">;
+       typedef struct (int arraySize) {
+         NRO_FACE_INDICIES array[arraySize] <optimize=false>;
+       } NRO_FACE_INDICIES_ARRAY;  
+       NRO_FACE_INDICIES_ARRAY NROFaceIndiciesArray(FCount) <name="Face Indicies Array">;                 
+  } OBJECTST <name="Section">;
 
-    struct {   
-      UINT Count; // Rendered objects count (visible in game)
-      if (Count > 0) {     
-        typedef struct (int arraySize) {
-          POLYGON_PROPERTIES array[arraySize] <optimize=false>;
-        } POLYGON_PROPERTIES_ARRAY;       
-        POLYGON_PROPERTIES_ARRAY PolygonsPropArray(Count) <name="Object Array">;
-      };
-    } POLYGONS <name="Poligons tagging">; 
-
-    struct {
-      UINT Count; // // non-Rendered objects count (invisible in game)
-      if (Count > 0) {  
-          typedef struct {
-            POLYGON_PROPERTIES pproperties;
-            UINT FCount;
-            typedef struct  {
-              UINT16 p1;
-              UINT16 p2;
-              UINT16 p3;
-              UINT16 FIndex;
-            } NRO_FACE_INDICIES <name="Face Indicies">;
-            typedef struct (int arraySize) {
-              NRO_FACE_INDICIES array[arraySize] <optimize=false>;
-            } NRO_FACE_INDICIES_ARRAY;  
-            NRO_FACE_INDICIES_ARRAY NROFaceIndiciesArray(FCount) <name="Face Indicies Array">;       
-          } NON_REND_OBJECT <name="Object">;
-          
-          typedef struct (int arraySize) {
-            NON_REND_OBJECT NonRendArray[arraySize] <optimize=false>;
-          } NONREND_OBJECT_ARRAY;  
-          NONREND_OBJECT_ARRAY MAPNonRendObjectArray(Count) <name="Objects Array">;
-      };
-    } NONROBJECTS <name="Non-rendered objects section">; 
-  } OBJECTSTAGGING <name="Tagging section">;
+  UINT FFCount;
+  struct {
+    UINT Length;
+    char Text[Length];
+    UINT MN;  
+    UINT Count;  
+     struct  {
+     UINT16 p1;
+     } E_INDICIES[Count] <name="Indixes">;
+  } IND[FFCount] <optimize=false>;
 
 } GEOMETRY <name=ObjectName>;
 
@@ -482,14 +428,12 @@ struct {   //
  typedef struct {
     struct { 
       UINT SectionSize;
-      UINT mn; // 0
-      Check(mn, 0, "PortalList section header mn");
+      UINT ID; // 0
       struct {
          UINT Length;
         char Text[Length]; 
         UINT Value; // 2
       } VERSION_STRING;
-      Check(VERSION_STRING.Value, 2, "PortalList section header VersionString");
       struct {
         UINT Length;
         char Text[Length];   
@@ -505,8 +449,6 @@ struct {   //
       COORDINATES CoordinatesArray[VertexCount];      
       UINT RoomNumber;
       UINT OpositeRoomNumber; 
-      BYTE mn; // 0
-      Check(mn, 0, "PortalList section header mn");
     } PORTAL_PARAMS; 
   } PORTAL <name=PortalName>;
 
@@ -517,14 +459,7 @@ string PortalName(PORTAL &portal) {
 struct {
   struct { 
     UINT SectionSize;
-    UINT mn; //9
-    Check(mn, 9, "PortalList section header mn");
-    struct {
-      UINT Length;
-      char Text[Length]; 
-      UINT Value;  // 1
-    } VERSION_STRING;
-    Check(VERSION_STRING.Value, 1, "PortalList section header VersionString");
+    UINT ID; //9
     struct {
       UINT Length;
       char Text[Length];   
@@ -537,63 +472,6 @@ struct {
   PORTAL_ARRAY MAPPORTAL_ARRAY(Count) <name="Portal Array">;   
 } PORTALLIST <name="3. PortalList section">;
 
-//------------------------------------------------------------
-//  OccluderList Section
-//------------------------------------------------------------
-
-typedef struct {
-     struct { 
-        UINT SectionSize;
-        UINT mn;        
-        struct {
-          UINT Length;
-          char Text[Length]; 
-          UINT Value;
-        } VERSION_STRING;        
-        struct {
-          UINT Length;
-          char Text[Length];   
-        } OCCLUDER_NAME_STRING;
-     } HEADER <name="Occluder header">;        
-     BYTE mnm[2];
-     UINT mn;        
-     BYTE mnk[3];         
-     UINT VertexCount;
-     typedef struct {
-       FLOAT X;
-       FLOAT Y;
-       FLOAT Z;
-     } OCCLUDER_VERTEX;
-     OCCLUDER_VERTEX VertexArray[VertexCount];     
- } OCCLUDER <name=OccluderName>; 
-
-string OccluderName(OCCLUDER &occluder) {
-  return "Name: " + occluder.HEADER.OCCLUDER_NAME_STRING.Text;
-};
-
-struct {
-   struct {
-    UINT SectionSize;
-    UINT mn;
-    struct {
-      UINT Length;
-      char Text[Length];
-      UINT Value;
-    } VERSION_STRING;
-    struct  { 
-      UINT Length;
-      char Text[Length];
-    } OCCLUDERLIST_STRING;
-  } OCCLUDERLIST_HEADER <name="OccluderList section header">;
-  UINT Count;
-  if (Count > 0) {     
-      typedef struct(int arraySize) {
-        OCCLUDER array[arraySize] <optimize=false>;
-      } OCCLUDER_ARRAY;    
-      OCCLUDER_ARRAY OccluderArray(Count) <name="Occluder Array">;
-  };  
-} OccluderList <name="4. OccluderList section">;
-
 //----------------------------------------------------------------
 // LightList Section
 //---------------------------------------------------------------
@@ -601,23 +479,16 @@ struct {
 struct {
    struct {
     UINT SectionSize;
-    UINT mn;
-
-    struct {
-      UINT StringLength;
-      char String[StringLength];
-      UINT number;
-    } VersionString;
-
+    UINT ID;
     struct  { 
       UINT StringLength;
       char OccluderList[StringLength];
     } LightListString;
-  } LightListHeader <name="OccluderList section header">;
+  } LightListHeader <name="LightList section header">;
   
 
   UINT Count;
-
+  if (Count > 0) {
   struct {
     typedef struct {
       struct { 
@@ -698,544 +569,17 @@ struct {
     } LightsArray;
     LightsArray MAPLightsArray(Count);  
   } Lights;
+}; 
 } LightList <name="5. LightList section">;
-
-//----------------------------------------------------------------
-// VFogList Section
-//---------------------------------------------------------------
-
-struct {
-   struct {
-    UINT SectionSize;
-    UINT mn;
-    struct {
-      UINT Length;
-      char Text[Length];
-      UINT value;
-    } VERSION_STRING;
-    struct  { 
-      UINT Length;
-      char OccluderList[Length];
-    } FOGLIST_NAME_STRING;
-  } FOGLIST_HEADER <name="FogList section header">; 
-  UINT Count;
-} VFogList <name="6. VFogList section">;
 
 //----------------------------------------------------------------
 // ObjectList section
 //---------------------------------------------------------------
 
-typedef struct {
-
-  typedef struct { 
-    UINT SectionSize;
-    UINT MN;
-    struct {    
-        UINT Length; // 1
-        char Text[Length]; //
-        UINT Value;
-    } VERSION;  
-
-    struct {    
-        UINT Length; // 
-        char Text[Length]; //
-    } NAME_STRING;         
-  } FOHEADER;
-
-
-  typedef struct { 
-     struct { 
-        FLOAT x;        
-        FLOAT y;
-        FLOAT z;
-      } XAxis;
-       struct { 
-        FLOAT x;
-        FLOAT y;
-        FLOAT z;
-      } YAxis;
-      struct {
-        FLOAT x;
-        FLOAT y;
-        FLOAT z;
-      } ZAxis;
-      struct {
-        FLOAT Y;
-        FLOAT X;
-        FLOAT Z;
-      } Position;
-  } TRANSFORMATION_MATRIX2;
-  typedef struct {
-      UINT DynamicsType; // 2 - Pbomb (Parray)
-      FLOAT Duration;
-      FLOAT Strength;
-      FLOAT Range;
-      UINT ExplosionType; // 2 - Eponential
-
-      struct {
-        FLOAT X; // 0
-        FLOAT Y; // 0  
-        FLOAT Z; // 1 
-      } Position; 
-
-      FLOAT MN;
-      FLOAT MN;
-      FLOAT MN;
-
-      UINT BlastSymmetry; // 1 - cylindrical
-      FLOAT StartTime;   
-      FLOAT Chaos;  
-  } SPACE_WARPS;   
-        
-    struct {
-      BYTE A; 
-      UINT Y;
-      UINT SpawnOnDeath; // 1
-      FLOAT Z;
-      FLOAT Y;
-      FLOAT X;
-      FLOAT Z;
-      FLOAT Y;
-      BYTE X;
-      BYTE X;
-      UINT AA; 
-      BYTE MN; 
-    } HEADER;
-
-    UINT ParticleSystemType; // 0 - blizzard, 1 - snow, 2 - Spray, 3 - SuperSpray, 4 - PArray, 5 - PCloud
-    if (ParticleSystemType != 3) {
-      struct { 
-        UINT Length; // 
-        char Text[Length]; //
-      } Properties;
-    }   
- 
-    struct { 
-      FLOAT Width; // IconSize
-      FLOAT Length; // 
-      FLOAT Height; // 3D
-    } EMITTER_SIZE;
-    
-    struct { 
-      FLOAT ParticleSpeed; // Parray (units in sec) (Particle Motion Speed (units per frame) * 30)
-      FLOAT ParticleSpeedVariation; // %ParticleSpeed 
-    } PARTICLE_MOTION;
-    
-    struct {
-      FLOAT GrowFor; // Parray (Particle size Grow For / 30)     
-      FLOAT FadeFor; // Parray (Particle size Fade For / 30)
-    } PARTICLE_Size;
-    
-    struct {
-      FLOAT MN;
-      FLOAT MN;
-    } SOME;
-    
-    struct {
-      FLOAT Life;
-      FLOAT LifeVariation; 
-    } PARTICLE_TIMING;
-    
-    struct{
-      FLOAT ParticleSize;
-      FLOAT ParticleSizeVariation;
-    } PARTICLE_SIZE;
-    
-    struct {
-      FLOAT UseRate; // * 3
-      UINT UseTotal;
-    } PARTICLE_QUANTITY;
-    
-    struct {
-      UINT SpinAxisControlType; // 0 - Random, 2- user defined
-      FLOAT XAxis;
-      FLOAT YAxis;
-      FLOAT ZAxis;
-      FLOAT Variation;
-    } SpinAxisControl ;
-    
-    FLOAT MN; // 1  
-    FLOAT MN; // 0
-    // 
-    struct {
-      FLOAT OffAxis;
-      FLOAT Spread;
-      FLOAT OffPlane;
-      FLOAT Spread;
-    } PARTICLE_FORMATION;
-    //
-    struct {        
-      FLOAT GrowFor;
-      FLOAT FadeFor;
-    } ParticleSize2;
-    
-    FLOAT MN;
-    FLOAT MN;    
-    UINT MN;     
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-        
-    struct {
-      FLOAT SpinTime;
-      FLOAT SpinTimeVariation;
-      FLOAT Phase;
-      FLOAT PhaseVariation;
-    } SpinSpeedControls;
-    
-    UINT particleType; // 2 - object fragments
-    
-    UINT SpawnType; // 2 instanced geometry
-    struct {
-      UINT Spawns;
-      UINT Spawns;
-      FLOAT Spawn_Affects;
-    } SPAWN_EFFECTS; 
-    
-    FLOAT MN; // time
-    
-    struct {
-      FLOAT EmiStart; // time    
-      FLOAT EmiStop; // time
-    } PARTICLE_TIMING;
-    
-    UINT MN;
-    struct {
-        UINT UseTotal; // * PercentageOfParticles
-    } PARTICLE_QUANTITY;
-    BYTE isTextured; 
-    if (isTextured) {
-          UINT Length;   
-          char TextureName[Length];
-    } 
-    if (particleType == 2) {
-         
-      typedef struct {
-        struct {
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-            FLOAT MN; 
-            FLOAT MN;  
-            FLOAT MN; 
-         } Some;
-             UINT Count;
-         FOHEADER F1;
-         struct {
-              UINT Length;  
-              char Text[Length];  
-         } ObjectProperties;   
-         struct { 
-             struct { 
-                FLOAT x;        
-                FLOAT y;
-                FLOAT z;
-              } XAxis;
-               struct { 
-                FLOAT x;
-                FLOAT y;
-                FLOAT z;
-              } YAxis;
-              struct {
-                FLOAT x;
-                FLOAT y;
-                FLOAT z;
-              } ZAxis;
-              struct {
-                FLOAT Y;
-                FLOAT X;
-                FLOAT Z;
-              } Position;
-          } TRANSFORMATION_MATRIX;
-         UINT Count; 
-         FOHEADER F2;
-         BYTE A;
-      } FRAGMENT <name="Fragment object">;
-      struct { 
-        FRAGMENT frg[PARTICLE_QUANTITY.UseTotal] <optimize=false>;
-      } Array <name="Fragment object Array">;
-    }
-    else {
-      UINT A;
-      if (A > 0) {
-        SPACE_WARPS SpaceWarps;
-      }
-    }
-} PARTICLE_NODE_PROPERTIES;
-
-typedef struct {         
-   UINT Length;
-   char Name[Length];
-   FLOAT SwitchDist;
-} TREE_MODEL_NAME <name=TreeName>; 
-
-string TreeName(TREE_MODEL_NAME &tree ) {
-  return "(LOD)Model Name: " + tree.Name;
-};
-
-typedef struct {
-  struct { 
-      struct {  
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } point1;
-      struct { 
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } point2;
-  } FOREST_SQUARE;
-  UINT GroupsCount; 
-
-  typedef struct {
-   struct {
-      struct {  
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } point1;
-      struct { 
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } point2;
-    } FOREST_SQUARE;
-
-    UINT TreesCount;
-    typedef struct { 
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAxis;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAxis;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAxis;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } Position;
-        } TransformationMatrix;
-    
-        // -------------------------
-    
-        UINT LODModelNameCount;
-        if (LODModelNameCount > 2) { 
-           BYTE V[56];
-        };
-        //
-        TREE_MODEL_NAME Treename[LODModelNameCount] <optimize=false>;
-    } Tree ;
-    typedef struct(int arraySize) {
-      Tree array[arraySize] <optimize=false>;
-    } TREE_ARRAY <name="Tree array">;
-    TREE_ARRAY TreeArray(TreesCount) <optimize=false>;
-  } FOREST_ARRAY <name="Foliage">;
-  FOREST_ARRAY ForestArray[GroupsCount] <optimize=false>;
-} FOREST_NODE_PROPERTIES;
-
-typedef struct {
-    struct {
-
-      UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
-      UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
-      UINT n3;
-      FLOAT n4; 
-      UINT16 n5;
-      UINT n6; 
-      UINT16 n7; 
-      UINT n8;  
-      BYTE n9;
-      BYTE n10; 
-      UBYTE A;     
-    } Prop;
-
-    UINT PKeysCount;
-    
-    typedef struct {
-        UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
-        if (ControllerType == 3) {
-            FLOAT n2; // 0
-            FLOAT Time;
-            FLOAT X;          
-            FLOAT Y;
-            FLOAT Z;  
-        }
-        else {
-            FLOAT n2; // 0
-            FLOAT Time;
-            FLOAT X;          
-            FLOAT Y;
-            FLOAT Z; 
-
-            FLOAT Tension;  
-            FLOAT Contunioty;
-            FLOAT Bias;         
-        }  
-    } PositionKey;   
-
-    typedef struct (int arraySize) {
-      PositionKey array[arraySize] <optimize=false>;
-    } PositionKeysArray; 
-
-     PositionKeysArray POBPositionKeysArray(PKeysCount);
-
-    UINT RKeysCount;
-    typedef struct {
-        UINT ControllerType; // 4 - Linear Rotation
-        if (ControllerType == 4) {
-            UINT n2; // 0
-            FLOAT Time;
-            UINT MN;        
-            UINT MN;
-            UINT MN; 
-            FLOAT X;          
-            FLOAT Y;
-            FLOAT Z; 
-            FLOAT Angel;
-        }
-    } RotationKey;
-
-    typedef struct (int arraySize) {
-      RotationKey array[arraySize] <optimize=false>;
-    } RotationKeysArray; 
-
-     RotationKeysArray POBRotationKeysArray(RKeysCount);
- } ANIMATION_NODE_PROPERTIES;  
-
-void NodesTree(UINT NodeCount, int rootnode)
-{   
-  typedef struct (int rootnode) {
-
-      if (rootnode) {
-        struct {
-          UINT SectionSize;
-          UINT MN;
-          struct {    
-             UINT Length; // 
-            char Text[Length]; //
-            UINT Value;
-          } VERSION;  
-          struct {
-            UINT Length; // 
-            char Text[Length]; // 
-          } NAME_STRING;
-         } HEADER <name="Root node header">; 
-      }; 
-
-      struct { 
-        UINT SectionSize;
-        UINT MN;
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-            UINT Value;
-        } VERSION;  
-    
-        struct {    
-            UINT Length; // 
-            char Text[Length]; //
-        } NAME_STRING;         
-      } HEADER <name="Header">;
-    
-      if (HEADER.SectionSize == 1) { 
-        BYTE MM; //0
-      }      
-      else {
-        if (HEADER.MN != 51) {   
-            struct {
-              UINT Length; // 
-              char Text[Length]; // 
-            } ObjectProperties;   
-        };
-        struct {
-          struct { 
-            FLOAT x;        
-            FLOAT y;
-            FLOAT z;
-          } XAxis;
-           struct { 
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } YAxis;
-          struct {
-            FLOAT x;
-            FLOAT y;
-            FLOAT z;
-          } ZAxis;
-          struct {
-            FLOAT Y;
-            FLOAT X;
-            FLOAT Z;
-          } Position;
-        } TransformationMatrix;
-
-      if (HEADER.MN == 51) {
-        PARTICLE_NODE_PROPERTIES particlenode <name="Particle node properties">;
-      }
-      else   
-      if (HEADER.MN == 50) { 
-        ANIMATION_NODE_PROPERTIES animation  <name="Animation node properties">;
-      }
-      else   
-      if (HEADER.MN == 52) { 
-        FOREST_NODE_PROPERTIES forest <name="Forest node properties">;
-      };  
-     
-      UINT SubeNodeCount;
-      if (SubeNodeCount > 0) {
-        NodesTree(SubeNodeCount, 0);
-      }
-     };
-
-  } NODE <name=NodeName>;
-  typedef struct (int arraySize, int rootnode) {
-    NODE array(rootnode)[arraySize] <optimize=false>;
-  } NODE_ARRAY;         
-  NODE_ARRAY MAPNodesArray(NodeCount, rootnode) <name="Child nodes">;
-};
-
-string NodeName(NODE &node) {
-    local string NodeType;
-    switch (node.HEADER.MN) {
-         case 46: NodeType = "Empty"; break;
-         case 47: NodeType = "Group"; break;
-         case 50: NodeType = "Animation"; break;
-         case 51: NodeType = "Particle"; break;
-         case 52: NodeType = "Forest"; break;
-         case 53: NodeType = "Light"; break;
-    };
-    return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
-}  
-
 struct {
   struct { 
     UINT SectionSize;
-    UINT MN;
-    struct {    
-       UINT Length; // 
-       char Text[Length]; //
-      UINT Value;
-    } VERSION; 
+    UINT ID;
     struct {
       UINT Length; // 
       char Text[Length]; // 
@@ -1243,11 +587,69 @@ struct {
   } HEADER <name="ObjectList section header">;  
 
   struct {
-    UINT NodeCount; 
-    if (NodeCount > 0) {
-        NodesTree(NodeCount, 1);
-    };
-  } NODE_TREE <name="Nodes Tree">;
+    UINT ObjectCount; 
+    struct {
+
+      if (ObjectCount > 0) {
+
+        struct { 
+          UINT SectionSize;
+          UINT ID;
+          struct {
+          UINT Length;
+            char String[Length];
+            UINT Value;
+          } VERSION_STRING;
+          struct {
+            UINT Length; // 
+            char Text[Length]; // 
+          } STRING <name="Name">;
+          struct {
+            UINT Length; // 
+            char Text[Length]; // 
+          } STRING <name="Name">;
+        } HEADER <name="Header">;  
+
+        TRANSFORMATION_MATRIX TM; 
+
+        switch (HEADER.ID) {
+          case 20: {
+            struct {
+              UINT Length; // 
+              char Text[Length]; // 
+            } STRING <name="Name">;         
+          }; break;
+          case 16: {
+            TRANSFORMATION_MATRIX TM; 
+
+           struct {
+             UINT Length; // 
+             char Text[Length]; // 
+          } STRING <name="Name">;
+          UINT A;
+          struct {
+             UINT Length; // 
+             char Text[Length]; // 
+          } P[12] <optimize=false, name="Name">;      
+
+          UINT Count;
+          struct {
+             UINT Length; // 
+             char Text[Length]; // 
+          } Pr[Count] <optimize=false, name="Name">;
+          FLOAT F[4];
+          struct {
+             UINT Length; // 
+             char Text[Length]; // 
+          } Pr2[3] <optimize=false, name="Name">;
+          FLOAT F2[5];
+          }; break;
+        }; 
+
+      };
+
+    } OBJECTS[ObjectCount] <optimize=false, name="Objects array">;
+  } NODE_TREE <name="Objects">;
 } OBJECTLIST <name="7. ObjectList section">;
 
 //----------------------------------------------------------------
@@ -1268,8 +670,10 @@ typedef struct {
         } ROOMNAME_STRING;
     } HEADER ;
     
-    BYTE MM; // 0
-    UINT Mn; // 0
+    BYTE MM1; // 0
+    BYTE MM2; // 0
+    BYTE MM3; // 0
+    if (MM1 == 0) BYTE MM4;
     UINT ShermanLevelCount; 
 
     typedef struct {
@@ -1279,28 +683,7 @@ typedef struct {
         } LevelNameString;
         UINT ACount;
         typedef struct {
-            struct {
-              struct { 
-                FLOAT x;        
-                FLOAT y;
-                FLOAT z;
-              } XAxis;
-               struct { 
-                FLOAT x;
-                FLOAT y;
-                FLOAT z;
-              } YAxis;
-              struct {
-                FLOAT x;
-                FLOAT y;
-                FLOAT z;
-              } ZAxis;
-              struct {
-                FLOAT Y;
-                FLOAT X;
-                FLOAT Z;
-              } Position;
-            } TransformationMatrix;  
+            TRANSFORMATION_MATRIX TM;  
             struct {
                 FLOAT X;
                 FLOAT Y;
@@ -1328,7 +711,6 @@ typedef struct {
       UINT mn;  //0
     } some;
     some s[A];
-    UINT mn; //0
 } ROOM <name=RoomName>;
 
 string RoomName(ROOM &room) {
@@ -1353,9 +735,7 @@ struct {
   } ROOMARRAY <name="Rooms array">;
 
 } ROOMLIST <name="8. RoomList section">;
-//
-//
-//
+
 ////----------------------------------------------------------------
 //// TransitionList section
 ////---------------------------------------------------------------
@@ -1430,3 +810,8 @@ struct {
     Arr arv[Count] <optimize=false>; 
   };
 } PlanningLevelList <name="10. PlanningLevelList section">;
+
+struct {
+    UINT Length; // 
+    char Text[Length]; // BeginMapv4.0
+} ENDMAP_STRING <name="File END">;
