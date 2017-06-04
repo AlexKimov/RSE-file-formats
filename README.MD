@@ -16,10 +16,10 @@
 | 4 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 5 | Ghost Recon (Desrt Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 6 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
-| 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map |
+| 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map, .sob |
 | 8 | Bang Gunship Elite | PC | 2000 | .rsb  |
-| 9 | Shadow Watch  | PC | 2000  | .rsb  |
-| 10 | Force 21  | PC | 1999  | .r16  |
+| 9 | Shadow Watch  | PC | 2000  | .r16  |
+| 10 | Force 21  | PC | 1999  | .rsb  |
 | 11 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
 | 12 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
@@ -44,5 +44,5 @@
 | 15 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
 | 16 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
 | 17 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
-| 18 | .sob       | SOB.bt        | **30%**      | yes          | Static 3D objects |
+| 18 | .sob       | SOB.bt        | **40%**      | yes          | Static 3D objects |
 | 19 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
