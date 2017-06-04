@@ -41,8 +41,9 @@
 | 12 | .pob       | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
 | 13 | .qob       | QOB.bt        | **95%**      | yes          | Static 3D objects |
 | 14 | .r16       | R16.bt        | **85%**      | yes          | Texture file |
-| 15 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
-| 16 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
+| 15 | .rob       | ROB.bt        | **70%**      | yes          | 3D objects |
+| 16 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
 | 17 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
 | 18 | .sob       | SOB.bt        | **40%**      | yes          | Static 3D objects |
-| 19 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
+| 20 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
+| 21 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
