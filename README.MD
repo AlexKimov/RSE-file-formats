@@ -14,9 +14,9 @@
 | 2 | Ghost Recon 2 | XBOX | 2004  | .xpr |
 | 3 | Tom Clancy's Ghost Recon Island Thunder | XBOX | 2002  | .rsb |
 | 4 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
-| 5 | Ghost Recon (Desrt Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
+| 5 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 6 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
-| 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map, .sob |
+| 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
 | 8 | Bang Gunship Elite | PC | 2000 | .rsb  |
 | 9 | Shadow Watch  | PC | 2000  | .r16  |
 | 10 | Force 21  | PC | 1999  | .rsb  |
