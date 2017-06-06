@@ -33,20 +33,25 @@ struct {
 
 BitfieldDisablePadding(); 
 
-struct {
-  typedef struct {
-    ubyte Red   : 5 <name="Red">;
-    ubyte Green : 6 <name="Green">;
+typedef struct {
     ubyte Blue  : 5 <name="Blue">;
-    ubyte Alpha  : 0 <name="Blue">;
-  } PIXEL <name="Pixel">;  
+    ubyte Green : 5 <name="Green">;
+    ubyte Red   : 5 <name="Red">;
+    ubyte Alpha : 1 <name="Blue">;
+} PIXEL <name="Pixel",size=pixelSize>;  
 
-  PIXEL PixelArray[HEADER.Height*HEADER.Width];
+int pixelSize(PIXEL &pixel) {
+  return 2;
+}
 
+struct {
+  PIXEL PixelArray[HEADER.Height*HEADER.Width] <optimize=false>;
+} PIXEL_DATA <name="Pixel data">;
+ 
+struct {
   struct {
     local int height = HEADER.Height, width = HEADER.Width, i;
   } variables <hidden=true>;
-
   if (HEADER.MM == 0) {
     while (variables.height >= 1 || variables.width >= 1)
       {
@@ -54,8 +59,8 @@ struct {
          variables.width = variables.width/2;
     
          struct {
-           PIXEL MipMapArray[variables.height*variables.width];      
+           PIXEL MipMapArray[variables.height*variables.width] <optimize=false>;      
          } MM <name="Mip Map">;
       };
   };
-} PIXEl_DATA <name="Pixel data">;
+} MM_DATA <name="Mip Mapping">;
