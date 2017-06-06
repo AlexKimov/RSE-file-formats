@@ -121,14 +121,14 @@
 
     case 80: vars.width = 128; vars.height = 128;  break;    // 8*9 20kb
 
-    case 96: vars.width = 128; vars.height = 128;  break;    // 8*12 24kb
+    case 96: vars.width = 256; vars.height = 128;  break;    // 8*12 24kb
 
-    case 136: vars.width = 128; vars.height = 128;  break;    // 8*17
-    case 184: vars.width = 128; vars.height = 128;  break;    // 8*23
+    case 136: vars.width = 256; vars.height = 128;  break;    // 8*17
+    case 184: vars.width = 256; vars.height = 128;  break;    // 8*23
     case 264: vars.width = 128; vars.height = 128;  break;    // 8*33
-    case 352: vars.width = 128; vars.height = 128;  break;    // 8*44
+    case 352: vars.width = 256; vars.height = 128;  break;    // 8*44
     case 520: vars.width = 128; vars.height = 128;  break;    // 8*65
-    case 696: vars.width = 128; vars.height = 128;  break;    // 8*87
+    case 696: vars.width = 512; vars.height = 512;  break;    // 8*87
 
     case 1032: vars.width = 256; vars.height = 512; break;   // 8*129 
 
@@ -149,10 +149,10 @@
        };
        break; 
      }
-    case 2056: vars.width = 1024; vars.height = 512; break;   // 8*172
-    case 2744: vars.width = 512; vars.height = 1024; break;   // 8*343
+    case 2056: vars.width = 1024; vars.height = 1024; break;   // 8*172
+    case 2744: vars.width = 512; vars.height = 512; break;   // 8*343
     case 4104: vars.width = 1024; vars.height = 512; break;  // 8*513
-    case 5472: vars.width = 2048; vars.height = 1024; break; // 8*684 
+    case 5472: vars.width = 1024; vars.height = 1024; break; // 8*684 
     case 6152: vars.width = 2048; vars.height = 1024; break; // 8*769 
   };
 
