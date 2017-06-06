@@ -1,0 +1,52 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+UINT Count1;
+
+struct {
+  UINT Count;
+  char Name[Count];
+
+  struct {
+    UINT Count;
+     struct {
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+      UINT B;
+      UINT B;
+      FLOAT A;
+      FLOAT A;
+       struct {
+       UINT Red;
+        UINT Green;
+        UINT Blue;
+         UINT Alpha;
+     } COLOR;
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+    } A[Count];
+  } F;
+
+  struct {
+    UINT Count;
+    struct {
+      UINT16 A;
+      UINT16 B;
+      UINT16 C;
+    } B[Count];
+  } E;
+} J[Count1] <optimize=false>;
+
+FLOAT I[6];

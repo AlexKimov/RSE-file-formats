@@ -1,0 +1,22 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+char GEE[4];
+
+UINT A;
+UINT B;
+UINT C[A];
+
+UINT Count;
+FLOAT G[10];
+UINT D[24];
