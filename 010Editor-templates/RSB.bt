@@ -204,19 +204,19 @@ typedef struct {
         } COLOR_DATA <name="Color Data">;
     }
     else {
-      if HEADER.RSB_BIT_INFO.alpha_bits + HEADER.RSB_BIT_INFO.red_bits + HEADER.RSB_BIT_INFO.green_bits + HEADER.RSB_BIT_INFO.blue_bits == 32) {
+      if (HEADER.BitInfo.alpha_bits + HEADER.BitInfo.red_bits + HEADER.BitInfo.green_bits + HEADER.BitInfo.blue_bits == 32) {
        // ARGB order
-        ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
-        ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
-        ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
-        ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
+        ubyte Alpha : HEADER.BitInfo.alpha_bits <name="Alpha">; 
+        ubyte Red   : HEADER.BitInfo.red_bits <name="Red">;
+        ubyte Green : HEADER.BitInfo.green_bits <name="Green">;
+        ubyte Blue  : HEADER.BitInfo.blue_bits <name="Blue">;
       } 
       else {
         // BGR order
-        ubyte Blue  : HEADER.RSB_BIT_INFO.blue_bits <name="Blue">;
-        ubyte Green : HEADER.RSB_BIT_INFO.green_bits <name="Green">;
-        ubyte Red   : HEADER.RSB_BIT_INFO.red_bits <name="Red">;
-        ubyte Alpha : HEADER.RSB_BIT_INFO.alpha_bits <name="Alpha">; 
+        ubyte Blue  : HEADER.BitInfo.blue_bits <name="Blue">;
+        ubyte Green : HEADER.BitInfo.green_bits <name="Green">;
+        ubyte Red   : HEADER.BitInfo.red_bits <name="Red">;
+        ubyte Alpha : HEADER.BitInfo.alpha_bits <name="Alpha">; 
       };
     };
   };
@@ -238,10 +238,10 @@ int sizePIXEL( PIXEL &pixel )
       }
     }
     else {
-    return (HEADER.RSB_BIT_INFO.red_bits + 
-            HEADER.RSB_BIT_INFO.green_bits + 
-            HEADER.RSB_BIT_INFO.blue_bits + 
-            HEADER.RSB_BIT_INFO.alpha_bits)/8;
+    return (HEADER.BitInfo.red_bits + 
+            HEADER.BitInfo.green_bits + 
+            HEADER.BitInfo.blue_bits + 
+            HEADER.BitInfo.alpha_bits)/8;
     }
   }
 } 
