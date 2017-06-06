@@ -11,7 +11,7 @@
 //   History: 
 //------------------------------------------------
 
-local UINT type = 1;
+local UINT type = 0;
 
 struct {
   UINT Length; // 
