@@ -187,14 +187,14 @@ typedef struct {
         };
         struct {
           struct {
-            ubyte Alpha : 5 <name="Alpha">; 
-            ubyte Red   : 6 <name="Red">;
-            ubyte Green : 5 <name="Green">; 
+            ubyte Red : 5 <name="Red">; 
+            ubyte Green   : 6 <name="Green">;
+            ubyte Blue : 5 <name="Blue">; 
            } Color1;     
           struct {
-            ubyte Alpha : 5 <name="Alpha">; 
-            ubyte Red   : 6 <name="Red">;
-            ubyte Green : 5 <name="Green">; 
+            ubyte Red : 5 <name="Red">; 
+            ubyte Green   : 6 <name="Green">;
+            ubyte Blue : 5 <name="Blue">; 
           } Color2;  
           struct {
             for (i = 0; i < 16; ++i) {
