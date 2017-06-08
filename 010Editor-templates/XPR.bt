@@ -1,7 +1,7 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: RSB.bt
+//      File: XPR.bt
 //   Authors: Alexander Evdokimov
 //   Version: 0.8
 //   Purpose: Red storm XPR file
@@ -14,6 +14,7 @@
     local float size1 = 0, size2 = 0;
     local int i = 0; 
     local int width = 0, height = 0; 
+    local int texelsize = 16;
   } vars <hidden = true>;
 
   BitfieldDisablePadding();
@@ -35,9 +36,13 @@
 
 
   switch (HEADER.Type) {
+    case 4: 
     case 5:
     case 6:
-    case 7:
+    case 7: 
+      vars.texelsize = 1; 
+      Printf("Type: B8G8R8A8"); 
+      break;
     case 12: Printf("Type: DXT1"); break;
     case 14: 
     case 15:
@@ -46,10 +51,12 @@
 
   BYTE BOffset[2020] <hidden=true>;
 
-  struct {
-    local int i = 0;
-    local int texelsize = 16;
-  } var <hidden = true>;
+  typedef struct {
+      ubyte Blue <name="Blue">; 
+      ubyte Green <name="Green">;
+      ubyte Red <name="Red">;
+      ubyte Alpha <name="Red">;    
+  } BGRA_PIXEl;
 
   typedef struct {
       ubyte Red   : 5 <name="Red">;
@@ -88,9 +95,10 @@
 
   typedef struct { 
     switch (HEADER.Type) { 
+      case 4:
       case 5: 
       case 6: 
-      case 7: 
+      case 7: BGRA_PIXEl bgraPixel; break;
       case 12: DXT1 dxt1; break; 
       case 14: 
       case 15:
@@ -99,19 +107,27 @@
   } TEXEL <name="Texel", optimize=false, size=texelSize>;
 
   int texelSize(TEXEL &texel) {
-    return (HEADER.Type <= 12 ? 8 : 16);
+     if (HEADER.Type == 12) 
+     return  8 ;
+     if (HEADER.Type > 12) 
+     return  16 ;
+     if (HEADER.Type == 6 || HEADER.Type == 7) 
+     return  4;
   };
 
   typedef struct (int arraySize) {
     TEXEL array[arraySize] <optimize=false>;
   } TEXEL_ARRAY;
-
+ 
+ //if (HEADER.Type >= 12)
  struct {
-    TEXEL_ARRAY TexelArray((1<<HEADER.width)*(1<<HEADER.height)/var.texelsize) <name="Pixel Array",optimize=false>;
+
+    TEXEL_ARRAY TexelArray((1<<HEADER.width)*(1<<HEADER.height)/vars.texelsize) <name="Pixel Array",optimize=false>;
  } IMAGE_DATA <name="Image data">;
  
- Printf("Size %d*%d\n", 1<<HEADER.width, 1<<HEADER.height);
+ Printf("Size %d*%d\n", (1<<HEADER.width), (1<<HEADER.height));
 
+ if (HEADER.Type >= 12)
  struct {
     vars.size1 = (1 << HEADER.height)/2;
     vars.size2 = (1 << HEADER.width)/2;
@@ -120,7 +136,7 @@
        Printf("MM: %d*%d\n", vars.size1, vars.size2);
       
       if (vars.size1*vars.size2 >= 16) {
-        TEXEL_ARRAY TexelArray(vars.size1*vars.size2/var.texelsize) <name="Image Data 16", optimize=false>;
+        TEXEL_ARRAY TexelArray(vars.size1*vars.size2/vars.texelsize) <name="Image Data 16", optimize=false>;
       } 
       else {
         TEXEL_ARRAY TexelArray(1) <name="Image Data", optimize=false>;
