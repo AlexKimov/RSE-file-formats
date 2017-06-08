@@ -153,9 +153,16 @@ struct {
   }
 } HEADER <name="File Header">;
 
+typedef struct{
+  ubyte Red    <name="Red">; 
+  ubyte Green  <name="Green">;
+  ubyte Blue   <name="Blue">;
+  ubyte Alpha   <name="Alpha">; 
+} PALLETE_COLOR;
+
 if (HEADER.version == 0) {   
   if (!type1) {
-    BYTE A[1024];
+    PALLETE_COLOR Pallete[256] <name="8-bit Pallete">;
   }
 };
 
@@ -163,15 +170,13 @@ BitfieldDisablePadding();
 
 typedef struct {   
   if ((HEADER.version == 0) & (!type1)) {  
-    ubyte Red   : 3 <name="Red">;
-    ubyte Green : 3 <name="Green">;
-    ubyte Blue  : 2 <name="Blue">;
+    ubyte Color;
   } 
   else {
     if (DXT == 1 ) {
-        if (HEADER.dxtType != 0) {
+        if (HEADER.dxtType != DXT1) {
           struct {
-            if (HEADER.dxtType < 3) {
+            if (HEADER.dxtType != DXT5) {
               for (i = 0; i < 16; ++i) {
                 ubyte AlphaIndex : 4 <name="Alpha Index">; 
               }
