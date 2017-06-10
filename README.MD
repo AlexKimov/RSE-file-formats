@@ -17,11 +17,10 @@
 | 5 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 6 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
 | 7 | Rogue Spear | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
-| 8 | Bang Gunship Elite | PC | 2000 | .rsb  |
-| 9 | Shadow Watch  | PC | 2000  | .r16  |
-| 10 | Force 21  | PC | 1999  | .rsb  |
-| 11 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
-| 12 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
+| 8 | Shadow Watch  | PC | 2000  | .r16  |
+| 9 | Force 21  | PC | 1999  | .rsb  |
+| 10 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
+| 11 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
 ## Available file extensions (wip)
 
