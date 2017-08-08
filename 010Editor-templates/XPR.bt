@@ -52,11 +52,18 @@
   BYTE BOffset[2020] <hidden=true>;
 
   typedef struct {
+      ubyte Blue: 5 <name="Blue">; 
+      ubyte Green: 6  <name="Green">;
+      ubyte Red: 5  <name="Red">;
+      ubyte Alpha: 0 <name="Red">;    
+  } BGRA16_PIXEl;
+
+  typedef struct {
       ubyte Blue <name="Blue">; 
       ubyte Green <name="Green">;
       ubyte Red <name="Red">;
       ubyte Alpha <name="Red">;    
-  } BGRA_PIXEl;
+  } BGRA32_PIXEl;
 
   typedef struct {
       ubyte Red   : 5 <name="Red">;
@@ -95,10 +102,10 @@
 
   typedef struct { 
     switch (HEADER.Type) { 
-      case 4:
-      case 5: 
+      case 4: 
+      case 5: BGRA16_PIXEl bgra16Pixel; break;
       case 6: 
-      case 7: BGRA_PIXEl bgraPixel; break;
+      case 7: BGRA32_PIXEl bgra32Pixel; break;
       case 12: DXT1 dxt1; break; 
       case 14: 
       case 15:
@@ -113,6 +120,8 @@
      return  16 ;
      if (HEADER.Type == 6 || HEADER.Type == 7) 
      return  4;
+     if (HEADER.Type == 4 || HEADER.Type == 5) 
+     return  2;
   };
 
   typedef struct (int arraySize) {
