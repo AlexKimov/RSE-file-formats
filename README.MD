@@ -22,7 +22,7 @@
 | 10 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
 | 11 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
-## Available file extensions (wip)
+## Available file templates (wip)
 
 | № | Extension       | File Name     | Progress     | Availability | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
