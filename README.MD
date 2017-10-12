@@ -24,7 +24,7 @@
 
 ## Available file extensions (wip)
 
-| № | File        | File Name     | Progress     | Availability | Description |
+| № | Extension       | File Name     | Progress     | Availability | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
 | 2 | .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
