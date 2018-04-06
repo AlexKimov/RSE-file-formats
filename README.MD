@@ -22,9 +22,9 @@
 | 10 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
 | 11 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
-## Available file extensions (wip)
+## Available file templates (wip)
 
-| № | File        | File Name     | Progress     | Availability | Description |
+| № | Format       | Template name     | Progress     | Availability | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
 | 2 | .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
