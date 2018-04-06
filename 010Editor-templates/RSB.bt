@@ -3,24 +3,25 @@
 //
 //      File: RSB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.8
+//   Version: 1.2
 //   Purpose: Red storm bitmap (RSB) file
  
 //   History: 
+//   2017.12 v1.2 fix RSB version 0 structures
 //   2017.05 v1.1 RSB with DXT1 compression and mipmaps added
-//   2017.05 v1.0 type1 variable added for the early rse games 
 //   2017.05 v0.9 RSB version 0 added
-//   2017.01 v0.8 95% ready release
+//   2017.01 v0.8 
 //      New: 
-//      - new structures, enums, names to the vars, 
+//      - new structures, enums, vars, 
 //      - speed optimization for pixel structure   
 //   2016.10 v0.6 initial release
 //
 //------------------------------------------------
 
-local uint type1 = 0; // 1 - some early RSE Games
-local int i;
-local int DXT = 0;
+struct {
+  local int height, width;
+  local int DXT = 0;
+} locals <hidden=true>;
 
 typedef enum <ubyte> {
     no,
@@ -29,9 +30,7 @@ typedef enum <ubyte> {
 
 typedef enum <uint> {
   DXT1,
-  DXT2,
-  DXT3,
-  DXT4,
+  DXT2, DXT3, DXT4,
   DXT5,
   none = 4294967295
 } DXT_TYPE; 
@@ -116,22 +115,22 @@ typedef struct {
   UINT green_bits;
   UINT blue_bits;
   UINT alpha_bits;
-} RSB_BIT_INFO;  
+} RSB_BIT_INFO <name="Bit Mask">;  
 
 struct {
   UINT version; // *.rsb file version
   /* 
     0 - 1 games released before Ghost Recon: 
-    Dominant Species, Bang Gunship Elite, Force 21, Shadow Watch, Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
+    Dominant Species, Bang Gunship Elite, Force 21, Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
     0 - 9 Ghost Recon + addons (PC + consoles)), The Summ of All Fears
     9 - 11 Rainbow Six LockDown.
   */
 
-  UINT width <name="Texture Width">; // texture width
-  UINT height <name="Texture Height">; // texture height  
+  UINT width <name="Texture Width">; // texture width (128-2048)
+  UINT height <name="Texture Height">; // texture height (128-2048) 
   if (version == 0)  {
-    UINT Unknown;     
-    if (type1) {
+    UINT Type;  // 8-bit image flag, 1 - it is 8-bit image in the file   
+    if (Type == 0) {
       RSB_BIT_INFO BitInfo;  
     }  
   }
@@ -147,7 +146,7 @@ struct {
       UINT mn; // 
       DXT_TYPE dxtType <name="DXT type">; // DXT compression type 0 - DXT1
       if ((dxtType >= 0) & (dxtType < 5)) {
-        DXT = 1;
+        locals.DXT = 1;
       };
    };  
   }
@@ -158,22 +157,24 @@ typedef struct{
   ubyte Green  <name="Green">;
   ubyte Blue   <name="Blue">;
   ubyte Alpha   <name="Alpha">; 
-} PALLETE_COLOR;
+} PALLETE_COLOR <name="Pallete Color">;
 
-if (HEADER.version == 0) {   
-  if (!type1) {
+if (HEADER.version == 0) {
+  if (HEADER.Type == 1) {   
     PALLETE_COLOR Pallete[256] <name="8-bit Pallete">;
-  }
+  };
 };
 
 BitfieldDisablePadding(); 
 
 typedef struct {   
-  if ((HEADER.version == 0) & (!type1)) {  
-    ubyte Color;
+  if (HEADER.version == 0) {
+    if (HEADER.Type == 1) { 
+      ubyte PalleteColor <name="Pallete Color">;
+    }
   } 
   else {
-    if (DXT == 1 ) {
+    if (locals.DXT == 1 ) {
         if (HEADER.dxtType != DXT1) {
           struct {
             if (HEADER.dxtType != DXT5) {
@@ -229,11 +230,13 @@ typedef struct {
 
 int sizePIXEL( PIXEL &pixel )
 {
-  if ((HEADER.version == 0) & (!type1)) {
-    return 1;
+  if ((HEADER.version == 0)) {
+    if (HEADER.Type == 1) {
+      return 1;
+    }
   } 
   else {
-    if (DXT == 1) { 
+    if (locals.DXT == 1) { 
       if (HEADER.dxtType == 0) { 
         return 8; 
       }
@@ -255,13 +258,14 @@ typedef struct (int arraySize) {
   PIXEL array[arraySize] <optimize=false>;
 } PIXEL_ARRAY;
 
-if (DXT == 1) {
+if (locals.DXT == 1) {
     PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height/16) <name="Pixel Array (DXT compression)", optimize=false>;
 } else {
   PIXEL_ARRAY PixelArray(HEADER.width*HEADER.height) <name="Pixel Array", optimize=false>;
 };
 
-if ((HEADER.version == 0) & (!type1)) { 
+if (HEADER.version == 0) { 
+if (HEADER.Type == 1) { 
     struct {
        UINT red_bits;
        UINT green_bits;
@@ -273,41 +277,58 @@ if ((HEADER.version == 0) & (!type1)) {
       ubyte Red   : RSB_BIT_INFO2.green_bits <name="Red">;
       ubyte Green : RSB_BIT_INFO2.blue_bits <name="Green">;
       ubyte Blue  : RSB_BIT_INFO2. alpha_bits <name="Blue">; 
-    } PIXEL2 <name="Pixel2", optimize=false>;
+    } PIXEL2 <name="Pixel", optimize=false>;
     typedef struct (int arraySize) {
       PIXEL2 array[arraySize] <optimize=false>;
     } PIXEL_ARRAY2;
 
-  PIXEL_ARRAY2 PixelArray(HEADER.width*HEADER.height) <name="Pixel Array 24">;
+  PIXEL_ARRAY2 PixelArray(HEADER.width*HEADER.height) <name="Pixel Array">;
 } 
+}
 
 typedef struct {
-  struct {
-    local int height = HEADER.height, width = HEADER.width;
-  } variables <hidden=true>;
+    locals.height = HEADER.height, locals.width = HEADER.width;
   for (i = 0; i < RSB_PROPERTIES.MapsCount; ++i)
     {
-       variables.height = variables.height/2; 
-       variables.width = variables.width/2;
-       PIXEL_ARRAY MipMapArray(variables.height*variables.width) <name="Mip Map">;      
+       locals.height = locals.height/2; 
+       locals.width = locals.width/2;
+       PIXEL_ARRAY MipMapArray(locals.height*locals.width) <name="Mip Map">;      
     };
 } MIP_MAPS <name="MipMaps">;
 
+typedef struct {
+  UINT Length;
+  char Name[Length];
+  UINT Count;
+  typedef struct {
+    UINT P1;
+    UINT P2;    
+    SHORT X1;
+    SHORT Y1;
+    SHORT X2;
+    SHORT Y2;
+  } Coordinates; 
+  Coordinates DATA[Count];
+} Channel <name=channelName>; 
+
+string channelName(Channel &channel){
+  return channel.Name;
+}
+
 if (HEADER.version > 2) {    
     struct{
-       if ((HEADER.version > 5) && (HEADER.version < 10)) { 
+       if ((HEADER.version > 5) && (HEADER.version < 10)) {
+        struct {  
          UINT SurfaceChannelsCount; // 
 
-       // surface channel section
-       if (SurfaceChannelsCount > 0) {            
-           UINT size;
-           BYTE SurfaceChannelsData[size];
-           typedef struct {
-             BYTE DATA[30];
-           } DataItem; 
-           DataItem Array[SurfaceChannelsCount] <optimize=false>;  
-         };
-       }; 
+         // surface channel section
+         if (SurfaceChannelsCount > 0) {            
+             UINT size;
+             BYTE SurfaceChannelsData[size];
+             Channel Array[SurfaceChannelsCount] <optimize=false>;  
+           };
+         }SurfaceData <name="Surface Channels">; 
+       } ; 
       
       if (HEADER.version > 9) {
          UINT Count;
@@ -370,9 +391,8 @@ if (HEADER.version > 2) {
          };
        }; 
     
-       if (HEADER.version > 2) {
-          SURFACE_TYPE SurfaceType <name="Surface Type">; 
-       };      
+
+       SURFACE_TYPE SurfaceType <name="Surface Type">;   
     } RSB_PROPERTIES <name="Texture Properties">;
 
   if (HEADER.version > 4) {
