@@ -3,10 +3,11 @@
 //
 //      File: RSB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 1.2
+//   Version: 1.3
 //   Purpose: Red storm bitmap (RSB) file
  
 //   History: 
+//   2018.01 v1.3 fix channel order (boristsr), new Channel struct
 //   2017.12 v1.2 fix RSB version 0 structures
 //   2017.05 v1.1 RSB with DXT1 compression and mipmaps added
 //   2017.05 v0.9 RSB version 0 added
@@ -115,35 +116,33 @@ typedef struct {
   UINT green_bits;
   UINT blue_bits;
   UINT alpha_bits;
-} RSB_BIT_INFO <name="Bit Mask">;  
+} BIT_MASK <name="Bit Mask">;  
 
 struct {
   UINT version; // *.rsb file version
   /* 
     0 - 1 games released before Ghost Recon: 
     Dominant Species, Bang Gunship Elite, Force 21, Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
-    0 - 9 Ghost Recon + addons (PC + consoles)), The Summ of All Fears
+    0 - 9 Ghost Recon (+addons), The Summ of All Fears
     9 - 11 Rainbow Six LockDown.
   */
 
   UINT width <name="Texture Width">; // texture width (128-2048)
   UINT height <name="Texture Height">; // texture height (128-2048) 
   if (version == 0)  {
-    UINT Type;  // 8-bit image flag, 1 - it is 8-bit image in the file   
+    UINT Type;  // 1 - additional 8-bit texture copy + palette
     if (Type == 0) {
-      RSB_BIT_INFO BitInfo;  
+      BIT_MASK BitMask;  
     }  
   }
   else {
     if (version > 7) { 
-      UINT mn;  
-      BYTE mn1;
-      BYTE mn2;
-      BYTE mn3;
+      UINT UnknownValue;  
+      BYTE UnknownValue[3];
     }; 
-    RSB_BIT_INFO BitInfo;  
+    BIT_MASK BitMask;  
     if (version >= 9) { 
-      UINT mn; // 
+      UINT UnknownValue; // 
       DXT_TYPE dxtType <name="DXT type">; // DXT compression type 0 - DXT1
       if ((dxtType >= 0) & (dxtType < 5)) {
         locals.DXT = 1;
@@ -153,15 +152,15 @@ struct {
 } HEADER <name="File Header">;
 
 typedef struct{
-  ubyte Red    <name="Red">; 
-  ubyte Green  <name="Green">;
   ubyte Blue   <name="Blue">;
+  ubyte Green  <name="Green">;
+  ubyte Red    <name="Red">;   
   ubyte Alpha   <name="Alpha">; 
-} PALLETE_COLOR <name="Pallete Color">;
+} PALETTE_COLOR <name="Palette Color">;
 
 if (HEADER.version == 0) {
   if (HEADER.Type == 1) {   
-    PALLETE_COLOR Pallete[256] <name="8-bit Pallete">;
+    PALETTE_COLOR palette[256] <name="8-bit Palette">;
   };
 };
 
@@ -170,7 +169,7 @@ BitfieldDisablePadding();
 typedef struct {   
   if (HEADER.version == 0) {
     if (HEADER.Type == 1) { 
-      ubyte PalleteColor <name="Pallete Color">;
+      ubyte paletteColor <name="palette Color">;
     }
   } 
   else {
@@ -210,19 +209,19 @@ typedef struct {
         } COLOR_DATA <name="Color Data">;
     }
     else {
-      if (HEADER.BitInfo.alpha_bits + HEADER.BitInfo.red_bits + HEADER.BitInfo.green_bits + HEADER.BitInfo.blue_bits == 32) {
+      if (HEADER.BitMaskInfo.alpha_bits + HEADER.BitMask.red_bits + HEADER.BitMask.green_bits + HEADER.BitMask.blue_bits == 32) {
        // ARGB order
-        ubyte Alpha : HEADER.BitInfo.alpha_bits <name="Alpha">; 
-        ubyte Red   : HEADER.BitInfo.red_bits <name="Red">;
-        ubyte Green : HEADER.BitInfo.green_bits <name="Green">;
-        ubyte Blue  : HEADER.BitInfo.blue_bits <name="Blue">;
+        ubyte Alpha : HEADER.BitMask.alpha_bits <name="Alpha">; 
+        ubyte Red   : HEADER.BitMask.red_bits <name="Red">;
+        ubyte Green : HEADER.BitMask.green_bits <name="Green">;
+        ubyte Blue  : HEADER.BitMask.blue_bits <name="Blue">;
       } 
       else {
-        // BGR order
-        ubyte Blue  : HEADER.BitInfo.blue_bits <name="Blue">;
-        ubyte Green : HEADER.BitInfo.green_bits <name="Green">;
-        ubyte Red   : HEADER.BitInfo.red_bits <name="Red">;
-        ubyte Alpha : HEADER.BitInfo.alpha_bits <name="Alpha">; 
+        // BGRA order
+        ubyte Blue  : HEADER.BitMask.blue_bits <name="Blue">;
+        ubyte Green : HEADER.BitMask.green_bits <name="Green">;
+        ubyte Red   : HEADER.BitMask.red_bits <name="Red">;
+        ubyte Alpha : HEADER.BitMask.alpha_bits <name="Alpha">; 
       };
     };
   };
@@ -246,10 +245,10 @@ int sizePIXEL( PIXEL &pixel )
       }
     }
     else {
-    return (HEADER.BitInfo.red_bits + 
-            HEADER.BitInfo.green_bits + 
-            HEADER.BitInfo.blue_bits + 
-            HEADER.BitInfo.alpha_bits)/8;
+    return (HEADER.BitMask.red_bits + 
+            HEADER.BitMask.green_bits + 
+            HEADER.BitMask.blue_bits + 
+            HEADER.BitMask.alpha_bits)/8;
     }
   }
 } 
@@ -265,29 +264,29 @@ if (locals.DXT == 1) {
 };
 
 if (HEADER.version == 0) { 
-if (HEADER.Type == 1) { 
+  if (HEADER.Type == 1) { 
     struct {
        UINT red_bits;
        UINT green_bits;
        UINT blue_bits;
        UINT alpha_bits;
-    } RSB_BIT_INFO2 <name="Bit mask">;
+    } BIT_MASK2 <name="Bit mask">;
     typedef struct {   
-      ubyte Alpha : RSB_BIT_INFO2.red_bits <name="Alpha">; 
-      ubyte Red   : RSB_BIT_INFO2.green_bits <name="Red">;
-      ubyte Green : RSB_BIT_INFO2.blue_bits <name="Green">;
-      ubyte Blue  : RSB_BIT_INFO2. alpha_bits <name="Blue">; 
+      // ubyte Alpha : BIT_MASK2.red_bits <name="Alpha">; 
+      ubyte Red   : BIT_MASK2.green_bits <name="Red">;
+      ubyte Green : BIT_MASK2.blue_bits <name="Green">;
+      ubyte Blue  : BIT_MASK2. alpha_bits <name="Blue">; 
     } PIXEL2 <name="Pixel", optimize=false>;
     typedef struct (int arraySize) {
       PIXEL2 array[arraySize] <optimize=false>;
     } PIXEL_ARRAY2;
 
-  PIXEL_ARRAY2 PixelArray(HEADER.width*HEADER.height) <name="Pixel Array">;
-} 
+  PIXEL_ARRAY2 PixelArray(HEADER.width*HEADER.height) <name="Pixel Array (16-bit)">;
+  } 
 }
 
 typedef struct {
-    locals.height = HEADER.height, locals.width = HEADER.width;
+  locals.height = HEADER.height, locals.width = HEADER.width;
   for (i = 0; i < RSB_PROPERTIES.MapsCount; ++i)
     {
        locals.height = locals.height/2; 
