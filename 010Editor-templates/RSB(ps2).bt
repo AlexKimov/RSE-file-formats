@@ -1,0 +1,254 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: RSB(ps2).bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Red storm bitmap (RSB) file
+ 
+//   History: 
+//
+//
+//------------------------------------------------
+
+typedef enum <ubyte> {
+    no,
+    yes
+} BOOL; // bool data type
+
+typedef enum <uint> {
+  sZero, 
+  sOne, 
+  sSource_Alpha, 
+  sInverse_Source_Alpha, 
+  sSource_Color, 
+  sInverse_Source_Color, 
+  sDestination_Color, 
+  sInverse_Destination_Color, 
+  sBoth_Source_Alpha, 
+  sBoth_Inverse_Source_Alpha 
+} SOURCE_FUNCTION_PARAMETER <comment="Source blending functions">; 
+
+typedef enum <uint> {
+  dZero, 
+  dOne, 
+  dSource_Alpha, 
+  dInverse_Source_Alpha_Source_Color, 
+  dInverse_Source_Color, 
+  dDestination_Color, 
+  dInverse_Destination_Color, 
+  dBoth_Source_Alpha, 
+  dBoth_Inverse_Source_Alpha 
+} DESTINATION_FUNCTION_PARAMETER <comment="Destination blending functions">; 
+
+typedef enum <uint> {
+  Never, 
+  Less, 
+  Equal, 
+  Less_Equal, 
+  Greater_Equal, 
+  Always, 
+} COMPARE_FUNCTION_PARAMETER <comment="Compare function to set up texture transparency with reference value.">;
+
+typedef enum <uint>  {
+  Cycle,
+  Oscillate, 
+  Constant
+} ANIMATION_TYPE;
+
+typedef enum <uint>  {
+  Rotate,
+  Degrees_Sec 
+} SCROLLING_TYPE;
+
+typedef enum <uint> {
+  NONE, 
+  Carpet, 
+  Concrete, 
+  Wood, 
+  Metal, 
+  Asphalt, 
+  Sand, 
+  Lowgrass, 
+  Highgrass, 
+  Puddle, 
+  Water, 
+  Drywall, 
+  Thin_Metal, 
+  Thick_Metal, 
+  Metal_Gas_Tank, 
+  Steam_Pipe, 
+  Electrical_Panel, 
+  Snow, 
+  Safety_Glass, 
+  Bullet_Resistant_Glass, 
+  Ice, 
+  Mud, 
+  Glass, 
+  Foliage, 
+  Gravel, 
+  Glass_Shards,
+  unset = 4294967295
+} SURFACE_TYPE; 
+
+typedef struct {
+  UINT red_bits;
+  UINT green_bits;
+  UINT blue_bits;
+  UINT alpha_bits;
+} BIT_MASK <name="Bit Mask">;  
+
+typedef struct{
+  ubyte Blue   <name="Blue">;
+  ubyte Green  <name="Green">;
+  ubyte Red    <name="Red">;   
+  ubyte Alpha   <name="Alpha">; 
+} PALETTE_COLOR <name="Palette Color">;
+
+struct {
+  UINT16 Version;
+  UINT16 B;
+  if (Version == 3) {
+    UINT Length;
+    char Name[Length];
+  }
+  else {
+    UINT Width;
+    UINT Height;
+    BIT_MASK BitMask;
+  }
+} HEADER <name="File Header">;
+
+BitfieldDisablePadding(); 
+
+typedef struct {
+  if (HEADER.BitMask.alpha_bits + HEADER.BitMask.red_bits + HEADER.BitMask.green_bits + HEADER.BitMask.blue_bits == 32) {
+    // ARGB order
+    ubyte Alpha : HEADER.BitMask.alpha_bits <name="Alpha">; 
+    ubyte Red   : HEADER.BitMask.red_bits <name="Red">;
+    ubyte Green : HEADER.BitMask.green_bits <name="Green">;
+    ubyte Blue  : HEADER.BitMask.blue_bits <name="Blue">;
+  } 
+  else {
+    // BGRA order
+    ubyte Blue  : HEADER.BitMask.blue_bits <name="Blue">;
+    ubyte Green : HEADER.BitMask.green_bits <name="Green">;
+    ubyte Red   : HEADER.BitMask.red_bits <name="Red">;
+    ubyte Alpha : HEADER.BitMask.alpha_bits <name="Alpha">; 
+  };
+} PIXEL <name="Pixel">;
+
+typedef struct (int arraySize) {
+  PIXEL array[arraySize] <optimize=false>;
+} PIXEL_ARRAY;
+
+int sizePIXEL( PIXEL &pixel )
+{
+  return (HEADER.BitMask.red_bits   + 
+          HEADER.BitMask.green_bits + 
+          HEADER.BitMask.blue_bits  + 
+          HEADER.BitMask.alpha_bits)/8;
+} 
+
+switch (HEADER.Version) {
+  case 0:
+    ubyte A[64]; 
+    PIXEL_ARRAY PixelArray(HEADER.Width*HEADER.Height) <name="Pixel Array", optimize=false>;    
+    break;
+  case 1:
+    struct {
+      PALETTE_COLOR PColor[256];
+    } Palette;
+
+    struct {
+      UBYTE Index[HEADER.Width*HEADER.Height];
+    } Index;
+  break;
+  case 4:
+  case  5:
+  case  6:
+
+    PIXEL_ARRAY PixelArray(HEADER.Width*HEADER.Height) <name="Pixel Array", optimize=false>;
+
+    typedef struct {
+      UINT Length;
+      char Name[Length];
+      UINT Count;
+      typedef struct {
+        UINT P1;
+        UINT P2;    
+        SHORT X1;
+        SHORT Y1;
+        SHORT X2;
+        SHORT Y2;
+      } Coordinates; 
+      Coordinates DATA[Count];
+    } Channel <name=channelName>; 
+   
+    struct{       
+       UINT SurfaceChannelsCount <name="Count">;
+
+       BOOL AlphaBlending <name="AlphaBlending", comment="Enables texture blending">;
+       BOOL AlphaTesting <name="AlphaTesting">;
+       BOOL Sampling <name="Sampling", comment="Enables Sampling properties">; // **
+       BOOL Animation <name="Animation", comment="Enables RSB flipbook animation">;
+       BOOL Scrolling <name="Scrolling", comment="Enables Scrolling animation">;
+       BOOL Tiled <name="Tiled">; // **   
+       BOOL Compression <name="Compression">;   // **      
+       BOOL Distortion <name="Distortion">; // **
+
+       UBYTE A[3];
+    
+       SOURCE_FUNCTION_PARAMETER SourceFunction <name="Source Function">;
+       DESTINATION_FUNCTION_PARAMETER DestinationFunction <name="Destination Function">;
+       COMPARE_FUNCTION_PARAMETER CompareFunction <name="Compare Function">;
+       BYTE ReferenceValue <name="Reference Value">;
+    
+       struct { 
+         SCROLLING_TYPE ScrollingType <name="Scrolling Type">;    
+         FLOAT HorizontalRate <name="Horizontal Rate">;
+         FLOAT VerticalRate <name="Vertical Rate">;
+       } TEXTURE_SCROLLING <name="Scrolling Animation">;
+      
+       struct {
+         ANIMATION_TYPE AnimationType <name="Animation Type">; 
+         FLOAT AnimationInterval <name="Interval">;
+         UINT TextureCount <name="Count">;
+         if ((TextureCount)) {
+              typedef struct {
+                UINT TextureNameLength;
+                char TextureName[TextureNameLength]; 
+              } TEXTURE_NAME <optimize=false, name=textureName>;
+        
+              typedef struct (int arraySize) {
+                TEXTURE_NAME array[arraySize];
+              } TEXTURE_ARRAY <optimize=false>;
+   
+             TEXTURE_ARRAY RSBTextureArray(TextureCount) <optimize=false, name="Textures List">; 
+          };
+       } ANIMATION <name="Flipbook Animation">; 
+
+             
+       UINT MapsCount <name="MipMaps Count">;   
+       if (HEADER.Version > 5)
+         UINT SubsamplingPriority <name="Subsampling Priority">;  
+       
+
+       BOOL Damaged <name="Damaged">; // **  
+       if (Damaged == yes) {
+         UINT TextureNameLength; // 
+         if (TextureNameLength > 0) {
+             char DamagedTextureName[TextureNameLength];
+         };
+       }; 
+    
+
+       SURFACE_TYPE SurfaceType <name="Surface Type">;   
+    } RSB_PROPERTIES <name="Texture Properties">; 
+
+  break;
+};
+
+string channelName(Channel &channel){
+   return channel.Name;
+ };
