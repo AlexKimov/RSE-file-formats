@@ -7,7 +7,7 @@
 //   Purpose: Red storm bitmap (RSB) file
  
 //   History: 
-//   2018.04 v1.4 add commentaries, minor fixes
+//   2018.04 v1.4 added commentaries, minor fixes
 //   2018.01 v1.3 fix channel order (boristsr), new Channel struct
 //   2017.12 v1.2 fix RSB version 0 structures
 //   2017.05 v1.1 RSB with DXT1 compression and mipmaps added
