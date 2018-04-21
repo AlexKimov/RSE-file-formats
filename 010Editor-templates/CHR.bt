@@ -17,7 +17,7 @@ time_t ModifiedDate <name="CHR File Modified Date">;
 struct {
   UINT Length; // 
   char Text[Length]; // 
-} BEGINMODEL_STRING <name="Model section begin">;
+} BEGINMODEL_STRING <name="BEGINMODEL signature">;
 
 typedef struct {
   struct {
@@ -66,25 +66,25 @@ typedef struct {
     struct {    
       UINT Length; // 
       char Text[Length]; //
-      UINT value;
-   } VERSION_STRING; 
+      UINT Value;
+   } VERSION; 
    struct {    
       UINT Length; // 
       char Text[Length]; //
    } TEXTURE_NAME_STRING <name="Texture Name">; 
   } HEADER <name="Textures section HEADER">;
 
-  BYTE mn;
+  BYTE mn; // 0
 
   struct {    
      UINT Length; // 
      char Text[Length]; //
-  } TEXTURE_FILENAME_STRING <name="Texture .rsb file name">; 
+  } TEXTURE_FILENAME <name="Texture .rsb file name">; 
   
   struct { 
     UINT AdvTransparencyType;  // 0 2 3
     UINT Tiled; // 1 - u tiled, 2 - v tiled, 3 - both none
-    FLOAT SelfIllumination; // 0
+    FLOAT SelfIllumination; // 0..1
   } PARAMETERS; 
 } TEXTURE <name=TextureName>;
 
@@ -137,7 +137,7 @@ struct {
 
   struct { 
     UINT SectionSize;
-    UINT MN; // 7
+    UINT ID; // 7
     struct {    
       UINT Length; 
       char String[Length]; 
@@ -156,7 +156,7 @@ struct {
     //  section header 
     struct { 
       UINT SectionSize;
-      UINT MN; // 3
+      UINT ID; // 3
       struct {    
         UINT Length;  
         char String[Length]; 
@@ -314,7 +314,7 @@ struct {
     
 typedef struct { 
   struct {
-    UINT ID; 
+    UINT ID; // 37
     struct {    
        UINT Length; 
        char Text[Length]; 
