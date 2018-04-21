@@ -3,12 +3,13 @@
 //
 //      File: POB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.8
+//   Version: 1.0
 //   Purpose: Ghost Recon POB file 
 // File Mask: *.pob
 // 
 //   History: 
 //
+//   2018.04 v1.0 initial release
 //   2016.12 v0.08 initial release
 //------------------------------------------------
 
@@ -36,7 +37,7 @@ struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
+    UINT ID; //2
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -76,7 +77,7 @@ typedef struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 38
     struct {    
       UINT Length; 
       char Text[Length]; 
@@ -88,7 +89,7 @@ typedef struct {
     } TEXTURENAME_STRING <name="Texture Name">; 
   } HEADER <name="Textures section header">;
 
-  BOOL mn;
+  BOOL mn; // 0
 
   struct {    
      UINT Length;  
@@ -113,7 +114,7 @@ string TextureName(TEXTURE &texture) {
 struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID; //8
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -185,11 +186,11 @@ string Point_Name (POINT &point) {
 typedef struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID;
     struct {    
       UINT Length; // 
       char Text[Length]; //
-       UINT Value;
+      UINT Value;
     } VERSION; 
     struct {
       UINT Length; // 
@@ -198,8 +199,8 @@ typedef struct {
   } HEADER <name="Section header">; 
 
   struct { 
-     UINT SectionSize;
-    UINT MN;
+    UINT SectionSize;
+    UINT ID;
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -228,11 +229,11 @@ struct {
 
   VERTEX_ARRAY VertexArray(VertexCount) <name="Object vertices array">; 
 
-} VERTICES <name="Object vertices section">;
+} VERTICES <name="Vertices section">;
 
 struct {
 
-UINT Count;
+UINT Count <name="Mesh Count">;
 
 typedef struct {
   struct {
@@ -348,7 +349,7 @@ typedef struct (int arraySize) {
 } OBJECT_DATA_ARRAY; 
 
 OBJECT_DATA_ARRAY POBObjectsDataArray(Count) <name="Objects data array">; 
-} OBJECTSDATA <name="Objects data section">;
+} OBJECTSDATA <name="Meshes section">;
 
 //-----------------------------------------------------
 
@@ -479,7 +480,7 @@ string ObjectName(GEOMETRY &geometry) {
 struct {   //
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 7
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -496,7 +497,7 @@ struct {   //
     typedef struct (int arraySize) {
       GEOMETRY array[arraySize] <optimize=false>;
     } GEOMETRY_ARRAY; 
-    GEOMETRY_ARRAY GeometryArray(Count) <name="Object geometry data array">; 
+    GEOMETRY_ARRAY GeometryArray(Count) <name="Objects array">; 
   } GEOMETRYDATA <name="Geometry data section">;
 } POBGEOMETRYLIST <name="2. GeometryList Section">;
 
@@ -522,7 +523,7 @@ typedef struct {
 
   typedef struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID;
     struct {    
         UINT Length; // 1
         char Text[Length]; //
@@ -916,7 +917,7 @@ void NodesTree(UINT NodeCount)
   typedef struct { 
       struct { 
         UINT SectionSize;
-        UINT MN;
+        UINT ID;
         struct {    
             UINT Length; // 1
             char Text[Length]; //
@@ -935,13 +936,13 @@ void NodesTree(UINT NodeCount)
            break;
          default : 
         
-          if (HEADER.MN != 51 && HEADER.MN != 53 && HEADER.MN != 54) {
+          if (HEADER.ID != 51 && HEADER.ID != 53 && HEADER.ID != 54) {
               struct {
                   UINT Length;  
                   char Text[Length];  
               } ObjectProperties <name = "Tagging properties">;   
           };
-          if (HEADER.MN == 51) { BYTE MN; };
+          if (HEADER.ID == 51) { BYTE MN; };
           struct { 
              struct { 
                 FLOAT x;        
@@ -965,8 +966,8 @@ void NodesTree(UINT NodeCount)
               } Position;
           } TRANSFORMATION_MATRIX;
 
-         if (HEADER.MN != 47) {
-            switch (HEADER.MN) {
+         if (HEADER.ID != 47) {
+            switch (HEADER.ID) {
                case 48: 
                  UINT Count;
                  break;
@@ -1002,16 +1003,16 @@ void NodesTree(UINT NodeCount)
 
 string NodeName(NODE &node) { 
     local string NodeType;
-    switch (node.HEADER.MN) {
-         case 46: NodeType = "Helper Point"; break;
-         case 47: NodeType = "Group"; break;
-         case 48: NodeType = "Billboard"; break;
-         case 49: NodeType = "LOD"; break;
-         case 50: NodeType = "Animation"; break;
-         case 51: NodeType = "Particle"; break;
-         case 52: NodeType = "Forest"; break;
-         case 53: NodeType = "Light"; break;
-         case 54: NodeType = "ProjectedMapLight"; break;
+    switch (node.HEADER.ID) {
+         case 46: NodeType = "Helper Point Node"; break;
+         case 47: NodeType = "Group Node"; break;
+         case 48: NodeType = "Billboard Node"; break;
+         case 49: NodeType = "LOD Node"; break;
+         case 50: NodeType = "Animation Node"; break;
+         case 51: NodeType = "Particle Node"; break;
+         case 52: NodeType = "Forest Node"; break;
+         case 53: NodeType = "Light Node"; break;
+         case 54: NodeType = "ProjectedMapLight Node"; break;
     };
     return "Name: " + node.HEADER.NAME_STRING.Text + " [" + NodeType + "]";
 }  
@@ -1019,7 +1020,7 @@ string NodeName(NODE &node) {
 struct {
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 10
     struct {    
        UINT Length; // 
        char Text[Length]; //
@@ -1035,7 +1036,7 @@ struct {
     UINT NodeCount; 
     struct {
       UINT SectionSize;
-      UINT MN;
+      UINT ID; //47
       struct {    
         UINT Length; // 
         char Text[Length]; //
@@ -1044,8 +1045,8 @@ struct {
       struct {
         UINT Length; // 
         char Text[Length]; // 
-      } NAME_STRING;
-    } HEADER <name="Root node header">; 
+      } NAME;
+    } HEADER; 
     NodesTree(NodeCount);
   } NODE_TREE <name="Root node">;
 } OBJECTLIST <name="3. ObjectList section">;
