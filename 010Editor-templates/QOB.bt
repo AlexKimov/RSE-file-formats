@@ -3,11 +3,12 @@
 //
 //      File: QOB.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.2
+//   Version: 1.0
 //   Purpose: Ghost Recon QOB file
 //
 //   History: 
-//    
+// 
+//   2018.14 v1.0 
 //   2016.10 v0.2 initial release
 //------------------------------------------------
 
@@ -27,7 +28,7 @@ struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 2
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -67,7 +68,7 @@ typedef struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 38
     struct {    
       UINT Length; 
       char Text[Length]; 
@@ -104,7 +105,7 @@ string TextureName(TEXTURE &texture) {
 struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT MN; // 8
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -170,7 +171,7 @@ struct {
     //  section header 
     struct { 
       UINT SectionSize;
-      UINT MN; // 3
+      UINT ID; // 3
       struct {    
         UINT Length;  
         char String[Length]; 
@@ -183,7 +184,8 @@ struct {
       } NAME_STRING;
     } SECTION_HEADER <name="Section header">; 
 
-    UINT16 mn; // 0
+    BYTE DarkMapped <name="DarkMapped">; // 
+    BYTE CastShadows  <name="CastShadows">;
 
     struct {
       UINT VertexCount;  
@@ -330,7 +332,7 @@ struct {
     typedef struct {
       struct {
         UINT Length; // 
-        char String[Length]; // 
+        char Name[Length]; // 
       } POINT_NAME;
       struct {
         struct { 
@@ -354,15 +356,20 @@ struct {
             FLOAT Z;
         } Position;
         } TRANSFORMATION_MATRIX;
-    } POINT;
+    } POINT <name=pointName>;
     
     typedef struct (int arraySize) {
       POINT array[arraySize] <optimize=false>; 
     } POINT_ARRAY <optimize=false>;   
 
-    POINT_ARRAY PointArray(PointCount) <optimize=false>; 
+    POINT_ARRAY PointArray(PointCount) <optimize=false,name="Points Array">; 
   };
 } QOBPOINTS <name="3. Points section">;
+
+// BoneName function 
+string pointName(POINT &point) {
+  return "Name: " + point.POINT_NAME.Name;
+} 
 
 struct {
   UINT Length;
