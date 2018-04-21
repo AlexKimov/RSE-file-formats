@@ -22,7 +22,7 @@ struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
+    UINT ID;
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -99,7 +99,7 @@ string TextureName(TEXTURE &texture) {
 struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID; // 8
     struct {    
       UINT Length; // 
       char Text[Length]; //
@@ -150,9 +150,7 @@ struct {
     } GEOMETRYLIST_STRING;
   } HEADER <name="GeometryList Header">;  
 
- UINT Count <name="Object Count">;
-
- struct {
+ UINT Count <name="Model Count">;
 
  typedef struct { 
     //  section header 
@@ -184,9 +182,9 @@ struct {
         Vertex array[arraySize];
       } VERTEX_ARRAY;     
       VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
-    } VERTICES <name="Vertices section">;
+    } VERTICES <name="Model Vertices">;
 
-    UINT Count;  //
+    UINT Count <name="Meshes Count">;  //
     typedef struct {
       struct {
           BYTE mn; // 1
@@ -290,23 +288,21 @@ struct {
           FACE_COLOR_ARRAY ColorMapArray(VertexCount) <name="Faces color array">;        
 
       } TEXTUREVERTICIES <optimize=false,name="Texture data">;   
-    } GEOMETRY_OBJECT;
+    } GEOMETRY_OBJECT <name="Mesh">;
 
     typedef struct (int arraySize) {
       GEOMETRY_OBJECT array[arraySize] <optimize=false>;
     } GEOMETRY_OBJECT_ARRAY; 
     
-    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(Count) <optimize=false,name="Object geometry data array">; 
+    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(Count) <optimize=false,name="Mesh array">; 
 
- } GEOMETRY_DATA;  
+ } GEOMETRY_DATA <name="Model">;  
 
   typedef struct (int arraySize) {
     GEOMETRY_DATA array[arraySize] <optimize=false>;
   } GEOMETRY_DATA_ARRAY; 
 
-  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
-
- } CHR_GEOMETRY_DATA <name="Geometry data section">; 
+  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Objects array">; 
 } CHRGEOMETRYLIST  <name="2. GeometryList Section">;
 
 UINT MN; //0
@@ -362,7 +358,7 @@ struct {
       UINT Length;  
       char Text[Length];  
     } SKIN; 
-    UINT MN; // 1
+    UINT ID; // 1
     struct {
       UINT Length;  
       char Text[Length];  
