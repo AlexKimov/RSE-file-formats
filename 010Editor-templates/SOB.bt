@@ -1,17 +1,17 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: SOB.bt
+//   Authors: Alexandr Evdokimov
+//   Version: 0.5
+//   Purpose: Rainbow six .sob file format
+// File Mask: .sob
+// 
 //   History: 
+//
+//   2018.04 v0.6 
+//   2016    v0.5 initial release
 //------------------------------------------------
-
-local UINT type = 0;
 
 struct {
   UINT Length; // 
@@ -21,18 +21,23 @@ struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT MN;
-    if (type == 1) {
-      struct {    
-        UINT Length; // 
-        char Text[Length]; //
+    UINT ID; // 8   
+    UINT Length;
+    if (Length == 8) {
+      char Text[Length]; //
+      if (Text == "Version") {
         UINT value;
-      } VERSION; 
+        struct {    
+          UINT Length; // 
+          char Text[Length]; //
+        } MATERIALNAME_STRING <name="Material Name">;
+      }; 
+    }
+    else {
+      struct {
+        char Text[Length] <name="Material Name">; // 
+      } MATERIALNAME_STRING <name="Material Name">; 
     };
-    struct {    
-       UINT Length; // 
-       char Text[Length]; //
-    } MATERIALNAME_STRING <name="Material Name">; 
   } HEADER <name="Header">;
 
   struct {    
@@ -43,11 +48,11 @@ typedef struct {
   struct { 
     FLOAT Opacity;
     FLOAT MN;
+    UINT mn;
     struct {              
       UINT Red; //
       UINT Green; //
       UINT Blue; //
-      UINT mn;
     } Ambient; 
     struct {           
       UINT Red; //
@@ -71,7 +76,7 @@ string MaterialName(MATERIAL &material) {
 struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID; //8
     struct {
       UINT Length; // 
       char Text[Length]; // 
@@ -94,24 +99,26 @@ struct {
 typedef struct {
      struct { 
        UINT SectionSize;
-       UINT MN; // 7
-       if (type == 1) {
-        struct {    
-          UINT Length; // 
+       UINT ID; // 7   
+       UINT Length; // 
+       if (Length == 8) {
           char Text[Length]; //
-          UINT value;
-        } VERSION; 
-       };
-       struct {
-         UINT Length;  
-         char Text[Length];  
-       } OBJECT_NAME;
-     } HEADER <name="Header">;  
+          if (Text == "Version") {
+            UINT version; 
+            struct {
+              UINT Length;  
+              char Text[Length]; 
+            } OBJECT_NAME;
+            UINT MN; // 0
+            UINT MN; // 0
+          };
+       } else {
+         struct {
+           char Text[Length]; 
+         } OBJECT_NAME;
+       }
+     } HEADER <name="Object Header">;  
 
-    if (type == 1) {
-    UINT A;
-    UINT B;
-    };
     struct {
       UINT VertexCount;  
       typedef struct {     
@@ -225,7 +232,7 @@ struct {
 
   struct { 
     UINT SectionSize;
-    UINT MN; // 7
+    UINT ID; // 7
     struct {
       UINT Length;  
       char Text[Length];  
