@@ -312,10 +312,10 @@ if (HEADER.version == 0) {
   if (HEADER.Palette == 1) { 
     BIT_MASK BitMask;
     typedef struct {   
-      //ubyte Alpha : BIT_MASK2.alpha_bits <name="Alpha">; 
-      ubyte Red   : BIT_MASK2.red_bits <name="Red">;
-      ubyte Green : BIT_MASK2.green_bits <name="Green">;
-      ubyte Blue  : BIT_MASK2.blue_bits <name="Blue">; 
+      //ubyte Alpha : BitMask.alpha_bits <name="Alpha">; 
+      ubyte Red   : BitMask.red_bits <name="Red">;
+      ubyte Green : BitMask.green_bits <name="Green">;
+      ubyte Blue  : BitMask.blue_bits <name="Blue">; 
     } PIXEL2 <name="Pixel">;
     typedef struct (int arraySize) {
       PIXEL2 array[arraySize];
