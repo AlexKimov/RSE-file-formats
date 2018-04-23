@@ -136,24 +136,26 @@ typedef struct {
        UINT Count; 
        typedef struct {
          struct {
-            FLOAT MN;
            FLOAT MN;
            FLOAT MN;
-          FLOAT MN;
            FLOAT MN;
            FLOAT MN;
          } NORMALS;
+         struct {
+           FLOAT U;
+           FLOAT V;
+         } UV;
          struct {
            UINT Red;
            UINT Green;
            UINT Blue;
          } Color;
-        } AA;
+        } AA <name="Vertex">;
        typedef struct (int arraySize) {
          AA array[arraySize] <optimize=false>;
-       } AA_ARRAY;
+       } AA_ARRAY ;
        AA_ARRAY AAArray(Count) <name="data array">; 
-     } NORMALS_ARRAY <name="Normals">;
+     } NORMALS_ARRAY <name="Vertex Normals | UV coordinates">;
 
      struct {
        UINT Count <name = "Face Count">; 
@@ -167,13 +169,15 @@ typedef struct {
            UINT MN;
            UINT MN;
            UINT MN;
-         } Texture;
+         } Texture_Index;
          struct {
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
-           UINT MN;
+           struct {
+             FLOAT MN;
+             FLOAT MN;
+             FLOAT MN;
+             FLOAT MN;
+           } FACE_NORMAL;
+           UINT MaterialIndex;
          } Properties;
        } Face <name = "Face">;
        typedef struct (int arraySize) {
@@ -221,7 +225,7 @@ typedef struct {
       MM array[arraySize] <optimize=false>;
     } MM_ARRAY;
     MM_ARRAY MMArray(Count) <name="Indexes array">; 
-    }  IND <name="Texture Coordinates">; 
+    }  IND <name="Params">; 
 } DATA <name=ObjectName>;  
 
 string ObjectName(DATA &data) {
