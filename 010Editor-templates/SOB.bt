@@ -136,10 +136,10 @@ typedef struct {
        UINT Count; 
        typedef struct {
          struct {
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
+           FLOAT X;
+           FLOAT Y;
+           FLOAT Z;
+           FLOAT W;
          } NORMALS;
          struct {
            FLOAT U;
@@ -161,21 +161,21 @@ typedef struct {
        UINT Count <name = "Face Count">; 
        typedef struct {     
          struct {
-           UINT MN;
-           UINT MN;
-           UINT MN;
+           UINT P1;
+           UINT P2;
+           UINT P3;
          } Face_Index;
          struct {
-           UINT MN;
-           UINT MN;
-           UINT MN;
+           UINT P1;
+           UINT P2;
+           UINT P3;
          } Texture_Index;
          struct {
            struct {
-             FLOAT MN;
-             FLOAT MN;
-             FLOAT MN;
-             FLOAT MN;
+             FLOAT X;
+             FLOAT Y;
+             FLOAT Z;
+             FLOAT W;
            } FACE_NORMAL;
            UINT MaterialIndex;
          } Properties;
