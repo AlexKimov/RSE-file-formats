@@ -18,9 +18,9 @@
 | 6 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 7 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
 | 8 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
-| 9 | Rogue Spear | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
+| 9 | Rogue Spear (Urban Operations, Eagle Watch) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
 | 10 | Shadow Watch  | PC | 2000  | .r16  |
-| 11 | Force 21  | PC | 1999  | .rsb  |
+| 11 | Force 21  | PC | 1999  | .rsb, .kit  |
 | 12 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf  |
 | 13 | Rainbow six | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
@@ -36,16 +36,17 @@
 | 6 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
 | 7 | .crp        | CRP(ds).bt    | **70%**      | yes          | Dominant Species's character 3D model |
 | 8 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
-| 9 | .map        | MAP(gr).bt    | **70%**      | yes          | Ghost recon level |
-| 10 | .map       | MAP(rs).bt    | **50%**      | yes          | Rainbow six level |
-| 11 | .map       | MAP(rsp).bt   | **70%**      | yes          | Rogue Spear level |
-| 12 | .pob       | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
-| 13 | .qob       | QOB.bt        | **95%**      | yes          | Static 3D objects |
-| 14 | .r16       | R16.bt        | **85%**      | yes          | Texture file |
-| 15 | .rob       | ROB.bt        | **70%**      | yes          | 3D objects |
-| 16 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
-| 16 | .rsb       | RSB(ps2).bt        | **5%**      | yes          | Texture file |
-| 17 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
-| 18 | .sob       | SOB.bt        | **40%**      | yes          | Static 3D objects |
-| 20 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
-| 21 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
+| 9  | .kit        | KIT.bt        | **50%**      |   yes        |  Force 21 3D Model                         |
+| 10 | .map        | MAP(gr).bt    | **70%**      | yes          | Ghost recon level |
+| 11 | .map       | MAP(rs).bt    | **50%**      | yes          | Rainbow six level |
+| 12 | .map       | MAP(rsp).bt   | **70%**      | yes          | Rogue Spear level |
+| 13 | .pob       | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
+| 14 | .qob       | QOB.bt        | **95%**      | yes          | Static 3D objects |
+| 15 | .r16       | R16.bt        | **85%**      | yes          | Texture file |
+| 16 | .rob       | ROB.bt        | **70%**      | yes          | 3D objects |
+| 17 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
+| 18 | .rsb       | RSB(ps2).bt        | **5%**      | yes          | Texture file |
+| 19 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
+| 20 | .sob       | SOB.bt        | **40%**      | yes          | Static 3D objects |
+| 21 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
+| 22 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
