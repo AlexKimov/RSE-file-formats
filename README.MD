@@ -2,22 +2,6 @@
 
 010 Editor file templates for the games by Red Storm Entertainment. Current available file templates are listed below.
 
-## File format specifications
-
-[see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki).
-
-### Ghost Recon File Formats
-
-| №    | Format |
-| :--- | :--- |
-| 1    |  [POB](https://github.com/AlexKimov/RSE-file-formats/wiki/POB-File-Format)    |
-| 2    |  [QOB](https://github.com/AlexKimov/RSE-file-formats/wiki/QOB-File-Format)    |
-| 3    |  [CHR](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)    |
-| 4    |  [MAP](https://github.com/AlexKimov/RSE-file-formats/wiki/MAP-File-Format)    |
-| 5    |  [RSB](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)    |
-| 6    |  [ANM](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)    |
-| 7    |  [BNF](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)    |
-
 ## Available file templates (wip)
 
 | № | Format       | Template name     | Progress     | Availability | Description |
@@ -45,6 +29,22 @@
 | 21 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      | yes          | Rainbow six Static 3D objects |
 | 22 | .sht       | [SHT.bt]()        | **0%**       | wip          | Collision data |
 | 23 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**      | yes          | Texture file |
+
+## File format specifications
+
+[see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki).
+
+### Ghost Recon File Formats
+
+| №    | Format |
+| :--- | :--- |
+| 1    |  [POB](https://github.com/AlexKimov/RSE-file-formats/wiki/POB-File-Format)    |
+| 2    |  [QOB](https://github.com/AlexKimov/RSE-file-formats/wiki/QOB-File-Format)    |
+| 3    |  [CHR](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)    |
+| 4    |  [MAP](https://github.com/AlexKimov/RSE-file-formats/wiki/MAP-File-Format)    |
+| 5    |  [RSB](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)    |
+| 6    |  [ANM](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)    |
+| 7    |  [BNF](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)    |
 
 ## Games
 
