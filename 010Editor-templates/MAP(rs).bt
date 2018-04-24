@@ -192,15 +192,15 @@ typedef struct {
        UINT Count; 
        typedef struct {
          struct {
-           FLOAT P1;
-           FLOAT P2;
-           FLOAT P3;
+           FLOAT X;
+           FLOAT Y;
+           FLOAT Z;
+           FLOAT W;
          } NORMAL;
          struct {
-           FLOAT P1;
-           FLOAT P2;
-           FLOAT P3;
-         } Coordinate;
+           FLOAT U;
+           FLOAT V;
+         } UV;
          struct {
            UINT Red;
            UINT Green;
@@ -229,8 +229,8 @@ typedef struct {
          struct {
            FLOAT MN;
            FLOAT MN;
-          FLOAT MN;
-         } NORMAL;
+           FLOAT MN;
+         } FACE_NORMAL;
          UINT MN;
          UINT TextureIndex;
        } FACE  <name="Polygon">;
