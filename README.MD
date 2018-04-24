@@ -28,25 +28,26 @@
 
 | № | Format       | Template name     | Progress     | Availability | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .anm        | ANM.bt        | **95%**      | yes          | Objects animation data |
-| 2 | .bcl        | BCL.bt        | **30%**      | yes          | Character animation data |
-| 3 | .bnf        | BNF.bt        | **95%**      | yes          | Character animation data |
-| 4 | .chr        | CHR.bt        | **95%**      | yes          | Character 3D model |
-| 5 | .cmf        | CMF.bt        | **50%**      | yes          | Character 3D model |
-| 6 | .crp        | CRP.bt        | **80%**      | yes          | Character 3D model |
-| 7 | .crp        | CRP(ds).bt    | **70%**      | yes          | Dominant Species's character 3D model |
-| 8 | .dam        | DAM.bt        | **10%**      | yes          | Character animation data |
-| 9  | .kit        | KIT.bt        | **50%**      |   yes        |  Force 21 3D Model                         |
-| 10 | .map        | MAP(gr).bt    | **70%**      | yes          | Ghost recon level |
-| 11 | .map       | MAP(rs).bt    | **50%**      | yes          | Rainbow six level |
-| 12 | .map       | MAP(rsp).bt   | **70%**      | yes          | Rogue Spear level |
-| 13 | .pob       | POB.bt        | **90%**      | yes          | Dynamic 3D objects |
-| 14 | .qob       | QOB.bt        | **95%**      | yes          | Static 3D objects |
-| 15 | .r16       | R16.bt        | **85%**      | yes          | Texture file |
-| 16 | .rob       | ROB.bt        | **70%**      | yes          | 3D objects |
-| 17 | .rsb       | RSB.bt        | **95%**      | yes          | Texture file |
-| 18 | .rsb       | RSB(ps2).bt        | **5%**      | yes          | Texture file |
-| 19 | .skl       | SKL.bt        | **10%**      | yes          | Skeletal animation data |
-| 20 | .sob       | SOB.bt        | **40%**      | yes          | Static 3D objects |
-| 21 | .sht       | SHT.bt        | **0%**       | wip          | Collision data |
-| 22 | .xpr       | XPR.bt        | **75%**      | yes          | Texture file |
+| 1 | .anm        | [ANM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM.bt)        | **95%**      | yes          | Objects animation data |
+| 2 | .bcl        | [BCL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BCL.bt)        | **30%**      | yes          | Character animation data |
+| 3 | .bnf        | [BNF.bt]https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt()        | **95%**      | yes          | Character animation data |
+| 4 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **95%**      | yes          | Character 3D model |
+| 5 | .cmf        | [CMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CMF.bt)        | **50%**      | yes          | Character 3D model |
+| 6 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      | yes          | Character 3D model |
+| 7 | .crp        | [CRP(ds).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)    | **70%**      | yes          | Dominant Species's character 3D model |
+| 8 | .dam        | [DAM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM.bt)        | **10%**      | yes          | Character animation data |
+| 9  | .kit        | [KIT.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/KIT.bt)        | **50%**      |   yes        |  Force 21 3D Model                         |
+| 10 | .map        | [MAP(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(gr).bt)    | **70%**      | yes          | Ghost recon level |
+| 11 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **50%**      | yes          | Rainbow six level |
+| 12 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%**      | yes          | Rogue Spear level |
+| 13 | .pob       | [POB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/POB.bt)        | **90%**      | yes          | Dynamic 3D objects |
+| 14 | .qob       | [QOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB.bt)        | **95%**      | yes          | Static 3D objects |
+| 15 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      | yes          | Texture file |
+| 16 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      | yes          | 3D objects |
+| 17 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | **95%**      | yes          | Texture file |
+| 18 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)        | **5%**      | yes          | Texture file |
+| 19 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)        | **10%**      | yes          | Skeletal animation data |
+| 21 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt)        | **40%**      | yes          | Rogue Spear Static 3D objects |
+| 21 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      | yes          | Rainbow six Static 3D objects |
+| 22 | .sht       | [SHT.bt]()        | **0%**       | wip          | Collision data |
+| 23 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**      | yes          | Texture file |
