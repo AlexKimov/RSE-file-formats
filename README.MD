@@ -30,7 +30,7 @@
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1 | .anm        | [ANM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM.bt)        | **95%**      | yes          | Objects animation data |
 | 2 | .bcl        | [BCL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BCL.bt)        | **30%**      | yes          | Character animation data |
-| 3 | .bnf        | [BNF.bt]https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt()        | **95%**      | yes          | Character animation data |
+| 3 | .bnf        | [BNF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **95%**      | yes          | Character animation data |
 | 4 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **95%**      | yes          | Character 3D model |
 | 5 | .cmf        | [CMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CMF.bt)        | **50%**      | yes          | Character 3D model |
 | 6 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      | yes          | Character 3D model |
