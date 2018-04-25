@@ -1,15 +1,16 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
-//   History: 
+//      File: CHR.bt
+//   Authors: AlexKimov
+//   Version: 1.0
+//   Purpose: Rainbow Six BCL file
+//
+//   History:
+//
 //------------------------------------------------
+
+local uint count = 21; // 
 
 typedef struct {
   UINT Count;
@@ -22,10 +23,10 @@ typedef struct {
   } S;
 
   typedef struct (int size) {
-    S A[size];
+    S array[size];
   } S1;
 
   S1 SA(Count) <optimize=false>;
 } D;
 
-D SD[21] <optimize=false>;
+D SD[count] <optimize=false>;
