@@ -4,11 +4,11 @@
 //      File: KIT.bt
 //   Authors: Alexander Evdokimov
 //   Version: 1.0
-//   Purpose: Ghost Recon KIT file
+//   Purpose: Force 21 KIT file
 //
 //   History: 
 // 
-//   2018.14 v0.5 initial release
+//   2018.04 v0.5 initial release
 //------------------------------------------------
 
 typedef enum <ubyte> {
