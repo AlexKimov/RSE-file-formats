@@ -47,7 +47,7 @@ struct {
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT ID;
+    UINT ID; // 2
 
     UINT Length; // 
     char Text[Length]; //
@@ -58,12 +58,13 @@ typedef struct {
         char Text[Length]; //
       } MATERIALNAME_STRING <name="Material Name">;
     }; 
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+   } TEXTURENAME_STRING <name="Texture FileName">; 
   } HEADER <name="Header">;
 
-  struct {    
-    UINT Length; // 
-    char Text[Length]; //
- } MATERIALNAME_STRING <name="Texture FileName">; 
+
 
   struct { 
     FLOAT Opacity;
@@ -90,10 +91,7 @@ typedef struct {
 } MATERIAL <name=MaterialName>;
 
 string MaterialName(MATERIAL &material) {
-  if (exists(HEADER.MATERIALNAME_STRING))
-    return "Name: " + material.HEADER.MATERIALNAME_STRING.Text;
-  else
-    return "Name: " + material.HEADER.Text;
+  return "Name: " + material.HEADER.TEXTURENAME_STRING.Text;
 } 
 
 struct {  
@@ -621,20 +619,41 @@ typedef struct {
      switch (HEADER.ID) {
        case 12: {
         BYTE A;
-        BYTE B;
-        if (B) BYTE c;
-        UINT U;
-        if (U == 0) BYTE A;
-        UINT Length;  
-        char ShermanLevel[Length];   
-
-        FLOAT D[6];
-        UINT K;
-        FLOAT K;
-        UINT K;
-        BYTE B[K];
-        BYTE N[17]; 
+        BYTE B;        
+        if (A == 0) BYTE C;
+        UINT ShermanCount;
+        if (ShermanCount == 0) BYTE A;
+        struct {
+          UINT Length;  
+          char ShermanLevel[Length];   
+            struct {
+                FLOAT X;
+                FLOAT Y;
+                FLOAT Z;
+                FLOAT X;
+                FLOAT Y;
+                FLOAT Z;
+            } Size;
+          UINT Count;
+          FLOAT K[Count];
+          BYTE Y;
+        } SHERMANS[ShermanCount] <optimize=false>;
+         
+        UINT Count;
+        struct {
+          struct { 
+            UINT Length;  
+            char ShermanLevel[Length];
+          } HH[3] <optimize=false>;
+          FLOAT T[4];
+        } MM[Count] <optimize=false>; 
+       
+        UINT A;
+        FLOAT arr[A]; // 1
+        FLOAT T[A];
+        UINT P;
        }; break;
+
        case 3: {
         BYTE A[4];
         UINT U;
@@ -678,9 +697,9 @@ typedef struct {
 
 string RoomName(ROOM &room) {
   if (exists(room.HEADER.NAME))
-    return "ObjecName: " + room.HEADER.NAME.Text + " ";
+    return "Room Name: " + room.HEADER.NAME.Text + " ";
   else
-    return "ObjecName: " + room.Text + " ";
+    return "Room Name: " + room.Text + " ";
 }
 
 struct {
@@ -703,14 +722,15 @@ struct {
    
 } ROOMLIST <name="Room List">;
 
+UINT L;
+
 //----------------------------------------------
 // PlanningLevelLIST
 //----------------------------------------------
 
 struct {
   struct { 
-    UINT SectionSize;
-    UINT MN; // 7
+    UINT ID; // 24
     struct {
       UINT Length;  
       char Text[Length];  
@@ -729,13 +749,14 @@ struct {
       char Text[Length];
     } NAME;
     } A;
-    A MN[Count];
+    A MN[Count] <optimize=false>;
   } II;
   typedef struct (int arraySize) {
       II array[arraySize] <optimize=false>;
   } II_ARRAY;
   II_ARRAY IIArray(Count) <name="data array">;
  
+  BYTE Y;
 } PlanningLevelLIST <name="PlanningLevel List">;
 
 struct {
