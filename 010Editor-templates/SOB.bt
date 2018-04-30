@@ -3,7 +3,7 @@
 //
 //      File: SOB.bt
 //   Authors: Alexandr Evdokimov
-//   Version: 0.5
+//   Version: 0.6
 //   Purpose: Rainbow six .sob file format
 // File Mask: .sob
 // 
@@ -47,8 +47,8 @@ typedef struct {
 
   struct { 
     FLOAT Opacity;
-    FLOAT MN;
-    UINT mn;
+    FLOAT SelfUllumination; // 
+    UINT MN; // 0 - faceted, 1 - ?, 3 - ?
     struct {              
       UINT Red; //
       UINT Green; //
@@ -189,43 +189,47 @@ typedef struct {
     struct {
     UINT Count; 
     typedef struct  { 
-       UINT Count; 
+       struct { 
+         UINT Count; 
+         struct {
+           UINT Length; 
+           char Text[Length]; 
+         } Name; 
+       } HEADER; 
+    
        struct {
-         UINT Length; // 
-         char Text[Length]; // 
-       } String <name="String">; 
-
-       UINT Count; 
-       typedef struct {  
-         UINT Index; 
-       } CC;
-       typedef struct (int arraySize) {
-          CC array[arraySize] <optimize=false>;
-       } CC_ARRAY;
-       CC_ARRAY CCArray(Count) <name="Face indexes">; 
-
-       UINT Count; 
-       typedef struct {  
-         UINT Index; 
-       } DD;
-       typedef struct (int arraySize) {
-          DD array[arraySize] <optimize=false>;
-       } DD_ARRAY;
-       DD_ARRAY DDArray(Count) <name="Texture indexes">; 
-
-       UINT Count; 
+         UINT VertexCount; 
+         typedef struct {  
+           UINT Index; 
+         } CC <name="Vertex">;
+         typedef struct (int arraySize) {
+           CC array[arraySize] <optimize=false>;
+         } CC_ARRAY;
+         CC_ARRAY CCArray(VertexCount) <name="Vertex indexes">; 
+    
+         UINT FaceCount; 
+         typedef struct {  
+           UINT Index;
+         } DD <name="Face">;
+         typedef struct (int arraySize) {
+           DD array[arraySize] <optimize=false>;
+         } DD_ARRAY;
+         DD_ARRAY DDArray(FaceCount) <name="Face Indexes">; 
+       } ARRAYS <name="Indexes">;       
+    
+       UINT MN;  // ? 
        struct {
          UINT Length; // 
          char Text[Length]; // 
        } String <name="String">;      
-       UINT Count;       
+       UINT MN;  // ?       
     } MM;
 
     typedef struct (int arraySize) {
       MM array[arraySize] <optimize=false>;
     } MM_ARRAY;
-    MM_ARRAY MMArray(Count) <name="Indexes array">; 
-    }  IND <name="Params">; 
+    MM_ARRAY MMArray(Count) <name="Meshes Array">; 
+    }  IND <name="Meshes">; 
 } DATA <name=ObjectName>;  
 
 string ObjectName(DATA &data) {
