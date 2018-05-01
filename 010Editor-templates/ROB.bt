@@ -1,15 +1,16 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: ROB.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.5
+//   Purpose: Rainbow Six Rogue Spear ROB file 
+// File Mask: *.rob
+//
 //   History: 
+//   2017 v0.5 initial release
 //------------------------------------------------
+
 struct {
   UINT Length; // 
   char Text[Length]; // 
@@ -115,7 +116,7 @@ struct {
       struct {    
         UINT Length;  
         char String[Length]; 
-        UINT number; // 1
+        UINT value; // 1
       } VERSION_STRING; 
 
       struct {
@@ -135,7 +136,7 @@ struct {
         Vertex array[arraySize];
       } VERTEX_ARRAY;     
       VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
-    } VERTICES <name="Vertecies section">;
+    } VERTICES <name="Vertices">;
 
     UINT MeshCount;  //
     typedef struct {
@@ -163,25 +164,25 @@ struct {
             UINT16 Vertex1;
             UINT16 Vertex2;
             UINT16 Vertex3;
-          } FACE_INDICIES <name="Face">;
+          } FACE_Indices <name="Face">;
     
           typedef struct (int arraySize) {
-            FACE_INDICIES array[arraySize];
-          } FACE_INDICIES_ARRAY;
+            FACE_Indices array[arraySize];
+          } FACE_Indices_ARRAY;
           
-          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount) <name="Face Indicies">;;
+          FACE_Indices_ARRAY FaceIndicesArray(FaceCount) <name="Face Indices">;
     
           typedef struct  {
             UINT16 Vertice1;
             UINT16 Vertice2;
             UINT16 Vertice3;
-          } TEXTURE_INDICIES <name="Face">;
+          } TEXTURE_Indices <name="Face">;
     
           typedef struct (int arraySize) {
-            TEXTURE_INDICIES array[arraySize];
-          } TEXTURE_INDICIES_ARRAY;
+            TEXTURE_Indices array[arraySize];
+          } TEXTURE_Indices_ARRAY;
           
-          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount) <name="Texture Indicies">;
+          TEXTURE_Indices_ARRAY TextureIndicesArray(FaceCount) <name="Texture Indices">;
     
         } Faces <name="Faces">;
     
@@ -193,24 +194,24 @@ struct {
           FLOAT X;
           FLOAT Y;
           FLOAT Z;
-        } QOBNORMALSCOORDINATES <name="Vertex Normal">;
+        } ROBNORMALSCOORDINATES <name="Vertex Normal">;
          
         typedef struct (int arraySize) {
-          QOBNORMALSCOORDINATES array[arraySize];
-        } QOBNORMALSCOORDINATESARRAY;
+          ROBNORMALSCOORDINATES array[arraySize];
+        } ROBNORMALSCOORDINATESARRAY;
         
-        QOBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount) <name="Normals">;
+        ROBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount) <name="Normals">;
          
         typedef struct   {
           FLOAT U;
           FLOAT V;
-        } QOBTEXTURECOORDINATES;
+        } ROBTEXTURECOORDINATES;
         
         typedef struct (int arraySize) {
-           QOBTEXTURECOORDINATES array[arraySize];
-        } QOBTEXTURECOORDINATESARRAY;
+           ROBTEXTURECOORDINATES array[arraySize];
+        } ROBTEXTURECOORDINATESARRAY;
         
-        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount) <name="Texture coordinates">;; 
+        ROBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount) <name="Texture coordinates">;; 
           
           typedef struct   {
             FLOAT Red;  // 0..1 (0..255 in RGB)
@@ -241,7 +242,7 @@ struct {
 
   GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
 
- } QOB_GEOMETRY_DATA <name="Geometry data section">;
+ } ROB_GEOMETRY_DATA <name="Geometry data section">;
 
  struct {   
  UINT A;
@@ -275,7 +276,7 @@ struct {
  UINT16 Index[Count] <name="Index">;
  } MeshData <name = "Meshes">;
 
-} QOBGEOMETRYLIST  <name="2. GeometryList Section">;
+} ROBGEOMETRYLIST  <name="2. GeometryList Section">;
 
 struct {
   UINT Length;
