@@ -1,10 +1,11 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: QOB.bt
+//      File: QOB(rsp).bt
 //   Authors: Alexander Evdokimov
 //   Version: 0.2
 //   Purpose: Ghost Recon QOB file
+// File Mask: *.qob
 //
 //   History: 
 //    
@@ -48,7 +49,7 @@ typedef struct {
 
   struct { 
     FLOAT Opacity;
-    FLOAT MN;
+    FLOAT SelfUllimination;
     UINT MN; 
     struct {            
       FLOAT Red; //
@@ -108,8 +109,6 @@ struct {
   struct { 
     UINT SectionSize;
     UINT ID; // 7
-
-
     struct {
       UINT Length;  
       char Text[Length];  
@@ -150,7 +149,7 @@ struct {
       VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
     } VERTICES <name="Vertex section">;
 
-    UINT Count;  //
+    UINT MeshCount;  //
     typedef struct {
         struct {
           UINT MaterialIndex;
@@ -170,7 +169,7 @@ struct {
             FACE_NORMALS array[arraySize];
           } FACE_NORMALS_ARRAY;
           
-          FACE_NORMALS_ARRAY FacesNormalsArray(FaceCount);
+          FACE_NORMALS_ARRAY FacesNormalsArray(FaceCount) <name="Face Normals">;
         
           typedef struct  {
             UINT16 Vertex1;
@@ -182,7 +181,7 @@ struct {
             FACE_INDICIES array[arraySize];
           } FACE_INDICIES_ARRAY;
           
-          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount);
+          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount) <name="Face Indices">;
     
           typedef struct  {
             UINT16 Vertice1;
@@ -194,7 +193,7 @@ struct {
             TEXTURE_INDICIES array[arraySize];
           } TEXTURE_INDICIES_ARRAY;
           
-          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount);
+          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount) <name="Texture Indices">;
     
         } Faces <name="Faces">;
     
@@ -212,7 +211,7 @@ struct {
           QOBNORMALSCOORDINATES array[arraySize];
         } QOBNORMALSCOORDINATESARRAY;
         
-        QOBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount);
+        QOBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount) <name="Vertex Normals">;
          
         typedef struct   {
           FLOAT U;
@@ -223,7 +222,7 @@ struct {
            QOBTEXTURECOORDINATES array[arraySize];
         } QOBTEXTURECOORDINATESARRAY;
         
-        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount); 
+        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount) <name="Texture coordinates">; 
           
           typedef struct   {
             FLOAT Red;  // 0..1 (0..255 in RGB)
@@ -244,7 +243,7 @@ struct {
       GEOMETRY_OBJECT array[arraySize] <optimize=false>;
     } GEOMETRY_OBJECT_ARRAY; 
     
-    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(Count) <name="Object geometry data array">; 
+    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(MeshCount) <name="Mesh array">; 
 
  } GEOMETRY_DATA;  
 
