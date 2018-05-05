@@ -2,9 +2,10 @@
 
 010 Editor file templates for the games by Red Storm Entertainment. Current available file templates are listed below.
 
-About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki)
+About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki). Current progress status [see Issues](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3Aprogress).
 
-Current progress status [see Issues](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3Aprogress).
+## File Converters 
+https://github.com/boristsr/RainbowSixFileConverters.
 
 ## Games
 
