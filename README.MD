@@ -13,8 +13,8 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 | 3 | Ghost Recon 2 | XBOX | 2004  | .xpr |
 | 4 | Tom Clancy's Ghost Recon Island Thunder | XBOX | 2002  | .rsb |
 | 5 | Tom Clancy's Ghost Recon | PS2 | 2002  | .rsb |
-| 6 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
-| 7 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bnf  |
+| 6 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bmf  |
+| 7 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bmf  |
 | 8 | Freedom First Resistance  | PC | 2000  | .rsb, .map |
 | 9 | Rogue Spear (Urban Operations, Covert Ops, Black Thorn) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
 | 10 | Shadow Watch  | PC | 2000  | .r16  |
@@ -28,7 +28,7 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1 | .anm        | [ANM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **95%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)          | Objects animation data |
 | 2 | .bcl        | [BCL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BCL.bt)        | **30%**      |          | Character animation data |
-| 3 | .bnf        | [BNF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **95%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Character animation data |
+| 3 | .bmf        | [BMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **95%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Character animation data |
 | 4 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **95%**      | [CHR file format](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)          | Character 3D model |
 | 5 | .cmf        | [CMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CMF.bt)        | **50%**      |           | Character 3D model |
 | 6 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      |           | Character 3D model |
