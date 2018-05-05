@@ -4,7 +4,7 @@
 
 About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki)
 
-Current progress [see Issues](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3Aprogress).
+Current progress status [see Issues](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3Aprogress).
 
 ## Games
 
