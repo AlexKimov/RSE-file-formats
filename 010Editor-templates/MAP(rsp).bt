@@ -613,12 +613,91 @@ struct {
         TRANSFORMATION_MATRIX TM; 
 
         switch (HEADER.ID) {
+
+           case 14: {
+             TRANSFORMATION_MATRIX TM <name="Position">;
+                      
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME[13] <optimize=false>; 
+
+             UINT Count;
+             if (Count > 0) { 
+               struct {
+                 UINT Length;  
+                 char Text[Length];  
+                 FLOAT AE[9];
+                 UINT A[2];
+               } NAME[Count] <optimize=false>; 
+             } else {
+               UINT Count;
+               struct {
+                 UINT Length;  
+                 char Text[Length];  
+               } NAME[Count] <optimize=false>;  
+               FLOAT A[4]; 
+
+             };
+           };break;
+
+
+           case 15: {
+             TRANSFORMATION_MATRIX TM <name="Position">;
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME <optimize=false>;          
+            UINT Count;
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME[12] <optimize=false>;  
+            UINT Count;
+
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME[Count] <optimize=false>; 
+
+            FLOAT RT[3];
+            UINT Count;
+
+
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME[3] <optimize=false>; 
+            FLOAT RI[5];           
+          }; break;
+
+
           case 20: {
             struct {
               UINT Length; // 
               char Text[Length]; // 
             } STRING <name="Name">;         
           }; break;
+
+
+           case 25: {
+
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME;  
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME; 
+             FLOAT J[6];
+             UINT Count;
+             struct {
+               UINT Length;  
+               char Text[Length];  
+             } NAME[Count] <optimize=false>; 
+           }; break;
+
           case 16: {
             TRANSFORMATION_MATRIX TM; 
 
@@ -637,13 +716,45 @@ struct {
              UINT Length; // 
              char Text[Length]; // 
           } Pr[Count] <optimize=false, name="Name">;
-          FLOAT F[4];
+          FLOAT F[3];
+
+          UINT Count;
+          struct {
+               UINT Length;  
+               char Text[Length];  
+           } NAME[Count] <optimize=false>; 
+
+
           struct {
              UINT Length; // 
              char Text[Length]; // 
           } Pr2[3] <optimize=false, name="Name">;
           FLOAT F2[5];
           }; break;
+
+           case 31: {
+             UINT Count;
+             typedef struct {
+               struct {
+                 UINT Length;  
+                 char Text[Length];  
+               } NAME <optimize=false>;                
+               FLOAT X; 
+               FLOAT Y;        
+               FLOAT Z;  
+               FLOAT X; 
+               FLOAT Y;        
+               FLOAT Z;
+               FLOAT X; 
+               FLOAT Y;                  
+             } Q;
+             typedef struct (int arraySize) {
+               Q array[arraySize] <optimize=false>;
+             } Q_ARRAY;
+             Q_ARRAY QArray(Count);
+     
+           }; break;
+
         }; 
 
       };
@@ -658,7 +769,7 @@ struct {
 
 typedef struct {
     struct {
-        UINT MN; // 12
+        UINT ID; // 12
         struct {
           UINT Length;
           char String[Length];
@@ -670,10 +781,18 @@ typedef struct {
         } ROOMNAME_STRING;
     } HEADER ;
     
-    BYTE MM1; // 0
-    BYTE MM2; // 0
-    BYTE MM3; // 0
-    if (MM1 == 0) BYTE MM4;
+    BYTE A; // 0
+    BYTE B; // 0
+    BYTE C; // 0
+    if (A == 0) BYTE D;
+
+    if (C == 1) {
+      FLOAT GH[6];
+    };
+
+    if (exists(D)) 
+      if (D == 1) FLOAT GH[6];  
+ 
     UINT ShermanLevelCount; 
 
     typedef struct {
