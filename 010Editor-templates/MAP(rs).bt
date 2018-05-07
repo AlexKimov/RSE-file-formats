@@ -744,36 +744,41 @@ void Nodes() {
     };
   } HEADER <name="Header">;   
  
-     switch (HEADER.ID) {
-       case 12: {
-        BYTE A;
-        BYTE B;        
-        if (A == 0) BYTE C;
-        UINT ShermanCount;
-        if (ShermanCount == 0) BYTE A;        
-        struct {
+
+    BYTE A;
+    BYTE B;        
+    if (A == 0) BYTE C;
+    UINT ShermanCount;
+    local uint scount = ShermanCount;
+    local uint i = 0;
+    //if (B != 1) scount = 1;
+    if (ShermanCount == 0) BYTE A; 
+    struct { 
+     
+      struct { 
+        UINT Length;  
+        char ShermanLevel[Length];
+      } Name <optimize=false>;
+      FLOAT T[6];
+      UINT Count; 
+      FLOAT Z[Count];
+      BYTE Y;
+      if (Y == 1) {
+          UINT AA;
           struct { 
+            UINT ID; //
+        
             UINT Length;  
-            char ShermanLevel[Length];
-          } Name <optimize=false>;
-          FLOAT T[6];
-          UINT Count; 
-          FLOAT Z[Count];
-          BYTE Y; 
-          if (Y > 0) { 
-            UINT A; 
-            Nodes(); 
-          };
-        } MM[ShermanCount] <optimize=false>; 
-       
-        UINT A;
-        FLOAT arr[A]; // 1
-        FLOAT T[A];
-        UINT P;
-       }; break;
+            char Text[Length]; 
+            if (Text == "Version") {
+              UINT value; 
+              struct {
+                UINT Length;  
+                char Text[Length];
+              } NAME;
+            };
+          } HEADER <name="Header">;   
 
-
-       case 3: {
         BYTE A;
         BYTE B;
         BYTE C;
@@ -819,34 +824,25 @@ void Nodes() {
           char Text[Length];
         } Name <optimize=false>;   
         UINT Count;
-        struct {
-          struct {
-            UINT Length;  
-            char Text[Length];
-          } Name <optimize=false>;   
-          FLOAT E[6]; 
-          UINT Count;   
-          FLOAT U;
-          BYTE Z;
-        } JJ[4] <optimize=false>;
-
-        UINT Count;
-        struct {
-          struct {
-            UINT Length;  
-            char Text[Length];
-          } Name[3] <optimize=false>; 
-          FLOAT E[4]; 
-        } JJ[Count] <optimize=false>;
-
-        UINT Count;
-        struct {
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-        } ZZ[Count] <optimize=false>; 
-       }; break;
      };
+    } Sherman[scount] <optimize=false>;
+
+
+    UINT Count;
+    struct {
+      struct { 
+        UINT Length;  
+        char ShermanLevel[Length] <optimize=false>;
+      } Name[3] <optimize=false>; 
+      FLOAT T[4];
+    } BB[Count] <optimize=false>;
+  
+    UINT Count;
+    FLOAT arr[Count]; // 1
+    FLOAT T[Count];
+    UINT Count;
+    FLOAT O[Count];
+
 };
 
 
