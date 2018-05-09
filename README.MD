@@ -52,10 +52,11 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 20 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | Freedome First Resistance 3D objects |
 | 21 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           | Texture file |
 | 22 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
-| 23 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture file |
-| 24 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Texture file |
-| 25 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Skeletal animation data |
-| 26 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Rogue Spear Static 3D objects |
-| 27 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
-| 28 | .sht       | [SHT.bt]()        | **0%**       |           | Collision data |
-| 29 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Texture file |
+| 23 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Freedom First Resistance Animations |    
+| 24 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture file |
+| 25 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Texture file |
+| 26 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Skeletal animation data |
+| 27 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Rogue Spear Static 3D objects |
+| 28 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
+| 29 | .sht       | [SHT.bt]()        | **0%**       |           | Collision data |
+| 30 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Texture file |
