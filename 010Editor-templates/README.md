@@ -14,6 +14,8 @@
 
 **DAM** - Rainbow six Character animation data.
 
+**GEE** - Force 21 mission.
+
 **KIT** -  Force 21 object file.                         
 
 **MAP(gr)** - Ghost recon level.
@@ -29,6 +31,8 @@
 **R16** - Shadow Watch Texture file.
 
 **ROB** - Rainbow Six object file.
+
+**RSA** - Freedom First Resistance Animations.
 
 **RSB** - Texture file. PC games.
 
