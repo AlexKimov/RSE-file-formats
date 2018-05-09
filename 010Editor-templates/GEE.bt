@@ -11,12 +11,18 @@
 //   History: 
 //------------------------------------------------
 
-char GEE[4];
+struct {
+  char GEE[4];
+} HEADER;
 
 UINT A;
-UINT B;
-UINT C[A];
+FLOAT B;
+UINT C[8];
 
 UINT Count;
-FLOAT G[10];
+UINT F[3];
+FLOAT G[8];
 UINT D[24];
+
+char Str[18];
+UINT FS[3];
