@@ -8,8 +8,11 @@
 // File Mask: *.map
 // 
 //   History: 
-//   
+//
+// 2018.05 0.8 initial release  
 //------------------------------------------------
+
+local uint type = 1; // some maps have slightly different structure, one at least (shuttlebay.map) 
 
 struct {
   local byte check_enable = 0; // 1 - enable value checking | 0 - disable
@@ -304,14 +307,16 @@ struct {
      struct {
           UINT MaterialIndex;
           UINT Count;
-          UINT MN[Count];
+          UINT MN[Count]; // texture index
           struct {
             UINT MN; 
+            if (type == 1) {   
               FLOAT SelfIlluminationMap;   
               FLOAT SpecularMap;
               FLOAT BumpMap;
               FLOAT ReflectionMap;
               FLOAT MapCount;
+            };  
           } MAPPING;
        } PARAMETERS;
 
@@ -405,49 +410,64 @@ OBJECT_DATA_ARRAY MAPObjectsDataArray(Count) <name="Meshes array">;
       } NAME;
       TRANSFORMATION_MATRIX TM; 
     } II[Count] <optimize=false>;
-    UINT A;
-    UINT A;
     UINT Count;
-    struct {  
-      UINT16 MN;
-      UINT16 MN;
-      UINT16 MN; 
-      UINT16 MN;
-      UINT MN; 
-      UINT MN;
-    } P[Count];
+    struct {
+      FLOAT M[3];
+    } LL[Count];
+
+    UINT Count;
+    struct {
+      FLOAT E[4];
+    } EE[Count]; 
+   
+    UINT CountA;
+    if (type == 0) {
+      struct {
+       UINT Length;
+       char Text[Length];   
+      } NAME;
+      UINT Count;
+      UINT Count;
+      UINT16 S[Count];  
+    } else {
+      struct {  
+        UINT16 MN;
+        UINT16 MN;
+        UINT16 MN; 
+        UINT16 MN;
+        UINT MN; 
+        UINT MN;
+        } P[CountA];
+    };
   }
   else { 
 
-  struct {
-      UINT VerticiesCount;
-      if (VerticiesCount > 0) {
-        typedef struct {     
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-        } COVERTICE <name="Vertex">;
-        typedef struct (int arraySize) {
-          COVERTICE array[arraySize];
-        } COVERTICE_ARRAY; 
-        COVERTICE_ARRAY COArray(VerticiesCount) <name="Vertex Array">; 
-      };
+    UINT Count;
+    if (type == 1) {
+      struct {
+        struct {
+           UINT Length;
+          char Text[Length];   
+         } NAME;
+        TRANSFORMATION_MATRIX TM; 
+      } AnchorPoints[Count] <optimize=false>;
+    } else {
+      struct {
+          FLOAT H[3];
+      } ZY[Count] <optimize=false>;
+    };
 
-      UINT FaceCount;
-      if (FaceCount > 0) {
-        typedef struct {     
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          //FLOAT DistanceOriginFace;
-         } COLLISION_FACE_NORMALS <name="Face Normals">;
-        typedef struct (int arraySize) {
-          COLLISION_FACE_NORMALS array[arraySize];
-        } COLLISION_FACE_NORMALS_ARRAY;
-        COLLISION_FACE_NORMALS_ARRAY MAPCollisionFaceNormalsArray(FaceCount) <name="Face Normals Array">;
-      };
+    UINT Count;
+    if (type == 1) {
+      struct {
+          FLOAT H[3];
+      } ZZ[Count] <optimize=false>;
+    } else {
+      struct {
+          FLOAT H[4];
+      } ZZW[Count] <optimize=false>;
+    };    
 
-  } CollisionObjects <name="2D-Collision (non-rendered) objects section">;
 
   // Objects tagging properties 
   struct {
@@ -468,24 +488,39 @@ OBJECT_DATA_ARRAY MAPObjectsDataArray(Count) <name="Meshes array">;
        NRO_FACE_INDICIES_ARRAY NROFaceIndiciesArray(FCount) <name="Face Indicies Array">;                 
   } OBJECTST <name="Section">;
 
-  UINT FFCount;
-  typedef struct {
-    UINT16 MN;
-    UINT16 MN;
-    UINT16 MN;
-    UINT16 MN;
-    UINT16 MN;
-    UINT16 MN;
-    UINT16 MN; 
-    UINT16 MN;
-  } IND;
+  if (type == 0) {
+    UINT CountE;
+    struct {
+      struct {
+        UINT Length;
+        char Text[Length];   
+      } NAME; 
+      UINT MN;
+      UINT Count;   
+      UINT16 MNp[Count]; 
+    } AU[CountE] <optimize=false>;   
+  }
+  else {
+    UINT FFCount;
+    typedef struct {
+      UINT16 MN;
+      UINT16 MN;
+      UINT16 MN;
+      UINT16 MN;
+      UINT16 MN;
+      UINT16 MN;
+      UINT16 MN; 
+      UINT16 MN;
+    } IND;
 
-  typedef struct (int arraySize) {
-    IND array[arraySize] <optimize=false>;
-  } IND_ARRAY; 
-  IND_ARRAY INDARRAY(FFCount) <name="Indicies">;
+    typedef struct (int arraySize) {
+      IND array[arraySize] <optimize=false>;
+    } IND_ARRAY; 
+    IND_ARRAY INDARRAY(FFCount) <name="Indicies">;
+     
   };
-
+  };
+  if (type == 1) {
   UINT Count;
   struct {
     struct {
@@ -496,8 +531,8 @@ OBJECT_DATA_ARRAY MAPObjectsDataArray(Count) <name="Meshes array">;
     UINT MN; 
     UINT Count;
     UINT16 MR[Count];
-  } AA[Count] <optimize=false>; 
-  
+  } AA[Count] <optimize=false>;
+  }; 
 } GEOMETRY <name=ObjectName>;
 
 string ObjectName(GEOMETRY &geometry) {
@@ -556,6 +591,12 @@ struct {   //
       UINT RoomNumber;
       UINT OpositeRoomNumber; 
       BYTE A;
+      if (A == 1) {
+        struct {
+          UINT Length;
+          char Text[Length];   
+        } NAME;
+      };
     } PORTAL_PARAMS; 
   } PORTAL <name=PortalName>;
 
