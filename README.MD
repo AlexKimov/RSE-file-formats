@@ -22,7 +22,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 8 | Freedom First Resistance  | PC | 2000  | .rsb, .map, .qob, .noz, .rsa |
 | 9 | Rogue Spear (Urban Operations, Covert Ops, Black Thorn) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
 | 10 | Shadow Watch  | PC | 2000  | .r16  |
-| 11 | Force 21  | PC | 1999  | .rsb, .kit  |
+| 11 | Force 21  | PC | 1999  | .rsb, .kit, .gee, .tgz  |
 | 12 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf, .dam  |
 | 13 | Rainbow six (Eagle Watch) | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
