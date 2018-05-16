@@ -12,7 +12,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 | №     | Game | Platform | Year | File extensions |
 | :--- | :-- | :------ | :------ | :------ |
-| 1 | Rainbow six Lockdown | PC | 2005 | .rsb, .chr, .skl |
+| 1 | Rainbow six Lockdown | PC | 2005 | .rsb, .chr, .skl, .qob |
 | 2 | Ghost Recon 2 Summit Strike | XBOX | 2005  | .xpr |
 | 3 | Ghost Recon 2 | XBOX | 2004  | .xpr |
 | 4 | Tom Clancy's Ghost Recon Island Thunder | XBOX | 2002  | .rsb |
@@ -51,14 +51,15 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 19 | .qob       | [QOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB.bt)        | **95%**      | [QOB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/QOB-File-Format)        | Ghost Recon Static 3D objects |
 | 20 | .qob       | [QOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(rsp).bt)        | **95%**      |      | Rogue Spear Static 3D objects |
 | 21 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | Freedome First Resistance 3D objects |
-| 22 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           | Texture file |
-| 23 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
-| 24 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Freedom First Resistance Animations |    
-| 25 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture file |
-| 26 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Texture file |
-| 27 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Skeletal animation data |
-| 27 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Rainbow Six Lockdown Skeletal animation data |
-| 28 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Rogue Spear Static 3D objects |
-| 29 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
-| 30 | .sht       | [SHT.bt]()        | **0%**       |           | Collision data |
-| 31 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Texture file |
+| 22 | .qob       | [QOB(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(LD).bt)        | **65%**      |      | Rainbow Six Lockdown 3D object |
+| 23 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           | Texture file |
+| 24 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
+| 25 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Freedom First Resistance Animations |    
+| 26 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture file |
+| 27 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Texture file |
+| 28 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Skeletal animation data |
+| 29 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Rainbow Six Lockdown Skeletal animation data |
+| 30 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Rogue Spear Static 3D objects |
+| 31 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
+| 32 | .sht       | [SHT.bt]()        | **0%**       |           | Ghost Recon Collision data |
+| 33 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Texture file |
