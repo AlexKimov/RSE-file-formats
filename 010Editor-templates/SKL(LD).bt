@@ -1,0 +1,48 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: SKL(LD).bt
+//   Authors: AlexKimov
+//   Version: 0.1
+//   Purpose: Rainbow Six Lockdown SKL file
+//
+//   History: 
+//
+//   2018.05 v0.1
+//------------------------------------------------
+
+local UINT count = 23; // 23 max
+FLOAT MN;
+UINT DataSize;
+
+typedef struct {
+  struct {
+    UINT ID;
+    UINT Length;
+    char Version[Length];
+    UINT value;
+    UINT Length;
+    char Name[Length];  
+  } HEADER;
+
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+    FLOAT H;
+  } Parammeters;
+} Bone <name=BoneName>;
+
+typedef struct (int arraySize) {
+  Bone array[arraySize] <optimize=false>;
+} Bone_ARRAY; 
+
+Bone_ARRAY BoneArray(count) <name="Bones">; 
+
+string BoneName(Bone &bone) {
+  return bone.HEADER.Name;
+} 
