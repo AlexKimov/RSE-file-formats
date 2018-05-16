@@ -1,27 +1,25 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: CHR.bt
+//      File: CHR(LD).bt
 //   Authors: AlexKimov
-//   Version: 1.0
-//   Purpose: Ghost Recon CHR file
+//   Version: 0.1
+//   Purpose: Rainbow Six Lockdown CHR file
 //
 //   History: 
 //
-//   2018.04 v1.0  
-//   2017.01 v0.9 current version 
-//   2016.12 v0.4 initial release
+//   2018.05 v0.1  
 //------------------------------------------------
 
 struct {
-  time_t ModifiedDate <name="CHR File Modified Date">;
-  BYTE A;
+  time_t CreateDate <name="CHR File Create Date">;
+  BYTE MN; //0, 1
 } HEADER <name="Header">;
 
 struct {
   UINT Length; // 
   char Text[Length]; // 
-} BEGINMODEL_STRING <name="BEGINMODEL">;
+} BEGINMODEL_STRING <name="BeginModel">;
 
 typedef struct {
   struct {
@@ -59,10 +57,25 @@ typedef struct {
       FLOAT mn;
     } Specular;
     FLOAT SpecularLevel; //o.o5
+
+    UINT16 A;
+    UINT16 B;
+    BYTE E;
+    FLOAT MN;
+    FLOAT MN;
     BYTE A;
     BYTE B;
+    UINT16 A;
     UINT A;
-    FLOAT MN[5];
+    UINT A;
+    BYTE A;
+    if (SpecularLevel > 0) {
+      BYTE B;
+      BYTE C;
+      BYTE D;
+      UINT16 B;
+      BYTE R[10];
+    };
   } Properties;
 } MATERIAL <name=MaterialName>;
 
@@ -102,7 +115,7 @@ string MaterialName(MATERIAL &material) {
 } 
 
 string TextureName(TEXTURE &texture) {
-  return "FileName: " + texture.TEXTURE_FILENAME_STRING.Text + " ";
+  return "FileName: " + texture.TEXTURE_FILENAME.Text + " ";
 } 
 
 struct {  
@@ -186,11 +199,18 @@ struct {
     FLOAT C;
     UINT16 O;
     UINT Count;
+    if (SECTION_HEADER.VERSION.value == 26)
+    struct {
+      FLOAT A;
+      FLOAT B;
+      FLOAT C; 
+    } IOZ[Count]; 
+    else
     struct {
       UINT16 A;
       UINT16 B;
       UINT16 C;
-    } IOZ[Count];    
+    } IOZ[Count];     
     struct {
       UINT Length;  
       char Text[Length];  
@@ -220,60 +240,72 @@ struct {
     UINT MeshCount;
 
     typedef struct {
-      UINT Count;
-      BYTE A;
-      BYTE B;
-      BYTE C;
-      UINT MN;
-      UINT MaterialIndex;
-      UINT TextureIndex;;
       struct {
-        UINT MN;     
-        UINT SelfIlluminationMap;
-        UINT SpecularMap;
-        UINT BumpMap;
-        UINT ReflectionMap;
-        UINT MapCount;
-        UINT MN; 
-        UINT MN; 
-        UINT MN; 
-        UINT MN;
-      } MAPPING;
+          UINT Count;
+          BYTE A;
+          BYTE B;
+          BYTE C;
+          UINT MN;
+          UINT MaterialIndex;
+          UINT TextureIndex;;
+          struct {
+            UINT MN;     
+            UINT SelfIlluminationMap;
+            UINT SpecularMap;
+            UINT BumpMap;
+            UINT ReflectionMap;
+            UINT MapCount;
+            UINT MN; 
+            UINT MN; 
+            UINT MN; 
+            UINT MN;
+          } MAPPING;
+      } Properties;
       UINT V;
       UINT CountY;
       UINT CountD;
       UINT CountZ;
-
+    
       struct {
         FLOAT X;
         FLOAT Y;
         FLOAT Z;
         FLOAT W;
       } P[CountD];
-      struct {
-        UINT A;
-      } IRT[CountZ];
 
-      UINT CountR; 
-      //BYTE B;  
-    
-      //UINT C;
-      //UINT C;
       struct {
-        UINT16 X;
-        UINT16 X;
-        UINT16 X;
-      } TTT[CountR];  
+        UINT SS; 
+      } RTO[CountZ]; 
+
+      UINT16 CountW;
+      BYTE F[CountW];
+
+      struct {
+        UINT16 A;
+        UINT16 B;
+        UINT16 C;
+      } S0[CountD];
+
+      UINT CountX;
+      UINT CountE; 
+      struct {
+        UINT16 A;
+      } S1[CountX];
+
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } T1[CountX];
+
+      struct {
+        FLOAT X;
+        FLOAT Y;
+      } T2[CountX];
+
       struct {
         FLOAT A;
-        FLOAT B; 
-        FLOAT A;
-        FLOAT A;
-        FLOAT A;
-      } VB[CountR]; 
-      struct {
-        FLOAT A;
-      } VE[CountR];     
+      } H[CountX];    
     } Mesh <name="Mesh">;
 
     typedef struct (int arraySize) {
@@ -292,11 +324,12 @@ struct {
 } CHRGEOMETRYLIST  <name="2. GeometryList Section">;
 
 UINT MN; // 0
+BYTE B;
 
 struct {
   UINT Length; // 
   char Text[Length]; // 
-} EndModelString <name="Model section end">;
+} EndModelString <name="EndModel">;
 
 struct {
   struct {
@@ -311,19 +344,69 @@ struct {
     } NAME;  
     UINT Count;
   } HEADER;
-  typedef struct {
+
     UINT AttCount;
-     struct {
-    UINT Length;  
-      char Text[Length];
+
+  typedef struct {
+      struct {
+        UINT Length;  
+        char Text[Length];
+      } Attachment_NAME;  
       FLOAT X;
       FLOAT Y;
-    FLOAT Z; 
-      BYTE A[14]; 
-    } Attachment_NAME;    
+      FLOAT Z; 
+      FLOAT X;
+      FLOAT Y;
+      BYTE Z;
+      BYTE Z;
+      FLOAT Y;    
   } Attachment <name="Attachment">;
   typedef struct (int arraySize) {
-     Mesh array[arraySize] <optimize=false>;
+     Attachment array[arraySize] <optimize=false>;
   } Attachment_ARRAY; 
-  Attachment_ARRAY MeshArray(MeshCount) <name="Attachments">;
-} Attachments <name="Attachment Section">;
+  Attachment_ARRAY MeshArray(AttCount) <name="Attachments">;
+} Attachments <name="Attachments Section">;
+
+struct {
+  UINT SectionSize;
+  BYTE B;
+} HEADER;
+
+if (HEADER.B > 0) {
+  struct {
+    UINT D;
+    UINT CountA;
+    typedef struct {
+      struct {
+        UINT Length;  
+        char Text[Length];
+      } NAME;
+
+      UINT16 Count;
+      struct {
+        UINT16 A;
+      } YOU[Count];
+    
+      struct { 
+        UINT16 A;
+         UINT16 B;
+        UINT16 C;   
+      }NO[Count];
+
+    } OP <name=Name>;
+    typedef struct (int arraySize) {
+       OP array[arraySize] <optimize=false>;
+    } OP_ARRAY; 
+    OP_ARRAY OPArray(CountA) <name="Array">;
+
+    UINT Count;
+      struct {
+        UINT16 A;
+      } Y[Count];
+    
+  } Section;
+};
+
+string Name(OP &op) {
+  return op.NAME.Text;
+}
