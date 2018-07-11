@@ -8,6 +8,13 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 Python scripts by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
 
+## More formats
+**1.** [Sea dogs (2000), Age of Sail 2 (2001)](https://github.com/AlexKimov/seadogs-file-formats)
+
+**2.** [Hitman Сodename 47, Hitman 2 Silent Assassin](https://github.com/AlexKimov/hitman-file-formats)
+
+**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/hitman-file-formats)
+
 ## Games
 
 | №     | Game | Platform | Year | File extensions |
