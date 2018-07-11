@@ -13,7 +13,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 **2.** [Hitman Сodename 47, Hitman 2 Silent Assassin](https://github.com/AlexKimov/hitman-file-formats)
 
-**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/hitman-file-formats)
+**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/HardTruck-RignRoll-file-formats)
 
 ## Games
 
