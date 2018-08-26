@@ -70,3 +70,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 31 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
 | 32 | .sht       | [SHT.bt]()        | **0%**       |           | Ghost Recon Collision data |
 | 33 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Ghost Recon 2 Texture file |
+
+### Scripts
+
+* [RSBtoBMP.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/RSBtoBMP.1sc) - convert **RSB** to **BMP**
