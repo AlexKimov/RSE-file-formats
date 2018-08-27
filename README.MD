@@ -37,7 +37,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 12 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf, .dam  |
 | 13 | Rainbow six (Eagle Watch) | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
 
-## Available file templates (wip)
+## Templates and scripts (wip)
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
