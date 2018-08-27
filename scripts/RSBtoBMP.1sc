@@ -11,8 +11,36 @@
 
 local byte fileNaming = 0; // 1 - extended naming
 local uchar Palette[1024];
-local uint DXT, depth, R, G, B, A, i, FileIndex;
+local int DXT = -1;
+local int depth, R, G, B, A, i, FileIndex;
 local string DirName, FileName, Path;
+local string RGB565, RGB4444, RGB888, RGB5551; 
+local string extensions = "*.rsb;*.RSB;*.R16;*.r16;*.xpr;*.XPR";
+
+
+if (fileNaming == 1) 
+{
+  RGB565 = "(RGB565)";
+  RGB4444 = "(RGB4444)";
+  RGB888 = "(RGB888)";
+  RGB5551 = "(RGB5551)";    
+};
+
+string StrLowerCase(uchar Str[])
+{ 
+  local uint length, i;
+  length = sizeof(Str);
+  for ( i = 0; i < length; i += 4)
+  {  
+    Str[i] = ToLower(Str[i]);
+  };
+  return Str;
+}
+
+string FileNameRemoveExt(string FileName)
+{
+  return SubStr(FileName, 0, Strchr(FileName, '.'));
+};
 
 void readMasks()
 {
@@ -169,17 +197,16 @@ void createBMPFile(string Name, uchar Buffer[], uint type, uint width, uint heig
     FSkip(1024); 
   };
 
-  //if (alignment > 0)
-  //  for ( i = 0; i < height; ++i)
-  //  { 
-  //    Memcpy(Line, Buffer, w, 0, pos);
-  //    WriteBytes(Line, FTell(), w);
-  //    FSkip(w); 
-  //    WriteBytes(Empty, FTell(), alignment);
-  //    FSkip(alignment);
-  //    pos += w;
-  //  }
-  // else
+  if (alignment > 0)
+    for ( i = 0; i < height; ++i)
+    { 
+      Memcpy(Line, Buffer, w, 0, pos);
+      WriteBytes(Line, FTell(), w);
+      FSkip(w); 
+      WriteBytes(Empty, FTell(), alignment);
+      FSkip(alignment);
+      pos += w;
+    }
 
   if (depth == 32)
   {
@@ -204,7 +231,7 @@ void createBMPFile(string Name, uchar Buffer[], uint type, uint width, uint heig
 
 void RSBtoBMP(string FileName, uint mode)
 {
-  local string RGB565, RGB4444, RGB888, RGB5551, Path;
+  local string Path;
   local uchar Buffer[10485760];
   local float size;
   local int isPaletted, Width, Height, Version, FileNew;
@@ -255,26 +282,24 @@ void RSBtoBMP(string FileName, uint mode)
     readMasks(); 
   }
 
-  size = Width*Height*(depth/8);
+  if (DXT >= 0) 
+    size = Width*Height*texelSize(12 + DXT);
+  else
+    size = Width*Height*(depth/8);
   ReadBytes(Buffer, FTell(), size);
 
   if (mode)
     FileClose();
 
-  if (fileNaming == 1) 
-  {
-    RGB565 = "(RGB565)";
-    RGB4444 = "(RGB4444)";
-    RGB888 = "(RGB888)";
-    RGB5551 = "(RGB5551)";    
-  };
-
-  Path = FileNameGetPath(FileName) + "\\BMPs";
+  Path = FileNameGetPath(FileName) + "\\output";
   if (!DirectoryExists(Path)) MakeDir(Path);
 
   FileName = Path + "\\" + FileNameGetBase(FileName);
-  FileName = SubStr(FileName, 0, Strchr(FileName, '.') - 1);
+  FileName = FileNameRemoveExt(FileName);
 
+  if (DXT >= 0)
+    createDDSFile(FileNameRemoveExt(FileName), Buffer, 12 + DXT, Width, Height, size); 
+  else
   if (R == 5 && G == 6)
     createBMPFile(FileName + RGB565, Buffer, 1, Width, Height);
   else
@@ -290,20 +315,233 @@ void RSBtoBMP(string FileName, uint mode)
     Printf("not supported: R:%d, G:%d, B:%d, A:%d  ", R, G, B, A);
 };  
 
-void processRSBs(string Directory) 
+void R16toBMP(string FileName, uint mode)
+{
+  local uint FileNew, Width, Height;
+  local uchar Buffer[10485760];
+  local float size;
+
+  if (mode) 
+  {
+    FileNew = FileOpen(FileName, false, "Hex");
+    FSeek(0);
+  };
+
+  //Header
+  Width = ReadShort(FTell());
+  FSkip(2);
+  Height = ReadShort(FTell());
+  FSkip(27);
+
+  size = Width*Height*2;
+  ReadBytes(Buffer, FTell(), size); 
+  depth = 16;
+
+  if (mode)
+    FileClose();
+
+  createBMPFile(FileNameRemoveExt(FileName) + RGB5551, Buffer, 5, Width, Height); 
+};
+
+void  createDDSFile(string Name, uchar Buffer[], uint Type, uint Width, uint Height, uint size)
+{
+  local string Magic = "DDS";
+
+  local uint mipmapcount, RGBBitCount, RBitMask, GBitMask, BBitMask, ABitMask, flags, pitchOrLinearSize, depth, mipMapCount, caps, caps2, caps3, caps4, reserved2;
+  string fourCC;
+  uchar reserved1[44];
+
+  FileNew("Hex");
+
+  // DDS Header
+  WriteString(FTell(), Magic);
+  WriteByte(3, 32);
+  FSkip(4);
+
+  WriteInt(FTell(), 124);
+  FSkip(4);
+  flags = 528391; // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT | DDSD_LINEARSIZE
+  WriteInt(FTell(), flags);
+  FSkip(4);
+
+  WriteInt(FTell(), Height);
+  FSkip(4);
+  WriteInt(FTell(), Width);
+  FSkip(4);
+
+  if (Type == 12) 
+    pitchOrLinearSize = 32768;
+  else
+    pitchOrLinearSize = 65536;
+
+  WriteInt(FTell(), pitchOrLinearSize);
+  FSkip(4);
+  depth = 0;
+  WriteInt(FTell(), depth);
+  FSkip(4);
+  mipmapcount = 0;
+  WriteInt(FTell(), mipmapcount);
+  FSkip(4); 
+  WriteBytes(reserved1, FTell(), 44); 
+  FSkip(44); 
+  // pixel format
+  WriteInt(FTell(), 32); 
+  FSkip(4);
+  flags = 4; // DDPF_FOURCC
+  WriteInt(FTell(), flags);
+  FSkip(4);
+
+  if (Type == 12) 
+    fourCC = "DXT1"; // DDPF_FOURCC
+  else
+    fourCC = "DXT5"; // DDPF_FOURCC
+  WriteString(FTell(), fourCC);
+  FSkip(4);
+
+  RGBBitCount = 0;
+  WriteInt(FTell(), RGBBitCount);
+  FSkip(4);
+  RBitMask = 0; 
+  WriteInt(FTell(), RBitMask);
+  FSkip(4);
+  GBitMask = 0;  
+  WriteInt(FTell(), GBitMask);
+  FSkip(4);
+  BBitMask = 0;  
+  WriteInt(FTell(), BBitMask);
+  FSkip(4);
+  ABitMask = 0; 
+  WriteInt(FTell(), ABitMask);
+  FSkip(4);
+  // caps
+  caps = 4096; 
+  WriteInt(FTell(), caps);
+  FSkip(4);
+  caps2 = 0; 
+  WriteInt(FTell(), caps2);
+  FSkip(4); 
+  caps3 = 0; 
+  WriteInt(FTell(), caps3);
+  FSkip(4); 
+  caps4 = 0; 
+  WriteInt(FTell(), caps4);
+  FSkip(4); 
+  reserved2 = 0; 
+  WriteInt(FTell(), reserved2);
+  FSkip(4);
+
+  WriteBytes(Buffer, FTell(), size);
+
+  FileSave(Name + ".dds");
+  FileClose();  
+};
+
+float texelSize(uint type) 
+{
+  switch (type)
+  {
+    case 12: 
+      return 0.5;
+    break;
+
+    case 6: 
+    case 7:
+      return  4;
+    break;
+
+    case 4: 
+    case 5:
+      return  2;
+    break;
+
+    default: 
+      return  1;
+  };
+};
+
+void XPRtoDDS(string FileName, uint mode)
+{
+  local uchar Buffer[10485760];
+  local uint FileNew, Width, Height, Type;
+  local byte b;
+  local float size; 
+  local string Path;
+
+  if (mode) 
+  {
+    FileNew = FileOpen(FileName, false, "Hex");
+    FSeek(0);
+  };
+
+  FSkip(25);
+  Type = ReadByte(FTell());
+  FSkip(1);
+  b = ReadByte(FTell());
+  Width = 1 << ((b >> 4) & 0xF);
+
+  FSkip(1);
+  Height = 1 << ReadByte(FTell());
+  FSkip(1);
+
+  FSkip(2020);
+
+  size = Width*Height*texelSize(Type);
+
+  ReadBytes(Buffer, FTell(), size); 
+
+  if (mode)
+    FileClose();
+
+  Path = FileNameGetPath(FileName) + "\\DDS";
+  if (!DirectoryExists(Path)) MakeDir(Path);
+
+  FileName = Path + "\\" + FileNameGetBase(FileName);
+
+  if (Type >= 12)
+    createDDSFile(FileNameRemoveExt(FileName), Buffer, Type, Width, Height, size); 
+};
+
+void processImage(string FileName, uint mode)
+{
+  local string ext;
+  ext = StrLowerCase(FileNameGetExtension(FileName));
+
+  switch (ext)
+  {
+    case ".rsb":
+    {
+      RSBtoBMP(FileName, mode);
+    }            
+    break;
+
+    case ".r16":
+    {
+      R16toBMP(FileName, mode);
+    }            
+    break;
+
+    case ".xpr":
+    {
+      XPRtoDDS(FileName, mode);
+    }  
+  }; 
+};
+
+void processDir(string Directory) 
 {
   local string dir = Directory;
   local uint i = 0;
-  TFileList fl = FindFiles( dir, "*.rsb;*.RSB" ); 
+
+  TFileList fl = FindFiles( dir,  extensions); 
     
   if (fl.filecount) // files      
     for ( i = 0; i < fl.filecount; ++i )
     {    
-      Printf(fl.file[i].filename);
-      RSBtoBMP(dir + fl.file[i].filename, 1);
+      //Printf(fl.file[i].filename);
+      processImage(dir + fl.file[i].filename, 1);
     };   
   for ( i = 0; i < fl.dircount; ++i )  
-    processRSBs(dir + fl.dir[i].dirname + "\\");    
+    processDir(dir + fl.dir[i].dirname + "\\");    
 };
 
 FileIndex = GetFileNum();
@@ -317,8 +555,8 @@ if (i == 0)
   DirName = InputDirectory("Choose directory");
   if (DirName != "") 
   {
-    processRSBs(DirName);
+    processDir(DirName);
   };
 }
 else if (i == 1)
-  RSBtoBMP(FileName, 0);
+  processImage(FileName, 0);
