@@ -4,6 +4,10 @@
 
 About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templates-GR/wiki). Current progress status [see Issues](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3Aprogress).
 
+#### Roadmap
+
+* conversion scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
+
 ## File Converters 
 Python scripts by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
