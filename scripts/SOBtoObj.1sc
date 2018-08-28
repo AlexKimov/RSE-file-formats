@@ -1,0 +1,371 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//
+//------------------------------------------------
+
+local uint Line;
+local uchar Materials[3000], MaterialsIndex[1000];
+local uint VertexesLine, UVLine, IndexesLine, NormalsLine, MaterialIndex, matpos;
+local int OBJ = -1, FileIndex;
+local string VertexesString, NormalsString, IndexesString, TCoordinatesString, ObjectName;
+local int MTL = -1;
+local float AmbientR, AmbientG, AmbientB, DiffuseR, DiffuseG, DiffuseB, SpecularR, SpecularG, SpecularB;
+local float Opacity, SpecularLevel, SelfUllumination;
+local string TextureName, MaterialName;
+local byte twoSided;
+local string FileName;
+
+string ReadName()
+{
+  local string Name;
+  local uint length; 
+  length = ReadInt(FTell());
+  FSkip(4);
+  Name = ReadString(FTell(), length);  
+  FSkip(length);
+  return Name; 
+};
+
+string FileNameRemoveExt(string FileName)
+{
+  return SubStr(FileName, 0, Strchr(FileName, '.'));
+};
+
+// Header
+string ReadHeader()
+{
+  local string Name;
+  local uint size, id, value;
+  size = ReadInt(FTell());
+  FSkip(4);
+  id = ReadInt(FTell());
+  FSkip(4);
+  Name = ReadName();
+  if (Name == "Version")
+  {
+    value = ReadInt(FTell());
+    FSkip(4); 
+    Name = ReadName();
+    if (id == 7) 
+    {
+        FSkip(8);
+    };
+  };
+  return Name;
+};
+
+// Material
+void ReadMaterial(uint i)
+{
+  local uint size, Unknown;
+  MaterialName = ReadHeader();
+  size = sizeof(MaterialName);
+  Materials[matpos] = size;
+  MaterialsIndex[i] = matpos;
+  ++matpos;
+  Memcpy(Materials, MaterialName, size, matpos , 0);
+  matpos += size;
+
+  TextureName = ReadName();
+  //  
+  Opacity = ReadFloat(FTell());
+  FSkip(4);
+  SelfUllumination = ReadFloat(FTell());
+  FSkip(4); 
+  Unknown = ReadInt(FTell());
+  FSkip(4);
+  //
+  AmbientR = ReadInt(FTell());
+  FSkip(4);
+  AmbientG = ReadInt(FTell());
+  FSkip(4);
+  AmbientB = ReadInt(FTell());
+  FSkip(4); 
+  //
+  DiffuseR = ReadInt(FTell());
+  FSkip(4);
+  DiffuseG = ReadInt(FTell());
+  FSkip(4);
+  DiffuseB = ReadInt(FTell());
+  FSkip(4); 
+  //
+  SpecularR = ReadInt(FTell());
+  FSkip(4);
+  SpecularG = ReadInt(FTell());
+  FSkip(4);
+  SpecularB = ReadInt(FTell());
+  FSkip(4); 
+  SpecularLevel = ReadFloat(FTell());
+  FSkip(4);
+  twoSided = ReadByte(FTell());
+  FSkip(1);
+};
+
+void ReadFileHeader()
+{
+  local uint length;
+  length = ReadInt(0);
+  FSkip(4);
+  FSkip(length);
+}
+
+void AddMaterialtoMTLFile()
+{
+  local string MTLString, Str;
+
+  FileSelect(MTL);
+
+  Str = "newmtl " + MaterialName + "\n";
+  MTLString += Str;
+  SPrintf(Str, "Ka %f, %f, %f\n", AmbientR/255, AmbientG/255, AmbientB/255);
+  MTLString += Str;
+  SPrintf(Str, "Kd %f, %f, %f\n", DiffuseR/255, DiffuseG/255, DiffuseB/255);
+  MTLString += Str;
+  SPrintf(Str, "Ks %f, %f, %f\n", SpecularR/255, SpecularG/255, SpecularB/255);
+  MTLString += Str;  
+  SPrintf(Str, "Ns %f\n", SpecularLevel*1000);
+  MTLString += Str;
+  SPrintf(Str, "d %f\n", Opacity);
+  MTLString += Str;
+  SPrintf(Str, "illum %d\n", 2);
+  MTLString += Str;
+  SPrintf(Str, "map_Kd %s\n", TextureName);
+  MTLString += Str;
+  TextWriteLine(MTLString, Line);
+  Line += 8;
+
+  FileSelect(FileIndex);
+};
+
+void ReadMaterialList()
+{
+  local uint count, i;
+  ReadHeader();
+  count = ReadInt(FTell());
+  FSkip(4);
+
+  MTL = FileNew("Text"); // create .mtl file
+  TextWriteLine("# MaterialList\n", Line);
+  ++Line;
+  FileSelect(FileIndex);
+ 
+  for ( i = 0; i < count; ++i )
+  {
+    ReadMaterial(i);
+    AddMaterialtoMTLFile();
+  };
+
+  FileSelect(MTL);
+  FileSave(FileNameRemoveExt(FileName) + ".mtl");
+    //FileClose();
+  FileSelect(FileIndex);
+};
+
+// Mesh
+void ReadMesh()
+{
+
+};
+
+// Mesh
+void ReadVertexes()
+{
+  local uint count, i;
+  local float X, Y, Z;
+  local string Str;
+  count = ReadInt(FTell());
+  FSkip(4);
+  VertexesLine = count;
+  for ( i = 0; i < count; ++i )
+  {
+    X = ReadFloat(FTell());
+    FSkip(4);
+    Y = ReadFloat(FTell());
+    FSkip(4);
+    Z = ReadFloat(FTell());
+    FSkip(4);
+    SPrintf(Str, "v %f, %f, %f\n", X, Y, Z);
+    VertexesString += Str;
+  };  
+};
+
+void ReadUVNormals()
+{
+
+  local uint count, i;
+  local float X, Y, Z, U, V;
+  local string Str;
+  count = ReadInt(FTell());
+  FSkip(4);
+  NormalsLine = count;
+  UVLine = count;
+  for ( i = 0; i < count; ++i )
+  {
+    X = ReadFloat(FTell());
+    FSkip(4);
+    Y = ReadFloat(FTell());
+    FSkip(4);
+    Z = ReadFloat(FTell());
+    FSkip(8);
+    SPrintf(Str, "vn %f, %f, %f\n", X, Y, Z);
+    NormalsString += Str;
+    U = ReadFloat(FTell());
+    FSkip(4);
+    V = ReadFloat(FTell());
+    FSkip(16);
+    SPrintf(Str, "vt %f, %f\n", U, V);
+    TCoordinatesString += Str;
+  };  
+};
+
+string getMaterialName(uint index)
+{
+
+  local uint pos, length;
+  pos = MaterialsIndex[index];
+  length = Materials[pos];
+  local uchar Name[length];
+  Memcpy(Name, Materials, length, 0, pos + 1);
+  return Name; 
+}
+
+void ReadIndexes()
+{
+  local uint count, i;
+  local uint V1, V2, V3, Vt1, Vt2, Vt3;
+  local string Str, Name;
+  count = ReadInt(FTell());
+  FSkip(4);
+  IndexesLine = 2*count;
+  for ( i = 0; i < count; ++i )
+  {
+    V1 = ReadInt(FTell()) + 1;
+    FSkip(4);
+    V2 = ReadInt(FTell()) + 1;
+    FSkip(4);
+    V3 = ReadInt(FTell()) + 1;
+    FSkip(4);
+
+    Vt1 = ReadInt(FTell()) + 1;
+    FSkip(4);
+    Vt2 = ReadInt(FTell()) + 1;
+    FSkip(4);
+    Vt3 = ReadInt(FTell()) + 1;
+    FSkip(20);
+    MaterialIndex = ReadInt(FTell());
+    FSkip(4);
+    //
+    if (MaterialIndex < 255)
+    {
+      Name = getMaterialName(MaterialIndex);
+      SPrintf(Str, "usemtl %s\n", Name);
+    }
+    else
+      SPrintf(Str, "usemtl %s\n", "none");      
+    IndexesString += Str;
+    SPrintf(Str, "f %u/%u %u/%u %u/%u\n", V1, Vt1, V2, Vt2, V3, Vt3);
+    IndexesString += Str;
+  };  
+};
+
+void ReadObject()
+{
+  ObjectName = ReadHeader();
+  ReadVertexes();
+  ReadUVNormals();
+  ReadIndexes();
+  //ReadMeshes();
+}
+
+void AddObjectToObj()
+{
+  local string Str;
+
+  FileSelect(OBJ);  
+
+  TextWriteLine("# " + FileName + "\n", Line);
+  ++Line;
+  TextWriteLine("mtllib " + FileNameRemoveExt(FileNameGetBase(FileName)) + ".mtl\n", Line);
+  ++Line;
+
+  TextWriteLine("\n", Line);
+  ++Line;
+
+  Str = "o " + ObjectName + "\n";
+  TextWriteLine(Str, Line);
+  ++Line;
+
+  TextWriteLine("\n", Line);
+  ++Line;
+
+  TextWriteLine("# Vertexes\n", Line);
+  ++Line;
+  TextWriteLine(VertexesString, Line);
+  Line += VertexesLine;
+
+  TextWriteLine("\n", Line);
+  ++Line;
+
+  TextWriteLine("# Normals\n", Line);
+  ++Line;
+  TextWriteLine(NormalsString, Line);
+
+  Line += NormalsLine;
+
+  TextWriteLine("\n", Line);
+  ++Line;
+
+  TextWriteLine("# Texture coordinates\n", Line);
+  ++Line; 
+  TextWriteLine(TCoordinatesString, Line);
+  Line += UVLine;
+
+  TextWriteLine("\n", Line);
+  ++Line;
+
+  TextWriteLine("# Faces\n", Line);
+  ++Line; 
+  TextWriteLine(IndexesString, Line);
+
+  FileSelect(FileIndex);
+};
+
+void ReadGeometryList()
+{
+  local uint count, i;
+  Line = 0;
+
+  ObjectName = ReadHeader();
+  count = ReadInt(FTell());
+  FSkip(4);
+  
+  OBJ = FileNew("Text"); // create .obj file
+  TextWriteLine("# GeometryList\n", Line);
+  ++Line;
+  FileSelect(FileIndex);  
+
+  for ( i = 0; i < count; ++i )
+  {
+    ReadObject();
+    AddObjectToObj();
+  };
+
+  FileSelect(OBJ);
+  FileSave(FileNameRemoveExt(FileName) + ".obj");
+    //FileClose();
+  FileSelect(FileIndex);
+};
+
+FileIndex = GetFileNum();
+FileName = GetFileName();
+
+ReadFileHeader();
+ReadMaterialList();
+ReadGeometryList();
