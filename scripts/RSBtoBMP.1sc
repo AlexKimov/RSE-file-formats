@@ -9,6 +9,7 @@
 //   History: 
 //------------------------------------------------
 
+local byte to24bit = 1; // 1 - convert 16 bit image to 24 bit image
 local byte fileNaming = 0; // 1 - extended naming
 local uchar Palette[1024];
 local int DXT = -1;
@@ -30,7 +31,7 @@ string StrLowerCase(uchar Str[])
 { 
   local uint length, i;
   length = sizeof(Str);
-  for ( i = 0; i < length; i += 4)
+  for ( i = 0; i < length; ++i)
   {  
     Str[i] = ToLower(Str[i]);
   };
@@ -78,7 +79,8 @@ void createBMPFile(string Name, uchar Buffer[], uint type, uint width, uint heig
     w = width; 
   };
   
-  alignment = w % 4;  
+  if (w % 4 > 0)
+    alignment = 4 - w % 4;  
 
   // BMP Header
   bfType = "BM";
@@ -175,7 +177,7 @@ void createBMPFile(string Name, uchar Buffer[], uint type, uint width, uint heig
   {
     biRMask = 3840;
     biGMask = 240;
-    biBMask = 240;
+    biBMask = 15;
     biAMask = 0;
   };
 
@@ -229,13 +231,61 @@ void createBMPFile(string Name, uchar Buffer[], uint type, uint width, uint heig
   FileClose();
 };
 
+void toRGB24(uchar dest[], uchar src[], uint size,  uint type)
+{
+  local uint i, pos;
+  local uchar Table1[2] = {0, 255}; 
+  local uchar Table4[16] = {0, 17, 34, 51, 68, 86, 102, 119, 136, 153, 170, 181, 204, 221, 238, 255 };
+  local uchar Table5[32] = {0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123, 132,
+   140, 148, 156, 165, 173, 181, 189, 197, 206, 214, 222, 230, 239, 247, 255};
+  local uchar Table6[64] = {0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 45, 49, 53, 57, 61, 65, 69,
+   73, 77, 81, 85, 89, 93, 97, 101, 105, 109, 113, 117, 121, 125, 130, 134, 138,
+   142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198,
+   202, 206, 210, 215, 219, 223, 227, 231, 235, 239, 243, 247, 251, 255};
+
+  local uint16 Pixel16;
+
+  local uint channels = 3;
+  if (type) channels = 4; 
+
+  for ( i = 0; i < size; i += channels  )
+  {     
+    Pixel16 = src[pos + 1];
+    Pixel16 = src[pos] | (Pixel16 << 8);
+    // RGB 565 to 888
+    switch (type)
+    {     
+      case 0: 
+        dest[i + 2] = Table5[(Pixel16 & 0xf800) >> 11];  // Red 8 bit
+        dest[i + 1] = Table6[(Pixel16 & 0x07e0) >> 5]; // Green 8 bit
+        dest[i] = Table5[(Pixel16 & 0x001f)]; // Blue 8 bit
+      // RGB 565 to 888
+      break; 
+      case 1:
+        dest[i] = Table4[(Pixel16 & 0xf000) >> 12];  // Red 8 bit
+        dest[i + 1] = Table4[(Pixel16 & 0xf00) >> 8]; // Green 8 bit
+        dest[i + 2] = Table4[(Pixel16 & 0xf0)  >> 4]; // Blue 8 bit
+        dest[i + 3] = Table4[(Pixel16 & 0xf)]; // Alpha 8 bit
+      // RGB 4444 to 8888
+      break;  
+      case 2:
+        dest[i + 3] = Table5[(Pixel16 & 0x001F)];  // Red 8 bit
+        dest[i + 2] = Table5[(Pixel16 & 0x03E0) >> 5]; // Green 8 bit
+        dest[i + 1] = Table5[(Pixel16 & 0x7C00) >> 10]; // Blue 8 bit
+        dest[i] = Table1[(Pixel16 & 0x8000) >> 15]; // Alpha 8 bit
+    };
+    pos += 2;
+  }; 
+
+}
+
 void RSBtoBMP(string FileName, uint mode)
 {
   local string Path;
   local uchar Buffer[10485760];
   local float size;
-  local int isPaletted, Width, Height, Version, FileNew;
-
+  local int isPaletted, Width, Height, Version, FileNew, i, pos;
+ 
   if (mode) 
   {
     FileNew = FileOpen(FileName, false, "Hex");
@@ -269,6 +319,12 @@ void RSBtoBMP(string FileName, uint mode)
     };     
   };
 
+  Path = FileNameGetPath(FileName) + "\\output";
+  if (!DirectoryExists(Path)) MakeDir(Path);
+
+  FileName = Path + "\\" + FileNameGetBase(FileName);
+  FileName = FileNameRemoveExt(FileName);
+
   // palette
   if (isPaletted) 
   {
@@ -278,7 +334,10 @@ void RSBtoBMP(string FileName, uint mode)
     ReadBytes(Buffer, FTell(), size);
     FSkip(size);
     createBMPFile(FileName + "(8 bit)", Buffer, 3, Width, Height);
-    if (mode) FileSelect(FileNew); 
+    if (mode)
+      FileSelect(FileNew); 
+    else
+      FileSelect(FileIndex); 
     readMasks(); 
   }
 
@@ -291,26 +350,54 @@ void RSBtoBMP(string FileName, uint mode)
   if (mode)
     FileClose();
 
-  Path = FileNameGetPath(FileName) + "\\output";
-  if (!DirectoryExists(Path)) MakeDir(Path);
-
-  FileName = Path + "\\" + FileNameGetBase(FileName);
-  FileName = FileNameRemoveExt(FileName);
-
   if (DXT >= 0)
     createDDSFile(FileNameRemoveExt(FileName), Buffer, 12 + DXT, Width, Height, size); 
   else
   if (R == 5 && G == 6)
-    createBMPFile(FileName + RGB565, Buffer, 1, Width, Height);
+  {
+    if (to24bit)
+    {
+      size = Width*Height*3;
+      local uchar newBuffer[size]; 
+      toRGB24(newBuffer, Buffer, size, 0);
+      depth = 24;
+      createBMPFile(FileName + RGB888, newBuffer, 4, Width, Height); 
+    }
+    else
+      createBMPFile(FileName + RGB565, Buffer, 1, Width, Height); 
+  }
   else
   if (R == 4 && G == 4 && G == 4) 
-    createBMPFile(FileName + RGB4444, Buffer, 2, Width, Height);
+  {
+    if (to24bit)
+    {
+      size = Width*Height*4;
+      local uchar newBuffer[size]; 
+      toRGB24(newBuffer, Buffer, size, 1);
+      createBMPFile(FileName + RGB888, newBuffer, 5, Width, Height);    
+    }
+    else
+      createBMPFile(FileName + RGB4444, Buffer, 2, Width, Height);
+  }
   else
   if (R == 8 && G == 8 && B == 8) 
+  {
     createBMPFile(FileName + RGB888, Buffer, 4, Width, Height);
-  else
+  }
+  else 
   if (R == 5 && G == 5 && B == 5) 
+  {
+    if (to24bit)
+    {
+      size = Width*Height*4;
+      local uchar newBuffer[size]; 
+      toRGB24(newBuffer, Buffer, size, 2); 
+      depth = 32;
+      createBMPFile(FileName + RGB888, newBuffer, 5, Width, Height);    
+    }
+    else
     createBMPFile(FileName + RGB5551, Buffer, 5, Width, Height);
+  }  
   else
     Printf("not supported: R:%d, G:%d, B:%d, A:%d  ", R, G, B, A);
 };  
@@ -505,7 +592,6 @@ void processImage(string FileName, uint mode)
 {
   local string ext;
   ext = StrLowerCase(FileNameGetExtension(FileName));
-
   switch (ext)
   {
     case ".rsb":
