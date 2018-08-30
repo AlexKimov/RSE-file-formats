@@ -79,3 +79,4 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 * [RSBtoBMP.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/RSBtoBMP.1sc) - convert **RSB**, **R16**, **XPR** to **BMP** and **DDS** (files with DXT compression). Supported games: Rainbow six (1998), Rogue Spear (1999 - 2001), Ghost Recon (2001 - 2003), Sum Of All Fears (2002), Rainbow 6 LockDown (2005), partly Ghost Recon 2 XBOX (2004). 
 * [SOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/SOBtoObj.1sc) - convert **SOB** (Rainbow six) to **Obj**.
+* [QOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/QOBtoObj.1sc) - convert **QOB** (Ghost Recon) to **Obj**.
