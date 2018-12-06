@@ -9,7 +9,7 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 * conversion scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
 
 ## File Converters 
-Python scripts by Philip Edwards 
+* Python scripts and even more by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
 
 ## Games
