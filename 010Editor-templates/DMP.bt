@@ -17,29 +17,6 @@ struct {
     
 } HEADER <name="LIGHTList Header">;  
 
-typedef struct {
-  struct { 
-    FLOAT x;        
-    FLOAT y;
-    FLOAT z;
-  } XAXIS;
-  struct { 
-    FLOAT x;
-    FLOAT y;
-    FLOAT z;
-  } YAXIS;
-  struct {
-    FLOAT x;
-    FLOAT y;
-    FLOAT z;
-  } ZAXIS;
-  struct {
-    FLOAT Y;
-    FLOAT X;
-    FLOAT Z;
-  } POSITION;
-} TRANSFORMATION_MATRIX_3x3_Position;
-
 typedef struct { 
     FLOAT x;        
     FLOAT y;
@@ -86,24 +63,20 @@ typedef struct {
                 BYTE Y;  
             } NAME_STRING;
         }
-    } LIGHTHEADER <name="LightHeader">;   
-    BYTE A;
-    BYTE B;
-    BYTE C;
-    BYTE D;
-    TRANSFORMATION_MATRIX_3x3 TM; 
+    } LIGHTHEADER <name="LightHeader">;
+    UINT unknown1;
+    Vec3f unknown2;
     Vec3f position;
+    Vec3f unknown3;
+    //TRANSFORMATION_MATRIX_3x3 TM; 
+    Vec3f Color;
     struct {
-        struct {
-            UINT MN; // 0..255
-            UINT MN; //
-            UINT MN;
-        } Color;
-        FLOAT MN; // 1
-        UINT MN; // 0
+        float IntensityOrDistance; // 0..255
+        Vec3f SpecularColorMaybe;
+        float MN; // 0
         FLOAT MN; //  0
-        FLOAT Angle; // 
-        FLOAT Atennuation;
+        FLOAT MN; // 
+        FLOAT MN;
         //BYTE Type;
         //Check(Type, 1, "AAAAAAAAAAAAAA"); 
     } Params;
