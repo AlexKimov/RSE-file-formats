@@ -1,26 +1,41 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: CHR.bt
+//   Authors: AlexKimov
+//   Version: 1.0
+//   Purpose: Rainbow Six DAM file
+// 
 //   History: 
 //------------------------------------------------
 
+local uint count = 75;
 
-UINT Count; 
+UINT Keys; 
+
 struct {
-  UINT Count; 
-  FLOAT A[75];
-}A[Count] <optimize=false>;
+  struct {
+    UINT BonesCount; // 18
+    typedef struct {
+      BYTE X;
+      BYTE Y;
+      BYTE Z;
+      BYTE W;
+    } Bone_Pos;
+    Bone_Pos BonePosArray[count];
+  } A[Keys] <optimize=false>;
+} MOTION_DATA;
 
-UINT Length;
-char B[Length];
-UINT A;
-UINT B;
-UINT C;
-FLOAT A2[3];
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} Name <name="Name">;
+
+struct {
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN;
+  FLOAT MN;
+} ANIMATION_PARAMS;

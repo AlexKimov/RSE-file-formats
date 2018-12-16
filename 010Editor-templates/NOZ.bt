@@ -3,14 +3,16 @@
 //
 //      File: QOB(rsp).bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.2
-//   Purpose: Ghost Recon QOB file
+//   Version: 0.7
+//   Purpose: Freedom First Resistance NOZ file
 // File Mask: *.qob
 //
 //   History: 
-//    
-//   2016.10 v0.2 initial release
+// 
+//   2018.15 0.7 initial release  
 //------------------------------------------------
+
+local uint type = 0; 
 
 typedef enum <ubyte> {
     no,
@@ -42,14 +44,8 @@ typedef struct {
     } MATERIALNAME_STRING <name="Material Name">; 
   } HEADER <name="Header">;
 
-  struct {    
-    UINT Length; // 
-    char Text[Length]; //
- } MATERIALNAME_STRING <name="Texture FileName">; 
-
   struct { 
     FLOAT Opacity;
-    FLOAT SelfUllimination;
     UINT MN; 
     struct {            
       FLOAT Red; //
@@ -74,14 +70,50 @@ typedef struct {
   } Properties;
 } MATERIAL <name=MaterialName>;
 
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT ID; // 38
+    struct {    
+      UINT Length; 
+      char Text[Length]; 
+      UINT Value;
+   } VERSION; 
+    struct {    
+       UINT Length;  
+       char Text[Length]; 
+    } TEXTURENAME_STRING <name="Texture Name">; 
+  } HEADER <name="Textures section header">;
+
+  struct {    
+     UINT Length;  
+     char Text[Length]; 
+  } TEXTURE_FILENAME_STRING <name="Texture .rsb file name">; 
+  
+  struct { 
+    UINT AdvTransparencyType;  // 0 2 3
+    UINT isTiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+    FLOAT SelfIllumination; // 0
+  } PARAMETERS; 
+} TEXTURE <name=TextureName>;
+
 string MaterialName(MATERIAL &material) {
   return "Name: " + material.HEADER.MATERIALNAME_STRING.Text + " ";
+} 
+
+string TextureName(TEXTURE &texture) {
+  return "FileName: " + texture.TEXTURE_FILENAME_STRING.Text + " ";
 } 
 
 struct {  
   struct { 
     UINT SectionSize;
-    UINT MN;
+    UINT ID;
+      struct {    
+        UINT Length;  
+        char String[Length]; 
+        UINT number; // 1
+      } VERSION_STRING; 
     struct {
       UINT Length; // 
       char Text[Length]; // 
@@ -98,6 +130,18 @@ struct {
     MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
   } Materials <name="1.1 Materials section">;
 
+  struct {
+    UINT Count <name="Textures Count">;
+     if (Count > 0) {
+
+        typedef struct (int arraySize) {
+          TEXTURE array[arraySize] <optimize=false>;
+        } TEXTURE_ARRAY; 
+    
+        TEXTURE_ARRAY TextureArray(Count) <name="Textures Array">; 
+    };
+  } TEXTURES <name="1.2 Textures section">;
+
 } MATERIALLIST <name="MaterialList section">;
 
 //--------------------
@@ -109,6 +153,11 @@ struct {
   struct { 
     UINT SectionSize;
     UINT ID; // 7
+      struct {    
+        UINT Length;  
+        char String[Length]; 
+        UINT number; // 1
+      } VERSION_STRING; 
     struct {
       UINT Length;  
       char Text[Length];  
@@ -123,13 +172,12 @@ struct {
     //  section header 
     struct { 
       UINT SectionSize;
-      UINT MN; // 3
+      UINT ID; // 3
       struct {    
         UINT Length;  
         char String[Length]; 
         UINT number; // 1
       } VERSION_STRING; 
-
       struct {
         UINT Length;  
         char Text[Length];  
@@ -153,6 +201,20 @@ struct {
     typedef struct {
         struct {
           UINT MaterialIndex;
+          UINT isTextured;
+          if (isTextured > 0) {
+            UINT TextureIndex;
+          };
+          struct {
+            UINT MN; 
+            if (type == 1) {
+              FLOAT SelfIlluminationMap;   
+              FLOAT SpecularMap;
+              FLOAT BumpMap;
+              FLOAT ReflectionMap;
+              FLOAT MapCount;
+            };
+          } MAPPING;
        } PARAMETERS;
     
        struct {
@@ -199,7 +261,7 @@ struct {
     
       struct {  
         UINT VertexCount;
-        //NT TextureCount;
+        UINT TextureCount;
           
         typedef struct   {
           FLOAT X;
@@ -222,7 +284,7 @@ struct {
            QOBTEXTURECOORDINATES array[arraySize];
         } QOBTEXTURECOORDINATESARRAY;
         
-        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount) <name="Texture coordinates">; 
+        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount*TextureCount);  
           
           typedef struct   {
             FLOAT Red;  // 0..1 (0..255 in RGB)
@@ -237,7 +299,7 @@ struct {
           FACE_COLOR_ARRAY CoordinatesArray(VertexCount) <name="Faces color array">; 
 
       } TEXTUREVERTICIES <name="Texture data">;   
-    } GEOMETRY_OBJECT;
+    } GEOMETRY_OBJECT  <name="Mesh">;
 
     typedef struct (int arraySize) {
       GEOMETRY_OBJECT array[arraySize] <optimize=false>;
@@ -257,7 +319,58 @@ struct {
   
 } QOBGEOMETRYLIST  <name="2. GeometryList Section">;
 
+if (type == 1) UINT MN;
+
 struct {
   UINT Length;
   char String[Length]; 
 } ENDMODEL_STRING <name="QOB File End">;
+
+typedef struct { 
+  struct {
+    UINT ID; // 37
+    struct {    
+       UINT Length; 
+       char Text[Length]; 
+       UINT value; // 1
+    } VERSION_STRING; 
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } BONE_NAME_STRING;
+  } SECTION_HEADER;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT Angle; 
+  } ROTATION;
+
+  UINT Connections;  
+
+  struct {
+    UINT A;
+  } V[Connections];
+
+  UINT MN;
+
+} BONE <name=BoneName>;
+
+// BoneName function 
+string BoneName(BONE &bone) {
+  return "Name: " + bone.SECTION_HEADER.BONE_NAME_STRING.Text;
+} 
+
+  typedef struct (int arraySize) {
+    BONE array[arraySize] <optimize=false>;
+  } BONE_ARRAY;
+  
+  if (type == 0)  
+    BONE_ARRAY CHRBoneArray(30) <name="Bones array">;
+  else
+    BONE_ARRAY CHRBoneArray(26) <name="Bones array">;  

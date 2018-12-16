@@ -1,30 +1,60 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: SKL.bt
+//   Authors: Alexandr Evdokimov
+//   Version: 0.5
+//   Purpose: Rainbow Six SKL File
+// 
 //   History: 
+//   2017 v0.5 Initial release
+//
 //------------------------------------------------
 
   UINT BoneCount;
-  BYTE C[10];
-  typedef struct {
-    FLOAT M1[30];
+  BYTE Data[10]; // 0111010100
 
+  typedef struct {
+
+    FLOAT F[30]; // Bone position
 
     struct {
-      UINT Length;
-      char MN[Length];
-    } BONENAME;
-    UINT Count;
-    BYTE E;
-    FLOAT A[11];
-  } Bone;
+      UINT Length;  
+      char Text[Length];  
+    } BONE_NAME;
 
-  Bone BoneArray[BoneCount] <optimize=false, name="Bones">;
+    UINT BoneIndex;
+    BYTE MN;
+    struct {
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+    } A;
+      FLOAT MN;
+    struct {
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+    } B;
+    struct {
+      FLOAT MN;
+      FLOAT MN;
+      FLOAT MN;
+    } C;
+    FLOAT MN;
+    if (BoneIndex == 15) BYTE N[5];  //10100
+    if (BoneIndex == 12) BYTE N[11];
+    if (BoneIndex == 8) BYTE N[7];
+    if (BoneIndex == 4) BYTE N[3];
+  } BONE <name=BoneName>;
+ 
+  typedef struct (int arraySize) {
+    BONE  array[arraySize] <optimize=false>;
+  } BONE_ARRAY; 
+
+  BONE_ARRAY BoneArray(BoneCount) <optimize=false, name="Bones">;
+
+  string BoneName(BONE &bone) {
+    return bone.BONE_NAME.Text;
+  };
   

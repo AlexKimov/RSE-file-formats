@@ -1,0 +1,412 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: CHR(LD).bt
+//   Authors: AlexKimov
+//   Version: 0.1
+//   Purpose: Rainbow Six Lockdown CHR file
+//
+//   History: 
+//
+//   2018.05 v0.1  
+//------------------------------------------------
+
+struct {
+  time_t CreateDate <name="CHR File Create Date">;
+  BYTE MN; //0, 1
+} HEADER <name="Header">;
+
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} BEGINMODEL_STRING <name="BeginModel">;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT ID;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT value;
+    } VERSION; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIALNAME_STRING <name="Material Name">; 
+  } HEADER <name="Section header">;
+  struct { 
+    FLOAT Opacity;
+    FLOAT Faceted;
+    struct {              
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Ambient; 
+    struct {           
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Diffuse;   
+    struct { 
+      FLOAT Red; //
+      FLOAT Green; //
+      FLOAT Blue; //
+      FLOAT mn;
+    } Specular;
+    FLOAT SpecularLevel; //o.o5
+
+    UINT16 A;
+    UINT16 B;
+    BYTE E;
+    FLOAT MN;
+    FLOAT MN;
+    BYTE A;
+    BYTE B;
+    UINT16 A;
+    UINT A;
+    UINT A;
+    BYTE A;
+    if (SpecularLevel > 0) {
+      BYTE B;
+      BYTE C;
+      BYTE D;
+      UINT16 B;
+      BYTE R[10];
+    };
+  } Properties;
+} MATERIAL <name=MaterialName>;
+
+typedef struct {
+  struct {
+    UINT SectionSize;
+    UINT MN;
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT Value;
+   } VERSION; 
+   struct {    
+      UINT Length; // 
+      char Text[Length]; //
+   } TEXTURE_NAME_STRING <name="Texture Name">; 
+  } HEADER <name="Textures section HEADER">;
+
+  BYTE mn; // 0
+
+  struct {    
+     UINT Length; // 
+     char Text[Length]; //
+  } TEXTURE_FILENAME <name="Texture .rsb file name">; 
+  
+  struct { 
+    UINT AdvTransparencyType;  // 0 2 3
+    UINT Tiled; // 1 - u tiled, 2 - v tiled, 3 - both none
+    FLOAT SelfIllumination; // 0..1
+    FLOAT A;
+    UINT16 B;
+  } PARAMETERS; 
+} TEXTURE <name=TextureName>;
+
+string MaterialName(MATERIAL &material) {
+  return "Name: " + material.HEADER.MATERIALNAME_STRING.Text + " ";
+} 
+
+string TextureName(TEXTURE &texture) {
+  return "FileName: " + texture.TEXTURE_FILENAME.Text + " ";
+} 
+
+struct {  
+  struct { 
+    UINT SectionSize;
+    UINT ID; // 8
+    struct {    
+      UINT Length; // 
+      char Text[Length]; //
+      UINT value;
+    } VERSION; 
+
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } MATERIALLIST_STRING;
+  } HEADER <name="1.0 MaterialList section header">;
+    
+  struct {
+    UINT Count <name="Materials Count">;
+
+    typedef struct (int arraySize) {
+      MATERIAL array[arraySize] <optimize=false>;
+    } MATERIAL_ARRAY; 
+
+    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
+  } Materials <name="1.1 Materials section">;
+
+  struct {
+    UINT Count <name="Textures Count">;
+    if (Count > 0) {    
+        typedef struct (int arraySize) {
+          TEXTURE array[arraySize] <optimize=false>;
+        } TEXTURE_ARRAY; 
+        TEXTURE_ARRAY TextureArray(Count) <name="Textures Array">; 
+    };
+  } Textures <name="1.2 Textures section">;
+} CHRMATERIALLIST <name="1. MaterialList section">;
+
+struct {   
+
+  struct { 
+    UINT SectionSize;
+    UINT ID; // 7
+    struct {    
+      UINT Length; 
+      char String[Length]; 
+      UINT value; // 1
+    } VERSION; 
+
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } GEOMETRYLIST_STRING;
+  } HEADER <name="GeometryList Header">;  
+
+ UINT Count <name="Model Count">;
+
+ typedef struct { 
+    //  section header 
+    struct { 
+      UINT SectionSize;
+      UINT ID; // 3
+      struct {    
+        UINT Length;  
+        char String[Length]; 
+        UINT value; // 1
+      } VERSION; 
+      struct {
+        UINT Length;  
+        char Text[Length];  
+      } NAME_STRING;
+    } SECTION_HEADER <name="Section header">; 
+
+    //BYTE DarkMapped <name="DarkMapped">; // 
+    //BYTE CastShadows  <name="CastShadows">;
+
+    UINT A;
+    UINT B;
+    BYTE K;
+    FLOAT C;
+    UINT16 O;
+    UINT Count;
+    if (SECTION_HEADER.VERSION.value == 26)
+    struct {
+      FLOAT A;
+      FLOAT B;
+      FLOAT C; 
+    } IOZ[Count]; 
+    else
+    struct {
+      UINT16 A;
+      UINT16 B;
+      UINT16 C;
+    } IOZ[Count];     
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } NAME;
+    UINT A;
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } NAME;
+
+    struct { 
+      UINT VertexCount; 
+      struct {
+        UINT MN;
+      } Properties[VertexCount];
+      typedef struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } VERTEX <name="MN">;
+      typedef struct (int arraySize) {
+       VERTEX array[arraySize] <optimize=false>;
+      } VERTEX_ARRAY; 
+      VERTEX_ARRAY VertexArray(VertexCount) <name="MN Array">; 
+    } VERTEXES <name="MN">;
+
+    UINT MeshCount;
+
+    typedef struct {
+      struct {
+          UINT Count;
+          BYTE A;
+          BYTE B;
+          BYTE C;
+          UINT MN;
+          UINT MaterialIndex;
+          UINT TextureIndex;;
+          struct {
+            UINT MN;     
+            UINT SelfIlluminationMap;
+            UINT SpecularMap;
+            UINT BumpMap;
+            UINT ReflectionMap;
+            UINT MapCount;
+            UINT MN; 
+            UINT MN; 
+            UINT MN; 
+            UINT MN;
+          } MAPPING;
+      } Properties;
+      UINT V;
+      UINT CountY;
+      UINT CountD;
+      UINT CountZ;
+    
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+        FLOAT W;
+      } P[CountD];
+
+      struct {
+        UINT SS; 
+      } RTO[CountZ]; 
+
+      UINT16 CountW;
+      BYTE F[CountW];
+
+      struct {
+        UINT16 A;
+        UINT16 B;
+        UINT16 C;
+      } S0[CountD];
+
+      UINT CountX;
+      UINT CountE; 
+      struct {
+        UINT16 A;
+      } S1[CountX];
+
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } T1[CountX];
+
+      struct {
+        FLOAT X;
+        FLOAT Y;
+      } T2[CountX];
+
+      struct {
+        FLOAT A;
+      } H[CountX];    
+    } Mesh <name="Mesh">;
+
+    typedef struct (int arraySize) {
+       Mesh array[arraySize] <optimize=false>;
+    } Mesh_ARRAY; 
+
+    Mesh_ARRAY MeshArray(MeshCount) <name="Meshes">; 
+  
+ } GEOMETRY_DATA <name="Model">;  
+
+  typedef struct (int arraySize) {
+    GEOMETRY_DATA array[arraySize] <optimize=false>;
+  } GEOMETRY_DATA_ARRAY; 
+
+  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Objects array">; 
+} CHRGEOMETRYLIST  <name="2. GeometryList Section">;
+
+UINT MN; // 0
+BYTE B;
+
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} EndModelString <name="EndModel">;
+
+struct {
+  struct {
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } NAME;
+    UINT Count;
+    struct {
+      UINT Length;  
+      char Text[Length];  
+    } NAME;  
+    UINT Count;
+  } HEADER;
+
+    UINT AttCount;
+
+  typedef struct {
+      struct {
+        UINT Length;  
+        char Text[Length];
+      } Attachment_NAME;  
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z; 
+      FLOAT X;
+      FLOAT Y;
+      BYTE Z;
+      BYTE Z;
+      FLOAT Y;    
+  } Attachment <name="Attachment">;
+  typedef struct (int arraySize) {
+     Attachment array[arraySize] <optimize=false>;
+  } Attachment_ARRAY; 
+  Attachment_ARRAY MeshArray(AttCount) <name="Attachments">;
+} Attachments <name="Attachments Section">;
+
+struct {
+  UINT SectionSize;
+  BYTE B;
+} HEADER;
+
+if (HEADER.B > 0) {
+  struct {
+    UINT D;
+    UINT CountA;
+    typedef struct {
+      struct {
+        UINT Length;  
+        char Text[Length];
+      } NAME;
+
+      UINT16 Count;
+      struct {
+        UINT16 A;
+      } YOU[Count];
+    
+      struct { 
+        UINT16 A;
+         UINT16 B;
+        UINT16 C;   
+      }NO[Count];
+
+    } OP <name=Name>;
+    typedef struct (int arraySize) {
+       OP array[arraySize] <optimize=false>;
+    } OP_ARRAY; 
+    OP_ARRAY OPArray(CountA) <name="Array">;
+
+    UINT Count;
+      struct {
+        UINT16 A;
+      } Y[Count];
+    
+  } Section;
+};
+
+string Name(OP &op) {
+  return op.NAME.Text;
+}

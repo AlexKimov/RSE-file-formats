@@ -1,0 +1,167 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: CRP(rsp).bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Rainbow six Rogue Spear CRP files
+// File Mask: *.crp
+//
+//   History: 
+//
+//   2018.05 v0.1 initial release
+//------------------------------------------------
+
+time_t DateTime;
+
+struct {
+  typedef struct {
+    UINT VertexCount <name="Vertex count">;
+  
+    struct {
+      typedef struct {
+        UINT A;
+      } INDEX;
+      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
+     } INDEX_ARRAY <name="Vertex index array">;
+
+    struct {
+      typedef struct {
+        FLOAT P1;
+        FLOAT P2;
+        FLOAT P3;
+      } COORDINATES <name="Vertex">;
+      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
+    } COORDINATES_ARRAY <name="Vertex cordinates array">;
+  } BODYP <name="Body part">;
+  BODYP BodyParts[18] <optimize=false>;
+} BODY <name="Verticies">;
+
+//-------------------------------------------------
+
+typedef struct {  
+    struct {
+      FLOAT P1;
+      FLOAT P2;
+      FLOAT P3;
+      FLOAT P2;
+      FLOAT P3;
+      UINT P1;
+      UINT P2;
+      UINT P1;
+    } PROPERTIES;  
+} TEXTURE <name=textureName>;
+
+string textureName(TEXTURE & texture) {
+  return texture.Name;
+};
+
+struct {
+  UINT Length;
+  char Name[Length];
+  //
+  struct {
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P2;
+    UINT P2;
+    BYTE H;
+  } T_PROPERTIES; 
+  //
+  UINT TextureCount <name="Number of textures">;
+  typedef struct (int arraySize) {
+      TEXTURE array[arraySize] <optimize=false>;
+  } TEXTURE_ARRAY;
+  TEXTURE_ARRAY Textures(TextureCount) <optimize=false>;
+
+} TEXTURES <name="2">;
+
+//-------------------------------------------------
+
+struct {
+
+  typedef struct {  
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    UINT P2;
+    UINT P1;
+    BYTE FF[3];
+    UINT I[2];
+    UINT Length;
+    char Name[Length];
+    UINT Count; 
+
+    FLOAT P1;
+    FLOAT P2;
+    FLOAT P3;
+
+    UINT COUNT;
+
+    struct {
+      FLOAT P3;
+      FLOAT P2;
+      FLOAT P3;
+      FLOAT P3;
+    } UI[COUNT];
+
+    FLOAT P1;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P3;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P1;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P2;
+    FLOAT P3;
+    FLOAT P2;
+    FLOAT P3;
+    BYTE V[2];
+
+    UINT Count;
+    struct {
+      FLOAT P3;
+      FLOAT P2;
+      FLOAT P3;
+      FLOAT P1;
+    } A[Count];
+
+    UINT Count;
+    struct {
+      FLOAT RT[16];
+    } B[Count];
+    UINT Count; 
+
+  } AA <name=textureName>;
+
+  UINT TextureCount <name="Count">;
+
+  typedef struct (int arraySize) {
+      AA array[arraySize] <optimize=false>;
+  } AA_ARRAY;
+
+  AA_ARRAY Textures(TextureCount) <optimize=false>;
+
+} UU <name="3">;
+
+//-------------------------------------------------

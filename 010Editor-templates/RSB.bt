@@ -5,7 +5,10 @@
 //   Authors: Alexander Evdokimov
 //   Version: 1.4
 //   Purpose: Red storm bitmap (RSB) file
- 
+//   Format Desription: 
+//   English: https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format
+//   Russian: https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format-RUS
+//
 //   History: 
 //   2018.04 v1.4 added commentaries, minor fixes
 //   2018.01 v1.3 fix channel order (boristsr), new Channel struct
@@ -44,7 +47,7 @@ typedef enum <uint> {
 
   RSB's with alpha channels use these parameters to get different opacity effects.
   By choosing different functions in each parameter will affect RSB transparency, when its 
-  used in the game. Try theme at your own to find out the result. 
+  used in the game. Try them at your own to find out the result. 
   
   Use AlphaBlending boolean to enable or disable first 2 functions and AlphaTesting for the last one. 
 */
@@ -159,15 +162,15 @@ struct {
   /* 
     File Versions:
     0 - 1 games released before Ghost Recon: 
-    Dominant Species, Bang Gunship Elite, Force 21 (?!), Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
+    Dominant Species, Force 21, Rainbow six (1998) + addon, Rogue Spear(2000) + addons, Freedom First Resistance  
     0 - 9 Ghost Recon (+addons), The Summ of All Fears
     9 - 11 Rainbow Six LockDown.
 
     files with 3 and 7 are something virtual or may be hiding somewhere in a game folder, waiting, who knows...
   */
 
-  UINT width <name="Texture Width">; // texture width (128-2048), 2048 max resolution
-  UINT height <name="Texture Height">; // texture height (128-2048), 2048 max resolution 
+  UINT width <name="Texture Width">; // texture width
+  UINT height <name="Texture Height">; // texture height
   if (version == 0)  {
     UINT Palette <name="8BitImage">;  // 1 - additional 8-bit texture copy + palette
     if (Palette == 0) {
@@ -312,10 +315,10 @@ if (HEADER.version == 0) {
   if (HEADER.Palette == 1) { 
     BIT_MASK BitMask;
     typedef struct {   
-      //ubyte Alpha : BIT_MASK2.alpha_bits <name="Alpha">; 
-      ubyte Red   : BIT_MASK2.red_bits <name="Red">;
-      ubyte Green : BIT_MASK2.green_bits <name="Green">;
-      ubyte Blue  : BIT_MASK2.blue_bits <name="Blue">; 
+      //ubyte Alpha : BitMask.alpha_bits <name="Alpha">; 
+      ubyte Red   : BitMask.red_bits <name="Red">;
+      ubyte Green : BitMask.green_bits <name="Green">;
+      ubyte Blue  : BitMask.blue_bits <name="Blue">; 
     } PIXEL2 <name="Pixel">;
     typedef struct (int arraySize) {
       PIXEL2 array[arraySize];

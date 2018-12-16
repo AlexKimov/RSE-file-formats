@@ -1,82 +1,80 @@
 //------------------------------------------------
 //--- 010 Editor v7.0 Binary Template
 //
-//      File: SOB.bt
-//   Authors: Alexandr Evdokimov
-//   Version: 0.6
-//   Purpose: Rainbow six .sob file format
-// File Mask: .sob
-// 
-//   History: 
+//      File: KIT.bt
+//   Authors: Alexander Evdokimov
+//   Version: 1.0
+//   Purpose: Force 21 KIT file
 //
-//   2018.04 v0.6 
-//   2016    v0.5 initial release
+//   History: 
+// 
+//   2018.04 v0.5 initial release
 //------------------------------------------------
 
+typedef enum <ubyte> {
+    no,
+    yes
+} BOOL; // bool data type
+
+struct {   
+ struct {
+    UINT Length;  
+    char String[Length];  
+  } KT_String <name="KIT FileID">; 
+  time_t DateTime;
+} KIT_FILE_HEADER <name="KIT Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+
 struct {
-  UINT Length; // 
-  char Text[Length]; // 
+  UINT Length;
+  char String[Length]; 
 } BEGINMODEL_STRING <name="BEGINMODEL">;
 
 typedef struct {
   struct {
     UINT SectionSize;
-    UINT ID; // 8   
-    UINT Length;
-    if (Length == 8) {
-      char Text[Length]; //
-      if (Text == "Version") {
-        UINT value;
-        struct {    
-          UINT Length; // 
-          char Text[Length]; //
-        } MATERIALNAME_STRING <name="Material Name">;
-      }; 
-    }
-    else {
-      struct {
-        char Text[Length] <name="Material Name">; // 
-      } MATERIALNAME_STRING <name="Material Name">; 
-    };
-  } HEADER <name="Header">;
-
-  struct {    
-    UINT Length; // 
-    char Text[Length]; //
- } MATERIALNAME_STRING <name="Texture FileName">; 
-
+    UINT ID; // 2
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } MATERIAL_NAME_STRING <name="Material Name">; 
+    struct {    
+       UINT Length; // 
+       char Text[Length]; //
+    } TEXTURE_NAME_STRING <name="Texture FileName">; 
+  } HEADER <name="Material Section Header">;
   struct { 
     FLOAT Opacity;
-    FLOAT SelfUllumination; // 
-    UINT MN; // 0 - faceted, 1 - ?, 3 - ?
-    struct {              
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Ambient; 
-    struct {           
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Diffuse;   
-    struct { 
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Specular;
+    FLOAT isFaceted;
+    UINT MN;
+    UINT MN;
+    UINT MN;
+    UINT MN;
+    UINT MN;
+    UINT MN;
+    UINT MN;
+    UINT MN;   
+    UINT MN;
+    UINT MN; 
     FLOAT SpecularLevel; //o.o5
-    BYTE twoSided;
-  } Properties;
+    BOOL twoSide;
+  } PARAMETRES;
 } MATERIAL <name=MaterialName>;
 
 string MaterialName(MATERIAL &material) {
-  return "Name: " + material.HEADER.MATERIALNAME_STRING.Text + " ";
+  return "Name: " + material.HEADER.MATERIAL_NAME_STRING.Text + " ";
 } 
 
 struct {  
   struct { 
     UINT SectionSize;
-    UINT ID; //8
+    UINT ID; // 8
+    //struct {    
+    //  UINT Length; // 
+    //  char Text[Length]; //
+   //   UINT Value;
+   // } VERSION; 
+
     struct {
       UINT Length; // 
       char Text[Length]; // 
@@ -91,10 +89,60 @@ struct {
     } MATERIAL_ARRAY; 
 
     MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
-  } Materials <name="1.1 Materials section">;
+  } MATERIALS <name="1.1 Materials section">;
 
-} MATERIALLIST <name="MaterialList section">;
+} KITMATERIALLIST <name="1. MaterialList section">;
 
+//--------------------
+// HierarchyList
+// --------------------
+
+struct {  
+  struct { 
+    UINT SectionSize;
+    UINT ID; // 8
+    //struct {    
+    //  UINT Length; // 
+    //  char Text[Length]; //
+   //   UINT Value;
+   // } VERSION; 
+
+    struct {
+      UINT Length; // 
+      char Text[Length]; // 
+    } MATERIALLIST_STRING;
+  } HEADER <name="Section header">;
+ 
+  UINT Count <name="Count">;
+
+  typedef struct {
+    struct { 
+      UINT Length; // 
+      char Text[Length]; // 
+    } NAME_STRING; 
+      struct { 
+        UINT Length; // 
+        char Text[Length]; // 
+      } NAME_STRING;
+    //BYTE A[2]; 
+  } HL <name=HName>;
+
+  typedef struct (int arraySize) {
+    HL array[arraySize] <optimize=false>;
+  } H_ARRAY; 
+
+  H_ARRAY HArray(Count) <name="Array">; 
+   
+
+} KITHierarchyLIST <name="1. HierarchyList section">;
+
+string HName(HL &hl) {
+  return "Name: " + hl.NAME_STRING.Text;
+}
+
+//--------------------
+// KITGEOMETRYLIST
+// --------------------
 
 typedef struct {
      struct { 
@@ -119,6 +167,8 @@ typedef struct {
        }
      } HEADER <name="Object Header">;  
 
+    switch (HEADER.ID) {
+    case 3:
     struct {
       UINT VertexCount;  
       typedef struct {     
@@ -189,47 +239,71 @@ typedef struct {
     struct {
     UINT Count; 
     typedef struct  { 
-       struct { 
-         UINT Count; 
-         struct {
-           UINT Length; 
-           char Text[Length]; 
-         } Name; 
-       } HEADER; 
-    
+       UINT Count; 
        struct {
-         UINT VertexCount; 
-         typedef struct {  
-           UINT Index; 
-         } CC <name="Vertex">;
-         typedef struct (int arraySize) {
-           CC array[arraySize] <optimize=false>;
-         } CC_ARRAY;
-         CC_ARRAY CCArray(VertexCount) <name="Vertex indexes">; 
-    
-         UINT FaceCount; 
-         typedef struct {  
-           UINT Index;
-         } DD <name="Face">;
-         typedef struct (int arraySize) {
-           DD array[arraySize] <optimize=false>;
-         } DD_ARRAY;
-         DD_ARRAY DDArray(FaceCount) <name="Face Indexes">; 
-       } ARRAYS <name="Indexes">;       
-    
-       UINT MN;  // ? 
+         UINT Length; // 
+         char Text[Length]; // 
+       } String <name="String">; 
+
+       UINT Count; 
+       typedef struct {  
+         UINT Index; 
+       } CC;
+       typedef struct (int arraySize) {
+          CC array[arraySize] <optimize=false>;
+       } CC_ARRAY;
+       CC_ARRAY CCArray(Count) <name="Face indexes">; 
+
+       UINT Count; 
+       typedef struct {  
+         UINT Index; 
+       } DD;
+       typedef struct (int arraySize) {
+          DD array[arraySize] <optimize=false>;
+       } DD_ARRAY;
+       DD_ARRAY DDArray(Count) <name="Texture indexes">; 
+
+       UINT Count; 
        struct {
          UINT Length; // 
          char Text[Length]; // 
        } String <name="String">;      
-       UINT MN;  // ?       
+       UINT Count;       
     } MM;
 
     typedef struct (int arraySize) {
       MM array[arraySize] <optimize=false>;
     } MM_ARRAY;
-    MM_ARRAY MMArray(Count) <name="Meshes Array">; 
-    }  IND <name="Meshes">; 
+    MM_ARRAY MMArray(Count) <name="Indexes array">; 
+    }  IND <name="Params">; 
+    break;
+    case 26:
+      FLOAT Y;
+      FLOAT X;
+      struct { 
+       struct { 
+          FLOAT x;        
+          FLOAT y;
+          FLOAT z;
+       } XAxis;
+       struct { 
+          FLOAT x;
+          FLOAT y;
+          FLOAT z;
+       } YAxis;
+       struct {
+          FLOAT x;
+          FLOAT y;
+          FLOAT z;
+       } ZAxis;
+       struct {
+          FLOAT Y;
+          FLOAT X;
+          FLOAT Z;
+       } Position;
+      } TRANSFORMATION_MATRIX;    
+    break;
+    };
 } DATA <name=ObjectName>;  
 
 string ObjectName(DATA &data) {
@@ -260,6 +334,8 @@ struct {
 
    } SOB_GEOMETRY_DATA <name="Geometry data">; 
 }  GEOMETRYLIST  <name="GeometryList Section">;
+
+UINT MN;
 
 struct {
   UINT Length; // 

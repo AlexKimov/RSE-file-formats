@@ -28,7 +28,7 @@ struct {
         FLOAT P1;
         FLOAT P2;
         FLOAT P3;
-      } COORDINATES;
+      } COORDINATES <name="Vertex">;
       COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
     } COORDINATES_ARRAY <name="Vertex cordinates array">;
   } BODYP <name="Body part">;

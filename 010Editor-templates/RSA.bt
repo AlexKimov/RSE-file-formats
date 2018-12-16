@@ -1,0 +1,73 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: ANM.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Freedome First Resistance rsa file
+// File Mask: *.rsa
+//
+//   History: 
+// 
+//------------------------------------------------
+struct {
+ struct {
+    char Text[3]; // 
+  } RSA_STRING <name="File ID (Signature)">;
+ struct {
+  } DATETIME <name="File DATETIME">;
+} HEADER <name="RSA Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+BYTE A;
+BYTE B;
+BYTE C;
+
+UINT AnimationsCount;
+UINT A;
+
+typedef struct {   
+  UINT Length; 
+  char Text[Length]; //
+  UINT SectionSize;
+  UINT Offset;
+} AnimationName <optimize=false, name=anName>;
+
+string anName(AnimationName &animation) {
+  return "Name: " + animation.Text;
+};
+
+typedef struct (int arraySize) {
+  AnimationName array[arraySize] <optimize=false>;
+} Animation_Name_Array;     
+Animation_Name_Array AnimationNameArray(AnimationsCount) <name="Animation Name List">; 
+
+typedef struct {
+  FLOAT Count;
+
+  UINT Count;
+  UINT CountA;
+  UINT Count;
+
+  struct {
+    UINT CountK;
+    UINT Count;
+    UINT Count;
+    FLOAT B;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      FLOAT W;
+    } K[CountK];
+  } B[CountA];
+  UINT Length; 
+  char Text[Length]; //
+    UINT C[3];
+    UINT D[3]; 
+} Animation;
+
+typedef struct (int arraySize) {
+  Animation array[arraySize] <optimize=false>;
+} Animations;     
+Animations AnimationArray(AnimationsCount) <name="Animations List">; 
+ 

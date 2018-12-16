@@ -12,17 +12,20 @@
 //------------------------------------------------
 
 struct {
-  char GEE[4];
-} HEADER;
-
-UINT A;
-FLOAT B;
-UINT C[8];
+  UINT length;
+  char Version[length];
+  UINT value;
+  UINT length;
+  char Name[length];  
+} Header;
 
 UINT Count;
-UINT F[3];
-FLOAT G[8];
-UINT D[24];
-
-char Str[18];
-UINT FS[3];
+struct {
+  BYTE MN[3];
+  struct {
+    UINT length;
+    char Version[length];
+    UINT value; 
+  } Header;
+  UINT MN1[4];
+} A[1];
