@@ -4,17 +4,33 @@
 //      File: SKL.bt
 //   Authors: Alexandr Evdokimov
 //   Version: 0.5
-//   Purpose: Rainbow Six SKL File
+//   Purpose: Rainbow Six Rogue Spear SKL File
 // 
 //   History: 
+//   2018 Added Rogue Spear compatibility
 //   2017 v0.5 Initial release
 //
 //------------------------------------------------
 
-  UINT BoneCount;
+  UINT FileID;
+  local UINT BoneCount; // This will always be the correct value for bone count, regardless of fileformat
+  if (FileID != 1069547520) {
+    BoneCount = FileID; // 0x3FC00000 / 1069547520
+  } else {
+    UINT BoneCountRaw;
+    BoneCount = BoneCountRaw;
+  }
   BYTE Data[10]; // 0111010100
 
   typedef struct {
+
+    //Unconfirmed
+    /*
+    FLOAT RelPosition[3];  // relative to parent
+    FLOAT Matrix[16];
+    FLOAT AbsPosition[3]; // absolute position
+    FLOAT F[8]; // Bone position
+    */
 
     FLOAT F[30]; // Bone position
 

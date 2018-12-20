@@ -9,8 +9,19 @@
 //
 //   History: 
 //
+//   2018.12 Began rogue spear compatibility.
 //   2017.06 v0.1 initial release
 //------------------------------------------------
+
+local uint bRogueSpear = false;
+
+local UINT fileIDPeek = ReadUInt();
+
+if(fileIDPeek == 1072064102) {
+    //Rogue spear file
+    UINT FileID;
+    bRogueSpear = true;
+}
 
 struct {
   typedef struct {
@@ -54,7 +65,9 @@ string textureName(TEXTURE & texture) {
 };
 
 struct {
-  FLOAT P;
+  if (bRogueSpear == false) {
+      FLOAT P;
+  }
   UINT Length;
   char Name[Length];
   //
