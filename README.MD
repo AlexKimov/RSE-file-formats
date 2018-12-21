@@ -9,15 +9,8 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 * conversion scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
 
 ## File Converters 
-Python scripts by Philip Edwards 
+* Python scripts and even more by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
-
-## More formats
-**1.** [Sea dogs (2000), Age of Sail 2 (2001)](https://github.com/AlexKimov/seadogs-file-formats)
-
-**2.** [Hitman Сodename 47, Hitman 2 Silent Assassin](https://github.com/AlexKimov/hitman-file-formats)
-
-**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/HardTruck-RignRoll-file-formats)
 
 ## Games
 
@@ -80,3 +73,11 @@ https://github.com/boristsr/RainbowSixFileConverters.
 * [RSBtoBMP.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/RSBtoBMP.1sc) - convert **RSB**, **R16**, **XPR** to **BMP** and **DDS** (files with DXT compression). Supported games: Rainbow six (1998), Rogue Spear (1999 - 2001), Ghost Recon (2001 - 2003), Sum Of All Fears (2002), Rainbow 6 LockDown (2005), partly Ghost Recon 2 XBOX (2004). 
 * [SOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/SOBtoObj.1sc) - convert **SOB** (Rainbow six) to **Obj**.
 * [QOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/QOBtoObj.1sc) - convert **QOB** (Ghost Recon) to **Obj**.
+* [CHRtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/CHRtoObj.1sc) - convert **CHR** (Ghost Recon) to **Obj**.
+
+## More formats
+**1.** [Sea dogs (2000), Age of Sail 2 (2001)](https://github.com/AlexKimov/seadogs-file-formats)
+
+**2.** [Hitman Сodename 47, Hitman 2 Silent Assassin](https://github.com/AlexKimov/hitman-file-formats)
+
+**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/HardTruck-RignRoll-file-formats)
