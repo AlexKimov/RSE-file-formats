@@ -6,6 +6,7 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 
 #### Roadmap
 
+* 3dsmax import/export scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
 * conversion scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
 
 #### Discussions
