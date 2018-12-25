@@ -242,6 +242,33 @@ struct greNode
   childNodes = #()
 ) 
 
+struct greCharacterAnimations
+(
+  time = 2.0,
+  frameCount = 1060,
+  boneCount = 21,
+  boneAnimations = #()
+)
+
+struct greBoneAnimation
+(
+  name = "",
+  positionKeys = #(),
+  rotationKeys = #()
+)
+
+struct grePosKey
+(
+  frame = 0,
+  position = (point3 0 0 0)
+)
+
+struct greRotKey
+(
+  frame = 0,
+  rotation = (quat 0 0 0 0)  
+)
+
 /*
   --------------------------
   Rainbow six 1/2 engine structs
