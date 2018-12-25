@@ -46,6 +46,15 @@ struct skinModifier
   )  
 )
 
+struct maxController
+(
+  fn addKey controller time value =
+  (
+    key = addNewKey controller time
+    key.value = value
+  )
+)
+
 struct maxModifier
 (
   skin = skinModifier()
@@ -63,6 +72,8 @@ struct maxBones
     bone.taper = 100
     bone.wirecolor = yellow
     bone.showlinks = true
+    bone.position.controller = linear_position()
+    bone.rotation.controller = linear_rotation()
     result = bone  
   )
 )
@@ -126,6 +137,7 @@ struct max3ds
   bones,
   nodes,
   modifiers, 
+  controller,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -316,7 +328,8 @@ struct max3ds
     sme = slateMatEditor()
     bones = maxBones()
     nodes = nodOp()
-    modifiers = maxModifier()    
+    modifiers = maxModifier()  
+    controller = maxController()    
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle
