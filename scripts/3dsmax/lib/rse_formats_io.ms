@@ -67,6 +67,11 @@ struct rseFormatReader
         fseek filestream length #seek_cur
       )      
     )    
+  ), 
+  fn skipSection =
+  (
+    header = readSectionHeader()
+    fseek filestream (header.size) #seek_cur  
   ),  
   fn readMaterials format:rseConsts.gr =
   (

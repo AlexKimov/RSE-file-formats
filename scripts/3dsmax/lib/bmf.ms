@@ -18,20 +18,20 @@ struct bmfStrings
 
 struct boneMovementsFile
 (
-  strings,
   filename,
   filestream,
   reader,   
   object = greCharacterAnimations(),
+  strings = bmfStrings(),  
   fn readHeader =
   (
-    object.time = ReadFloat filestream
+    object.framesPerMin = ReadFloat filestream
     object.frameCount = ReadLong filestream
     object.boneCount = ReadLong filestream    
   ),
   fn readBoneAnimations =
   (
-    for i = 1 to boneCount do 
+    for i = 1 to object.boneCount do 
     (
       boneAnimation = greBoneAnimation()
       boneAnimation.name = reader.readName()
@@ -51,16 +51,15 @@ struct boneMovementsFile
         rotKey.rotation = reader.readQuatValues()
         append boneAnimation.rotationKeys rotKey      
       )  
-      append object.boneAnimations boneAnimation     
+      append object.boneAnimations boneAnimation         
     )
   ),  
   fn readFile =
   (
-    reader = formatReader(filestream)
     readHeader()
     readBoneAnimations()   
     result = true  
-  )
+  ),
   fn writeFile =
   (
     --writeHeader()
@@ -79,6 +78,8 @@ struct boneMovementsFile
       dialogs.caption = strings.saveFileCaption
     local fname = filename
     filestream = dialogs.openFileDialog &fname mode
-    filename = fname    
+    filename = fname 
+    reader = formatReader(filestream)   
+    result = filestream      
   )   
 )

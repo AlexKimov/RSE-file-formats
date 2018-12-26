@@ -244,8 +244,8 @@ struct greNode
 
 struct greCharacterAnimations
 (
-  time = 2.0,
-  frameCount = 1060,
+  framesPerMin = 2.0,
+  frameCount = 0,
   boneCount = 21,
   boneAnimations = #()
 )

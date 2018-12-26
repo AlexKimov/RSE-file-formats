@@ -16,6 +16,14 @@ struct maxStrings
   )
 )
 
+struct maxAnimation
+(
+  fn setLength length =
+  (
+    animationRange = interval 0 length
+  )
+)
+
 struct skinModifier
 (
   fn create =
@@ -48,10 +56,22 @@ struct skinModifier
 
 struct maxController
 (
-  fn addKey controller time value =
+  fn addKey controller time value: =
   (
     key = addNewKey controller time
-    key.value = value
+    if value != unsupplied then
+      key.value = value
+  ),
+  fn delKey controller index: =
+  (
+    if index == unsupplied then
+    (
+      deleteKeys controller #allKeys
+    )  
+    else
+    (
+      deleteKey controller index
+    )  
   )
 )
 
@@ -138,6 +158,7 @@ struct max3ds
   nodes,
   modifiers, 
   controller,
+  animation,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -329,7 +350,8 @@ struct max3ds
     bones = maxBones()
     nodes = nodOp()
     modifiers = maxModifier()  
-    controller = maxController()    
+    controller = maxController()
+    animation = maxAnimation()    
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle

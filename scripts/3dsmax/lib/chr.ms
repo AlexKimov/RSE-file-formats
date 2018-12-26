@@ -51,8 +51,32 @@ struct characterFile
       append bone.connectedBones (readBone())          
     result = bone     
   ),
+  fn setSectionOffset sectionIndex =
+  (
+    /* sectionIndex:
+       1 - materials 
+       2 - geometry 
+       3 - skeleton
+    */
+    if sectionIndex == 1 then
+      result = 19
+    if sectionIndex == 2 then
+    (
+      fseek filestream 19 #seek_cur
+      rse.skipSection()
+    ) 
+    if sectionIndex == 3 then
+    (
+      fseek filestream 19 #seek_cur
+      rse.skipSection()
+      rse.skipSection()
+      fseek filestream 13 #seek_cur   
+    )    
+  ),
   fn readSkeleton =
   ( 
+    if (ftell filestream) == 0 then
+      setSectionOffset 3
     object.bones = readBone()     
   ),  
   fn readWeights =
@@ -79,7 +103,6 @@ struct characterFile
   (
 	--try
 	--(
-      rse = rseFormatReader(filestream)
       readHeader()
       rse.ReadName() -- BeginModel string
       readMaterialList()
@@ -109,6 +132,8 @@ struct characterFile
       dialogs.caption = strings.saveFileCaption
     local fname = filename
     filestream = dialogs.openFileDialog &fname mode
-    filename = fname    
+    filename = fname
+    rse = rseFormatReader(filestream)   
+    result = filestream    
   )  
 )
