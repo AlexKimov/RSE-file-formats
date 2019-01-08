@@ -1,0 +1,66 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+void ReadBone(uint count, string ParentName)
+{
+  local uint numb;
+  local uint i = 0;
+  local uchar MatrixStr[256] = {0};
+  local float X, Y, Z, W;
+  local uint length;
+  local string name;
+  for (i = 0; i < count; ++i) 
+  {
+    Printf("\n");
+    FSkip(20);
+    length = ReadInt(FTell());
+    FSkip(4);
+    name = ReadString(FTell());
+    Printf("%s = BoneSys.createBone [0,0,0] [0,0,0] [0,0,0]\n%s.name = \"%s\"\n", name, name, name);
+    Printf("%s.width = 1\n%s.height = 1\n%s.taper = 100\n%s.wirecolor = yellow\n%s.showlinks = true\n", name, name, name, name, name);
+
+    FSkip(length);
+
+    X = ReadFloat(FTell());
+    FSkip(4);
+    Y = ReadFloat(FTell());
+    FSkip(4);
+    Z = ReadFloat(FTell());
+    FSkip(4);
+    SPrintf(MatrixStr, "pos = (point3 %f %f %f)\n", X, Y, Z);
+    Printf(MatrixStr);
+
+    X = ReadFloat(FTell());
+    FSkip(4);
+    Y = ReadFloat(FTell());
+    FSkip(4);
+    Z = ReadFloat(FTell());
+    FSkip(4);
+    W = ReadFloat(FTell());
+    FSkip(4);
+    SPrintf(MatrixStr, "matrix = inverse ((quat %f %f %f %f) as matrix3)\n", X, Y, Z, W);
+    Printf(MatrixStr); 
+    Printf("matrix.position = pos\n"); 
+    if (name != "SpineRoot01")
+      Printf("%s.parent = %s\n", name, ParentName);
+    if (name != "SpineRoot01")
+      Printf("%s.transform = matrix*%s.transform\n", name, ParentName);
+    else
+      Printf("%s.transform = matrix\n", name);
+
+    FSkip(4);
+    numb = ReadInt(FTell());
+    FSkip(4); 
+    ReadBone(numb, name);
+  };
+};
+
+ReadBone(1, "");

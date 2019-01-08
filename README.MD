@@ -6,7 +6,11 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 
 #### Roadmap
 
+* 3dsmax import/export scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
 * conversion scripts ([link](https://github.com/AlexKimov/RSE-file-formats/issues/28));
+
+#### Discussions
+* ghostrecon.net forum ([link](http://www.ghostrecon.net/forums/index.php?/topic/61545-gr-community-sdk/));
 
 ## File Converters 
 * Python scripts and even more by Philip Edwards 

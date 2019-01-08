@@ -1,0 +1,9 @@
+name "Ghost Recon 2001 tools"
+version 0.1
+treeMove lib to $scripts\ht_tool
+copy gre_import.ms to $scripts\ht_tool
+copy icons\*.* to $max\UI_ln\Icons
+copy icons\*.* to $max\UI_ln\IconsDark
+run rse_tools.mcr.mcr
+drop rse_tools.mcr.mcr
+clear temp
