@@ -56,7 +56,8 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 2 | .dam        | [DAM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM.bt)        | **10%**      |          |Character animation data |
 | 3 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **50%**  |           | level |
 | 4 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Skeleton |
-| 5 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Static 3D objects |
+| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 6 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Static 3D objects |
 
 **3. Rainbow Six Rogue Spear**
 
@@ -67,8 +68,9 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 3 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%** |           |level |
 | 4 | .qob       | [QOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(rsp).bt)        | **95%**      |      | 3D objects |
 | 5 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
-| 6| .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **10%**     |           | Skeleton |
-| 7| .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Static 3D objects |
+| 6 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 7 | .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **10%**     |           | Skeleton |
+| 8 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Static 3D objects |
 
 **3. Rainbow Six Lockdown**
 
@@ -76,7 +78,8 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1 | .chr        | [CHR(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR(ld).bt)        | **55%**      |           | 3D model |
 | 2 | .qob       | [QOB(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(LD).bt)        | **65%**      |      | 3D object |
-| 3 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Skeleton |
+| 3 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 4 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Skeleton |
 
 **4. Dominant Species** 
 
@@ -92,6 +95,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
 | 1  | .kit        | [KIT.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/KIT.bt)        | **50%**     |          |   3D Model                         |
+| 2 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
 
 **6. Freedome First Resistance level**
 
@@ -100,7 +104,8 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 1 | .map       | [MAP(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(ffs).bt)   | **70%** |           | level |
 | 2 | .noz       | [NOZ.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/NOZ.bt)   | **90%** |           | character model |
 | 3 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | 3D objects |
-| 4 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Animations |    
+| 4 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Animations |   
+| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
 
 **7. Shadow Watch**
 
