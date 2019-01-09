@@ -1,0 +1,51 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: CHR.bt
+//   Authors: AlexKimov
+//   Version: 1.0
+//   Purpose: Rainbow Six Rogue Spear DAM file
+// 
+//   History: 
+//------------------------------------------------
+
+struct {
+  BYTE Magic[4];
+} FILE_HEADER;
+
+UINT KeyCount <name="KeyCount?">; 
+UINT FrameCount; 
+UINT AnimationSpeed;
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT W;
+} ROTATION;
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} POSITION;
+
+typedef struct {
+  UINT BoneCount;
+  POSITION BonePos;
+  struct {
+    ROTATION Rot;
+  } Bone[BoneCount]; 
+} ANIMATION_FRAME;
+
+ANIMATION_FRAME Frame[FrameCount] <name="Frames">;
+
+UINT Length;
+CHAR Name[Length];
+struct {
+  FLOAT Unknown;
+  FLOAT AnimationSpeed;
+  FLOAT Speed <name="in-game speed of the character">;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+} ANIMATION_PARAMETERS;
