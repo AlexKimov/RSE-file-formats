@@ -12,156 +12,183 @@
 //   2018.05 v0.1 initial release
 //------------------------------------------------
 
-time_t DateTime;
+struct {
+  FLOAT Version <name="Version">; // 1.8
+} HEADER <name="Header">;
+
+//-------------------------------------------------
 
 struct {
   typedef struct {
-    UINT VertexCount <name="Vertex count">;
-  
+    UINT VertexCount <name="Vertex count">;  
     struct {
       typedef struct {
-        UINT A;
+        UINT I;
       } INDEX;
-      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
+      INDEX IndexArray[VertexCount] <name="Index">;
      } INDEX_ARRAY <name="Vertex index array">;
-
     struct {
       typedef struct {
-        FLOAT P1;
-        FLOAT P2;
-        FLOAT P3;
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
       } COORDINATES <name="Vertex">;
-      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
+      COORDINATES CoordinatesArray[VertexCount];
     } COORDINATES_ARRAY <name="Vertex cordinates array">;
-  } BODYP <name="Body part">;
-  BODYP BodyParts[18] <optimize=false>;
-} BODY <name="Verticies">;
+  } BODYP <optimize=false, name="Body part">;
+  BODYP BodyParts[18];
+} BODY <name="Vertices">;
 
 //-------------------------------------------------
 
 typedef struct {  
-    struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-      FLOAT P2;
-      FLOAT P3;
-      UINT P1;
-      UINT P2;
-      UINT P1;
-    } PROPERTIES;  
-} TEXTURE <name=textureName>;
-
-string textureName(TEXTURE & texture) {
-  return texture.Name;
-};
+  FLOAT P1;
+  FLOAT P2;
+  FLOAT P3;
+  FLOAT P2;
+  FLOAT P3;
+  UINT P1;
+  UINT P2;
+  UINT P3; 
+} VERTEX_S;
 
 struct {
   UINT Length;
   char Name[Length];
+  UINT Unknown;
+  BYTE A;
+  BYTE A;
+  BYTE A;
   //
-  struct {
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P2;
-    UINT P2;
-    BYTE H;
-  } T_PROPERTIES; 
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT Unknown;
   //
-  UINT TextureCount <name="Number of textures">;
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT Unknown;
+  UINT A;
+  if (A > 0)
+  {
+    UINT A;
+  };
+  //
+  BYTE A;
+  BYTE B;
+  UINT Unknown; 
+  // !?? 
+  UINT Unknown; 
+  //
+  UINT Count;
   typedef struct (int arraySize) {
-      TEXTURE array[arraySize] <optimize=false>;
-  } TEXTURE_ARRAY;
-  TEXTURE_ARRAY Textures(TextureCount) <optimize=false>;
-
-} TEXTURES <name="2">;
+      VERTEX_S array[arraySize] <optimize=false>;
+  } ARRAY;
+  ARRAY Vertexes(Count) <optimize=false>;
+} VERTEXES <name="Vertexes??">;
 
 //-------------------------------------------------
 
-struct {
+UINT MeshCount;
+typedef struct {
+  struct {
+  UINT Length;
+  char Name[Length];
+  UINT Unknown;  
+  BYTE A;
+  BYTE A;
+  BYTE A;
+  //
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT Unknown;
+  //
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT Unknown;
+  UINT A; 
+  //  
+  if (A > 0)
+  { 
+    if (A == 5)
+      UINT Data[8];
+    UINT B;
+  }  
+  UINT Length;
+  CHAR TextureFileName[Length];
 
-  typedef struct {  
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    BYTE FF[3];
-    UINT I[2];
-    UINT Length;
-    char Name[Length];
-    UINT Count; 
-
-    FLOAT P1;
-    FLOAT P2;
-    FLOAT P3;
-
-    UINT COUNT;
-
+  UINT A;
+  UINT B;
+  UINT C;
+  UINT D;
+  UINT F;
+  UINT G;
+  FLOAT nn1[4];
+  UINT G;
+  FLOAT nn2[16];
+  UINT F;
+  BYTE A;
+  BYTE A;
+  } UNKNOWN_DATA;
+  //
+  struct {
+    UINT VertexCount;
     struct {
-      FLOAT P3;
-      FLOAT P2;
-      FLOAT P3;
-      FLOAT P3;
-    } UI[COUNT];
-
-    FLOAT P1;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P3;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P1;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P2;
-    FLOAT P3;
-    FLOAT P2;
-    FLOAT P3;
-    BYTE V[2];
-
-    UINT Count;
+      FLOAT R;
+      FLOAT G;
+      FLOAT B;
+      FLOAT A;
+    } AMBIENT_COLOR[VertexCount]; 
+    UINT count2; 
     struct {
-      FLOAT P3;
-      FLOAT P2;
-      FLOAT P3;
-      FLOAT P1;
-    } A[Count];
-
-    UINT Count;
+      FLOAT A;
+      FLOAT B;
+    } Unnkown[VertexCount*count2];
+    UINT VertexCount; 
     struct {
-      FLOAT RT[16];
-    } B[Count];
-    UINT Count; 
+      FLOAT R;
+      FLOAT G;
+      FLOAT B;
+      FLOAT A;
+    } DIFFUSE_COLOR[VertexCount];  
+    UINT count4; 
+    struct {
+      FLOAT U;
+      FLOAT V;
+    } UV_COORDINATES[VertexCount];
+     struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } NORMAL1[VertexCount]; 
 
-  } AA <name=textureName>;
-
-  UINT TextureCount <name="Count">;
-
-  typedef struct (int arraySize) {
-      AA array[arraySize] <optimize=false>;
-  } AA_ARRAY;
-
-  AA_ARRAY Textures(TextureCount) <optimize=false>;
-
-} UU <name="3">;
+    UINT FaceCount;
+    struct {   
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+        FLOAT Distance;
+      } NORMAL2[FaceCount]; 
+      struct {
+        UINT16 I1;
+        UINT16 I2;
+        UINT16 I3;
+      } FACE_INDEXES[FaceCount]; 
+      struct {
+        UINT16 I1;
+        UINT16 I2;
+        UINT16 I3;
+      } UV_INDEXES[FaceCount];
+    } FACES;
+  } GEOMETRY_DATA;       
+} MESH <optimize=false>;
+typedef struct (uint count) {
+  MESH  array[count];
+} MESH_ARRAY;
+MESH_ARRAY Meshes(MeshCount) ;
 
 //-------------------------------------------------
