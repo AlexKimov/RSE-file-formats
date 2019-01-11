@@ -9,12 +9,10 @@
 //
 //   History: 
 //
-//   2018.12 Began rogue spear compatibility.
 //   2017.06 v0.1 initial release
 //------------------------------------------------
 
 local uint count;
-
 
 struct {
   typedef struct {
@@ -67,7 +65,6 @@ string textureName(TEXTURE & texture) {
 
 struct {
   FLOAT Version;
-
   UINT Length;
   char Name[Length];
   //
