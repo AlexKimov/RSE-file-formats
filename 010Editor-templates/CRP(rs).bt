@@ -13,51 +13,52 @@
 //   2017.06 v0.1 initial release
 //------------------------------------------------
 
-local uint bRogueSpear = false;
+local uint count;
 
-local UINT fileIDPeek = ReadUInt();
-
-if(fileIDPeek == 1072064102) {
-    //Rogue spear file
-    UINT FileID;
-    bRogueSpear = true;
-}
 
 struct {
   typedef struct {
     UINT VertexCount <name="Vertex count">;
-  
     struct {
       typedef struct {
-        UINT A;
+        UINT I;
       } INDEX;
-      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
+      INDEX IndexArray[VertexCount] <optimize=false,name="Index">;
      } INDEX_ARRAY <name="Vertex index array">;
-
     struct {
       typedef struct {
-        FLOAT P1;
-        FLOAT P2;
-        FLOAT P3;
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
       } COORDINATES <name="Vertex">;
-      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
+      COORDINATES array[VertexCount] <optimize=false>;
     } COORDINATES_ARRAY <name="Vertex cordinates array">;
   } BODYP <name="Body part">;
   BODYP BodyParts[18] <optimize=false>;
-} BODY <name="Verticies">;
+} BODY <name="Vertexes">;
 
 //-------------------------------------------------
 
 typedef struct {
-    UINT Length;
-    char Name[Length];   
+  UINT Length;
+  char Name[Length];   
+  struct {
     struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-      UINT P4; 
-      BYTE P5;
-    } PROPERTIES;  
+      UBYTE R;
+      UBYTE G;
+      UBYTE B;
+      UBYTE A;
+    } AMBIENT_COLOR;
+    struct {
+      UBYTE R;
+      UBYTE G;
+      UBYTE B;
+      UBYTE A;
+    } DIFFUSE_COLOR;
+    UINT Unknown; // Transparency type ?
+    UINT Transparency; 
+    BYTE twoSided; // 1 - yes
+  } PROPERTIES;  
 } TEXTURE <name=textureName>;
 
 string textureName(TEXTURE & texture) {
@@ -65,19 +66,18 @@ string textureName(TEXTURE & texture) {
 };
 
 struct {
-  if (bRogueSpear == false) {
-      FLOAT P;
-  }
+  FLOAT Version;
+
   UINT Length;
   char Name[Length];
   //
   struct {
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
   } T_PROPERTIES; 
   //
   UINT TextureCount <name="Number of textures">;
@@ -87,34 +87,35 @@ struct {
 //-------------------------------------------------
 
 struct {
-  UINT Count <name="count">;
+  UINT Count;
   typedef struct {
     struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } INDEXIES1 <name="Face index">;  
+    } FACE_INDEXES <name="Face index">;  
     struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } INDEXIES2 <name="Texture coordinates index">;  
-    UINT MN;
-    UINT MN;
+    } UV_INDEXES <name="Texture coordinates index">;  
+    UINT TexureIndex;
+    UINT Unknown;
   } PINDEX <name="Index">;
-  PINDEX IArray[Count] <optimize=false>;
-} INDIXIES <name="Indexes">;
+  PINDEX Indexes[Count] <optimize=false>;
+} INDEXES <name="Indexes">;
 
 //-------------------------------------------------
+
 struct {
   UINT Count <name="count">;
   typedef struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-  } MN;
-  MN NArray[Count] <optimize=false>;
-} N <name="MN">;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+  } VERTEX <name="Vertex">;
+  VERTEX Vertexes[Count] <optimize=false>;
+} OCCLISION <name="Occlusion Data">;
 
 //-------------------------------------------------
 struct {
@@ -123,21 +124,21 @@ struct {
     struct {    
       FLOAT U;
       FLOAT V;
-    } TEX_COORDINATES;   
+    } TEX_COORDINATES <name="UV">;   
     struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-    } NORMALS;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } NORMAL <name="Normal">;
     struct {
       UINT Red;
       UINT Green;
       UINT Blue;
       UINT Alpha;
     } COLOR;
-  } Face <name="Polygon">;
+  } Face <name="Face">;
   Face FaceArray[FaceCount] <optimize=false>;
-} POLYGONS <name="Polygons">;
+} POLYGONS <name="Faces">;
 
 //-------------------------------------------------
 

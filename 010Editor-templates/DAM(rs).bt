@@ -11,7 +11,7 @@
 
 local uint count = 75;
 
-UINT Keys; 
+UINT FrameCount; 
 
 struct {
   struct {
@@ -23,7 +23,7 @@ struct {
       BYTE W;
     } Bone_Pos;
     Bone_Pos BonePosArray[count];
-  } A[Keys] <optimize=false>;
+  } Frames[FrameCount] <optimize=false, name="Frame">;
 } MOTION_DATA;
 
 struct {
@@ -32,10 +32,10 @@ struct {
 } Name <name="Name">;
 
 struct {
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN;
-  FLOAT MN;
-} ANIMATION_PARAMS;
+  FLOAT Unknown;
+  FLOAT AnimationSpeed;
+  FLOAT Speed <name="in-game speed of the character">;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+} ANIMATION_PARAMETERS;

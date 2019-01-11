@@ -36,41 +36,94 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 ## Templates and scripts (wip)
 
+**1. Ghost Recon 1, The Summ Of All Fears**
+
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .anm        | [ANM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **95%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)          | Ghost Recon Objects animation data |
-| 2 | .bcl        | [BCL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BCL.bt)        | **30%**      |          | Rainbow Six Character animation data |
-| 3 | .bmf        | [BMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **95%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Ghost Recon Character animation data |
-| 4 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **95%**      | [CHR file format](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)          | Ghost Recon Character 3D model |
-| 5 | .chr        | [CHR(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR(ld).bt)        | **55%**      |           | Rainbow Six Lockdown Character 3D model |
-| 6 | .cmf        | [CMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CMF.bt)        | **50%**      |           | Dominant Species Character 3D model |
-| 7 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      |           | Rainbow six Character 3D model |
-| 8 | .crp        | [CRP(ds).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(ds).bt)    | **70%**      |           | Dominant Species character 3D model |
-| 9 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **70%**      |           | Rogue Spear character 3D model |
-| 10 | .dam        | [DAM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM.bt)        | **10%**      |          | Rainbow Six Character animation data |
-| 11 | .dam        | [DAM(ds).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(ds).bt)        | **10%**      |          | Dominant Species Character animation data |
-| 12  | .kit        | [KIT.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/KIT.bt)        | **50%**     |          |  Force 21 3D Model                         |
-| 13 | .map        | [MAP(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(gr).bt)    | **70%** | [MAP file format](https://github.com/AlexKimov/RSE-file-formats/wiki/MAP-File-Format)          | Ghost recon level |
-| 14 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **50%**  |           | Rainbow six level |
-| 15 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%** |           | Rogue Spear level |
-| 16 | .map       | [MAP(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(ffs).bt)   | **70%** |           | Freedome First Resistance level |
-| 17 | .noz       | [NOZ.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/NOZ.bt)   | **90%** |           | Freedome First Resistance character model |
-| 18 | .pob       | [POB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/POB.bt)        | **90%**      | [POB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/POB-File-Format)          | Ghost Recon 3D objects |
-| 19 | .qob       | [QOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB.bt)        | **95%**      | [QOB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/QOB-File-Format)        | Ghost Recon Static 3D objects |
-| 20 | .qob       | [QOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(rsp).bt)        | **95%**      |      | Rogue Spear Static 3D objects |
-| 21 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | Freedome First Resistance 3D objects |
-| 22 | .qob       | [QOB(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(LD).bt)        | **65%**      |      | Rainbow Six Lockdown 3D object |
-| 23 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           | Shadow Watch Texture file |
-| 24 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | Rogue Spear 3D objects |
-| 25 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Freedom First Resistance Animations |    
-| 26 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture file |
-| 27 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Playstation 2 Texture file |
-| 28 | .skl       | [SKL.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL.bt)         | **10%**     |           | Rainbow Six Skeletal Bones |
-| 29 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Rainbow Six Lockdown Skeletal Bones |
-| 30 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Rogue Spear Static 3D objects |
-| 31 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Rainbow six Static 3D objects |
-| 32 | .sht       | [SHT.bt]()        | **0%**       |           | Ghost Recon Collision data |
-| 33 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Ghost Recon 2 Texture file |
+| 1 | .anm        | [ANM.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **95%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)          |  Animation data |
+| 2 | .bmf        | [BMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **95%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Charater animation data |
+| 3 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **95%**      | [CHR file format](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)          | Character 3D model |
+| 4 | .map        | [MAP(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(gr).bt)    | **70%** | [MAP file format](https://github.com/AlexKimov/RSE-file-formats/wiki/MAP-File-Format)          | Level: 3d Data, portals, lights, objects |
+| 5 | .pob       | [POB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/POB.bt)        | **90%**      | [POB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/POB-File-Format)          | 3D objects: vehicles (tanks, bmps and so on), helicopters, boats + Particles |
+| 6 | .qob       | [QOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB.bt)        | **95%**      | [QOB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/QOB-File-Format)        | 3D objects: Weapons + special objects. |
+| 7 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+
+**2. RainBow Six**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      |           | Character 3D model |
+| 2 | .dam        | [DAM(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rs).bt)        | **10%**      |          |Character animation data |
+| 3 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **50%**  |           | level |
+| 4 | .skl       | [SKL(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(rs).bt)         | **10%**     |           | Skeleton |
+| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 6 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Static 3D objects |
+
+**3. Rainbow Six Rogue Spear**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **70%**      |           | character 3D model |
+| 2 | .dam        | [DAM(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rsp).bt)        | **10%**      |          | Character animation data |
+| 3 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%** |           |level |
+| 4 | .qob       | [QOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(rsp).bt)        | **95%**      |      | 3D objects |
+| 5 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
+| 6 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 7 | .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **10%**     |           | Skeleton |
+| 8 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Static 3D objects |
+
+**3. Rainbow Six Lockdown**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .chr        | [CHR(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR(ld).bt)        | **55%**      |           | 3D model |
+| 2 | .qob       | [QOB(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(LD).bt)        | **65%**      |      | 3D object |
+| 3 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 4 | .skl       | [SKL(LD).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(LD).bt)         | **50%**     |           | Skeleton |
+
+**4. Dominant Species** 
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .cmf        | [CMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CMF.bt)        | **50%**      |           | Character 3D model |
+| 2 | .crp        | [CRP(ds).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(ds).bt)    | **70%**      |           | character 3D model |
+| 3 | .dam        | [DAM(ds).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(ds).bt)        | **10%**      |          | Character animation data |
+
+
+**5. Force 21**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1  | .kit        | [KIT.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/KIT.bt)        | **50%**     |          |   3D Model                         |
+| 2 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+
+**6. Freedome First Resistance level**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .map       | [MAP(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(ffs).bt)   | **70%** |           | level |
+| 2 | .noz       | [NOZ.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/NOZ.bt)   | **90%** |           | character model |
+| 3 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | 3D objects |
+| 4 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **50%**      |           | Animations |   
+| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+
+**7. Shadow Watch**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           |Texture file |
+
+**8. Ghost Recon 2**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .xpr       | [XPR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/XPR.bt)       | **75%**       |           | Texture file |
+
+**8. Ghost Recon (playstaion)**
+
+| № | Format       | Template name     | Progress     | Specs | Description |
+| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| 1 | .rsb       | [RSB(ps2).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB(ps2).bt)  | **5%**   |           | Texture file |
 
 ### Scripts
 

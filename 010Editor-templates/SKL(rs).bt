@@ -1,0 +1,108 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: SKL.bt
+//   Authors: Alexandr Evdokimov
+//   Version: 0.5
+//   Purpose: Rainbow Six SKL File
+// 
+//   History: 
+//   2017 v0.5 Initial release
+//
+//------------------------------------------------
+
+typedef struct {
+  struct { 
+    FLOAT x;        
+    FLOAT y;
+    FLOAT z;
+  } XAXIS;
+  struct { 
+    FLOAT x;
+    FLOAT y;
+    FLOAT z;
+  } YAXIS;
+  struct {
+    FLOAT x;
+    FLOAT y;
+    FLOAT z;
+  } ZAXIS;
+  struct {
+    FLOAT Y;
+    FLOAT X;
+    FLOAT Z;
+  } POSITION;
+} TRANSFORMATION_MATRIX; 
+
+
+UINT BoneCount;
+
+typedef struct {
+  FLOAT X;   
+  FLOAT Y;
+  FLOAT Z; 
+  // 
+  FLOAT X;   
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT W;
+  //
+  TRANSFORMATION_MATRIX Matrix;
+  //
+  FLOAT X;   
+  FLOAT Y;
+  FLOAT Z;
+  // 
+  FLOAT X;   
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT W;
+  // 
+  FLOAT X;   
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT W;
+  //
+  UINT Length;
+  CHAR Name[Length];
+  UINT BoneIndex;
+  BYTE A;
+  if (A == 1)
+  {
+    //
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    //
+    FLOAT Unknown;
+    //
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    //
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    //
+    FLOAT Unknown;
+  }
+} BONE <optimize=false, name=getBoneName>;
+
+
+string getBoneName(BONE &Bone)
+{
+  return Bone.Name;
+}
+
+void ReadBone()
+{  
+  BYTE Cycle;
+  if (Cycle == 1)
+    ReadBone();
+  BYTE Cycle;
+  if (Cycle == 1)
+    ReadBone(); 
+  BONE Bone;
+};
+
+ReadBone();
