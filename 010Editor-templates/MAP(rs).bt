@@ -138,10 +138,7 @@ struct {
 typedef struct  { 
    struct { 
      UINT Count; 
-     struct {
-       UINT Length; 
-       char Text[Length]; 
-     } Name; 
+     CString Name; 
    } HEADER; 
 
    //Check(HEADER.Name.Length, 5, "AAAAA");
@@ -153,12 +150,10 @@ typedef struct  {
      UINT FaceCount; 
      UINT FaceIndices[FaceCount];
    } ARRAYS <name="Indexes">;  
-   UINT Count; 
+   UINT GeometryFlags;  // Each bit corresponds to another flag on this mesh, such as Collision, Climbable, Invisible etc.
    CString String <name="String">;  
-
-   //Check(String.Length, 5, "BBBBB");
     
-   UINT Index ;       
+   UINT Unknown ;       
 } OBJECT <name=objectName>;
 
 string objectName(OBJECT &object) {
@@ -170,15 +165,11 @@ typedef struct {
        UINT SectionSize;
        UINT ID; // 7
    
-       UINT Length; // 
-       char Text[Length]; //
-       if (Text == "Version") { 
+       CString Text;
+       if (Text.Text == "Version") { 
          UINT value;
 
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } OBJECT_NAME;
+         CString OBJECT_NAME;
          UINT A;
          UINT B;
        };
@@ -187,10 +178,10 @@ typedef struct {
     struct {
       UINT VertexCount;  
       typedef struct {     
-        FLOAT P1;
-        FLOAT P2;
-        FLOAT P3;
-       } Vertex <name="Vertex">;    
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+       } Vertex <name="Vertex">;
       typedef struct (int arraySize) {
         Vertex array[arraySize];
       } VERTEX_ARRAY;     
@@ -204,22 +195,22 @@ typedef struct {
            FLOAT X;
            FLOAT Y;
            FLOAT Z;
-           FLOAT W;
          } NORMAL;
          struct {
            FLOAT U;
            FLOAT V;
          } UV;
+         FLOAT Unknown;
          struct {
            UINT Red;
            UINT Green;
            UINT Blue;
          } Color;
-        } F <name="Vertex">;
+        } VertexParameter <name="Vertex Parameter">;
        typedef struct (int arraySize) {
-         F array[arraySize] <optimize=false>;
-       } F_ARRAY;
-       F_ARRAY FArray(Count) <name="Vertex data array">; 
+         VertexParameter array[arraySize] <optimize=false>;
+       } VERTEX_PARAMETER_ARRAY;
+       VERTEX_PARAMETER_ARRAY FArray(Count) <name="Vertex data array">; 
      } VERTEX_PARAMS_ARRAY <name="Vertex Parameters">;
 
      struct {
