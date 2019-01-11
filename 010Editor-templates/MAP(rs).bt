@@ -29,6 +29,11 @@ void Check(int value, int number, string str) {
   }; 
 };
 
+typedef struct { 
+        UINT Length;  
+        char Text[Length] <optimize=false>;
+      } CString <optimize=false>; 
+
 typedef struct {
   struct { 
     FLOAT x;        
@@ -53,10 +58,7 @@ typedef struct {
 } TRANSFORMATION_MATRIX;   
 
 struct {
-  struct {
-    UINT Length; // 
-    char Text[Length]; // 
-  } BeginMap_STRING <name="BeginMapv2.1">;
+  CString BeginMap_STRING <name="BeginMapv2.1">;
   time_t DateTime;
 } HEADER <name="BeginMapv2.1">;
 
@@ -84,8 +86,8 @@ typedef struct {
 
   struct { 
     FLOAT Opacity;
-    FLOAT SelfUllimination; // 0    
-    UINT MN; // 0 - faceted, 1 - ?
+    FLOAT Emissive; // 0    
+    UINT AlphaMethod; // 0 - Opaque, 1 - unknown, 3 - Lookup CXP or opaque
     struct {              
       UINT Red; //
       UINT Green; //
@@ -114,10 +116,7 @@ struct {
   struct { 
     UINT SectionSize;
     UINT ID; // 8
-    struct {
-      UINT Length; // 
-      char Text[Length]; // 
-    } MATERIALLIST_STRING;
+    CString MATERIALLIST_STRING;
   } HEADER <name="1.0 MaterialList section header">;
     
   struct {
@@ -148,29 +147,14 @@ typedef struct  {
    //Check(HEADER.Name.Length, 5, "AAAAA");
 
    struct {
-     UINT VertexCount; 
-     typedef struct {  
-       UINT Index; 
-     } CC;
-     typedef struct (int arraySize) {
-       CC array[arraySize] <optimize=false>;
-     } CC_ARRAY;
-         CC_ARRAY CCArray(VertexCount) <name="Vertex indexes">; 
+     UINT VertexCount;
+     UINT VertexIndices[VertexCount];
 
      UINT FaceCount; 
-     typedef struct {  
-       UINT Index; 
-     } DD <name="Index">;
-     typedef struct (int arraySize) {
-       DD array[arraySize] <optimize=false>;
-     } DD_ARRAY;
-       DD_ARRAY DDArray(FaceCount) <name="Face Indexes">; 
+     UINT FaceIndices[FaceCount];
    } ARRAYS <name="Indexes">;  
    UINT Count; 
-   struct {
-     UINT Length; // 
-     char Text[Length]; // 
-   } String <name="String">;  
+   CString String <name="String">;  
 
    //Check(String.Length, 5, "BBBBB");
     
@@ -236,7 +220,7 @@ typedef struct {
          F array[arraySize] <optimize=false>;
        } F_ARRAY;
        F_ARRAY FArray(Count) <name="Vertex data array">; 
-     } FACE_ARRAY <name="Texture coordinates">;
+     } VERTEX_PARAMS_ARRAY <name="Vertex Parameters">;
 
      struct {
        UINT Count <name = "Face Count">; 
@@ -245,25 +229,25 @@ typedef struct {
            UINT I1;
            UINT I2;
            UINT I3;
-         } INDEXIES1 <name="Face index">;  
+         } VERTEX_INDICES <name="Vertex indices">;  
          struct {
            UINT I1;
            UINT I2;
            UINT I3;
-         } INDEXIES2 <name="Texture coordinates index">;  
+         } VERTEX_PARAM_INDICES <name="Vertex Param indices">;  
          struct {
            FLOAT MN;
            FLOAT MN;
            FLOAT MN;
+           FLOAT MN;
          } FACE_NORMAL;
-         UINT MN;
-         UINT TextureIndex;
+         UINT MaterialIndex;
        } FACE  <name="Face">;
        typedef struct (int arraySize) {
           FACE array[arraySize] <optimize=false>;
        } FACE_ARRAY;
        FACE_ARRAY FaceArray(Count)  <name="Faces">; 
-     } TEXTURE_DATA <name="Indexes">;
+     } FACE_DATA <name="Face Definitions">;
 
     struct {
       UINT Count; 
@@ -750,7 +734,7 @@ void Nodes() {
     if (A == 0) BYTE C;
     UINT ShermanCount;
     local uint scount = ShermanCount;
-    local uint i = 0;
+    //local uint i = 0;
     //if (B != 1) scount = 1;
     if (ShermanCount == 0) BYTE A; 
     struct { 
@@ -825,17 +809,15 @@ void Nodes() {
         } Name <optimize=false>;   
         UINT Count;
      };
-    } Sherman[scount] <optimize=false>;
-
+    } ShermanLevelPlanArea[scount] <optimize=false>;
 
     UINT Count;
     struct {
-      struct { 
-        UINT Length;  
-        char ShermanLevel[Length] <optimize=false>;
-      } Name[3] <optimize=false>; 
+      CString TransitionName;
+      CString LevelA;
+      CString LevelB;
       FLOAT T[4];
-    } BB[Count] <optimize=false>;
+    } ShermanLevelTransition[Count] <optimize=false>;
   
     UINT Count;
     FLOAT arr[Count]; // 1
