@@ -1,0 +1,96 @@
+//------------------------------------------------
+//--- 010 Editor v9.0 Binary Template
+//
+//      File: DMP.bt
+//   Authors: Philip Edwards
+//   Version: 
+//   Purpose: Read DMP files containing lights for Rogue Spear maps.
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: Uses a lot of preexisting structures from Alex Kimov, with modifications
+//------------------------------------------------
+struct { 
+    UINT FileID;
+    uint skipUINTs[5];
+    uint LightCount;
+    
+} HEADER <name="LIGHTList Header">;  
+
+typedef struct { 
+    FLOAT x;        
+    FLOAT y;
+    FLOAT z;
+    FLOAT w;
+  } Vec4f;
+
+typedef struct { 
+    FLOAT x;        
+    FLOAT y;
+    FLOAT z;
+  } Vec3f;
+
+typedef struct {
+    Vec4f XAXIS; 
+    Vec4f YAXIS;
+    Vec4f ZAXIS;
+    Vec4f WAXIS;
+} TRANSFORMATION_MATRIX_4x4;
+
+typedef struct {
+    Vec3f XAXIS; 
+    Vec3f YAXIS;
+    Vec3f ZAXIS;
+} TRANSFORMATION_MATRIX_3x3;  
+
+typedef struct {
+    struct { 
+        UINT Version;
+        if (Version == 4){
+            UINT ID;
+        }
+        else {
+            SHORT ID;
+        }
+        UINT Length; // 
+        char Text[Length]; 
+        if (Text == "Version"){
+            struct {    
+                //
+                UINT value;
+                UINT Length;  
+                char Text[Length]; 
+                BYTE Y;  
+            } NAME_STRING;
+        }
+    } LIGHTHEADER <name="LightHeader">;
+    UINT unknown1;
+    Vec3f unknown2;
+    Vec3f position;
+    Vec3f unknown3;
+    //TRANSFORMATION_MATRIX_3x3 TM; 
+    Vec3f Color;
+    struct {
+        float IntensityOrDistance; // 0..255
+        Vec3f SpecularColorMaybe;
+        float MN; // 0
+        FLOAT MN; //  0
+        FLOAT MN; // 
+        FLOAT MN;
+        //BYTE Type;
+        //Check(Type, 1, "AAAAAAAAAAAAAA"); 
+    } Params;
+
+    char skipBytes[37];
+} LIGHT <name=LightName>;
+
+string LightName(LIGHT &light) {
+    if (exists(light.LIGHTHEADER.NAME_STRING))
+        return "Name: " + light.LIGHTHEADER.NAME_STRING.Text;
+    else
+        return "Name: " + light.LIGHTHEADER.Text;
+};
+
+LIGHT lights[HEADER.LightCount] <optimize=false>;
+
+
