@@ -28,7 +28,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 6 | The Sum of All Fears | PC  |2002 | .chr, .map, .pob, .qob, .rsb, .anm, .bmf  |
 | 7 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bmf  |
 | 8 | Freedom First Resistance  | PC | 2000  | .rsb, .map, .qob, .noz, .rsa |
-| 9 | Rogue Spear (Urban Operations, Covert Ops, Black Thorn) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob |
+| 9 | Rogue Spear (Urban Operations, Covert Ops, Black Thorn) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob, .skl, .dam |
 | 10 | Shadow Watch  | PC | 2000  | .r16  |
 | 11 | Force 21  | PC | 1999  | .rsb, .kit, .gee, .tgz  |
 | 12 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf, .dam  |
