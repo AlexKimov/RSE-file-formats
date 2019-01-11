@@ -368,15 +368,15 @@ struct {
      TRANSFORMATION_MATRIX TM; 
      struct {
        struct {
-         UINT MN; // 0..255
-         UINT MN; //
-         UINT MN;
+         UINT R; // 0..255
+         UINT G; //
+         UINT B;
        } Color;
-       FLOAT MN; // 1
-       UINT MN; // 0
-       FLOAT MN; //  0
-       FLOAT Angle; // 
-       FLOAT Atennuation;
+       FLOAT ConstantAttenuation; // 1
+       FLOAT LinearAttenuation; // 0
+       FLOAT QuadraticAttenuation; //  0
+       FLOAT Falloff; // 
+       FLOAT Energy;
        BYTE Type;
        //Check(Type, 1, "AAAAAAAAAAAAAA"); 
      } Params;
