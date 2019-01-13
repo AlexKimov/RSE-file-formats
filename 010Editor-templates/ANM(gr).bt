@@ -11,109 +11,113 @@
 //
 //------------------------------------------------
 
-struct {  
- struct {
-    UINT Length; // 
-    char Text[Length]; // BeginANM.
-  } BEGINANM_STRING <name="File ID (Signature)">;
- struct {
-    time_t CreateDate <name="File Creation Date">;
-    time_t ModifiedDate <name="File Modified Date">;
-  } DATETIME <name="File DATETIME">;
-} ANM_HEADER <name="ANM Header", fgcolor=cBlack, bgcolor=0xccff66>;
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {
+  UINT SectionSize;
+  UINT ID;
+  struct {    
+    CSTRING Name <name="Version">; 
+    UINT Value;
+  } VERSION;    
+  CSTRING Name <name="Name">; 
+} SECTION_HEADER <name="Header">;
+
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+} VECTOR3; 
+
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+  FLOAT w;  
+} VECTOR4; 
+
+//--------------------
+// File header
+// --------------------
+
+struct {
+  CSTRING Name <name="BeginModel token">; 
+  FLOAT Version <name="Version">;
+  time_t ModifiedDate <name="File Modified Date">;
+} HEADER <name="File header">;
 
 UINT Count;
 
 typedef  struct {
-  struct {  
-    UINT SectionSize;
-    UINT MN;
-    struct {    
-      UINT Length; // 
-      char Text[Length]; //
-      UINT Value;
-    } VERSION; 
-    struct {    
-       UINT Length; // 
-       char Text[Length]; //
-    } NAME_STRING <name="Vehicle node name">; 
-  } HEADER <name="HEADER">;
+  SECTION_HEADER Header;
+  struct {
+    UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+    UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
+    UINT Unknown; // 0
+    UINT16 Unknown; // 0
+    UINT16 Unknown; // 65535
+    UINT16 Unknown; // 32639
+    UINT16 Unknown; // 128
+    FLOAT TicksinSecond; // 4800 
+    UINT Unknown; // 0 
+    BYTE Unknown; // 1
+    BYTE Unknown; // 1
+    UBYTE Unknown; // ?    
+  } PROPERTIES;
 
-    struct {
-      UINT Position_OutOfRangeType; // 1 - cycle, 3 - ping-pong
-      UINT Rotation_OutOfRangeType; // 1 - cycle, 3 - ping-pong
-
-      UINT MN; // 0
-      UINT16 MN; // 0
-      UINT16 MN; // 65535
-      UINT16 MN; // 32639
-      UINT16 MN; // 128
-      FLOAT TicksinSecond; // 4800 
-      UINT MN; // 0 
-      BYTE MN; // 1
-      BYTE MN; // 1
-      UBYTE A; // ?    
-    } PROPERTIES;
-
-    UINT PKeysCount;    
-    typedef struct {                         
-        UINT ControllerType; // 3 - Linear Position, 4 - ?, 5 - TCB Position
-        if (ControllerType == 3) {
-            FLOAT n2; // 0
-            FLOAT Time;
-            FLOAT X;          
-            FLOAT Y;
-            FLOAT Z;  
-        }
-        else {
-            FLOAT n2; // 0
-            FLOAT Time;
-            FLOAT X;          
-            FLOAT Y;
-            FLOAT Z; 
-
-            FLOAT Tension;  
-            FLOAT Contunioty;
-            FLOAT Bias;         
-        }    
-    } PositionKey;       
-    typedef struct (int arraySize) {
-      PositionKey array[arraySize] <optimize=false>;
-    } PositionKeysArray;     
-     PositionKeysArray POBPositionKeysArray(PKeysCount);
-
-    UINT RKeysCount;
-    typedef struct {
-        UINT ControllerType; // 4 - Linear rotation
-        UINT MN; //0
-        FLOAT Time;
-
-        FLOAT MN; // 0         
-        FLOAT MN; // 0  
-        FLOAT MN; // 0  
-        // transformation matrix rotation in local space (quaternions)
-        FLOAT x;          
-        FLOAT y;
-        FLOAT z; 
-        FLOAT Angle;
-    } RotationKey;    
-    typedef struct (int arraySize) {
-      RotationKey array[arraySize] <optimize=false>;
-    } RotationKeysArray;     
-    RotationKeysArray POBRotationKeysArray(RKeysCount); 
+  UINT Count<name="Number of position keys">;    
+  typedef struct 
+  {
+    UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
+    if (ControllerType == 3) 
+    {
+      FLOAT Unknown; // 0
+      FLOAT Time;
+      VECTOR3 Position;  
+    }
+    else 
+    {
+      FLOAT Unknown; // 0
+      FLOAT Time;
+      VECTOR3 Position; 
+      FLOAT Tension;  
+      FLOAT Contunioty;
+      FLOAT Bias;         
+    };  
+  } POSITION_KEY;       
+  typedef struct (int arraySize) {
+    POSITION_KEY array[arraySize] <optimize=false>;
+  } POSITION_KEYS;     
+  POSITION_KEYS PositionKeys(Count);
+    
+  UINT Count <name="Number of rotation keys">;
+  typedef struct {
+    UINT ControllerType; // 4 - Linear Rotation
+    if (ControllerType == 4) 
+    {
+      UINT Unknown; // 0
+      FLOAT Time;
+      UINT Unknown;        
+      UINT Unknown;
+      UINT Unknown; 
+      VECTOR4 Rotation;
+    }
+  } ROTATION_KEY;    
+  typedef struct (int arraySize) {
+    ROTATION_KEY array[arraySize] <optimize=false>;
+  } ROTATION_KEYS;     
+  ROTATION_KEYS RotationKey(Count);
 } ANIMATION <name=ObjectName>;
 
 string ObjectName (ANIMATION &animation) {
-  return "Object name: " + animation.HEADER.NAME_STRING.Text;
-};
-    
+  return "Object name: " + animation.Header.Name.Text;
+}; 
 typedef struct (int arraySize) {
-    ANIMATION array[arraySize] <optimize=false>;
-} ANIMATION_ARRAY; 
-    
-ANIMATION_ARRAY AnimationArray(Count) <name="Object animations array">; 
+  ANIMATION array[arraySize] <optimize=false>;
+} ANIMATIONS;  
+ANIMATIONS Animations(Count) <name="Animations">; 
 
-struct {
-  UINT Length;
-  char Text[Length]; 
-} ENDANM_STRING <name="ANM File End">;
+CSTRING Name <name="EndANM token">;
