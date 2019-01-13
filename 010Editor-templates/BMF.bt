@@ -3,7 +3,7 @@
 //
 //       File: BNF.bt
 //    Authors: Alexander Evdokimov
-//    Version: 0.5
+//    Version: 1.0
 //    Purpose: Ghost Recon BMF files
 //  File Mask: *.bmf
 //
@@ -11,44 +11,50 @@
 //   
 //------------------------------------------------
 
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+} VECTOR3; 
+
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+  FLOAT w;  
+} VECTOR4; 
+
 FLOAT Time; // animation time in seconds
-UINT FramesCount; //
-UINT BonesCount;  // 21 bones for a character animation
+UINT FrameCount; //
+UINT Count; // 21 bones in skeleton by default
 
 typedef struct {
-    struct {
-      UINT Length; // 
-      char Text[Length]; // 
-    } BONE_NAME_STRING <name="">;
-
-    UINT PositionKeysCount;
-    typedef struct {
-      UINT Time; // in Ticks
-      // position (x,y,z)
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-    } MOVEMENT;
-    MOVEMENT MovementArray[PositionKeysCount] <name="Movement Array">; 
-
-    UINT RotationKeysCount;
-    typedef struct {
-      UINT Time; // in Ticks
-      // local transformation matrix rotation (quats)
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-      FLOAT Angle;
-    } ROTATION;
-    ROTATION RotationArray[RotationKeysCount] <name="Rotation Array">; 
+  CSTRING Name;
+  UINT Count;
+  typedef struct {
+    UINT Time; // in Ticks
+    VECTOR3 Position;
+  } POSITION;
+  POSITION Movements[Count] <name="Positions">; 
+  UINT Count;
+  typedef struct {
+    UINT Time; // in Ticks
+    VECTOR4 Rotation;
+  } ROTATION;
+  ROTATION RotationArray[Count] <name="Rotations">; 
 } BONE_ANIMATION <name=BoneName>;
 
 string BoneName(BONE_ANIMATION &bone) {
-  return "Bone Name: " + bone.BONE_NAME_STRING.Text;
+  return "Bone Name: " + bone.Name.Text;
 };
 
 typedef struct (int arraySize) {
-    BONE_ANIMATION array[arraySize] <optimize=false>;
-} BONE_ANIMATION_ARRAY ; 
+  BONE_ANIMATION array[arraySize] <optimize=false>;
+} ANIMATIONS; 
 
-BONE_ANIMATION_ARRAY AnimationArray(BonesCount) <name = "Bone Animation">; 
+ANIMATIONS Animations(Count) <name = "Animations">; 
