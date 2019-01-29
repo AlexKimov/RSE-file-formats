@@ -36,7 +36,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 ## Templates and scripts (wip)
 
-**1. Ghost Recon 1, The Summ Of All Fears**
+**1. Ghost Recon 1, The Sum Of All Fears**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
