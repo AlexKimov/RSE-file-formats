@@ -40,7 +40,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .anm        | [ANM(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **100%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANF-File-Format)          |  Animation data |
+| 1 | .anm        | [ANM(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **100%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANM-File-Format)          |  Animation data |
 | 2 | .bmf        | [BMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **100%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Charater animation data |
 | 3 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **100%**      | [CHR file format](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)          | Character 3D model |
 | 4 | .map        | [MAP(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(gr).bt)    | **80%** | [MAP file format](https://github.com/AlexKimov/RSE-file-formats/wiki/MAP-File-Format)          | Level: 3d Data, portals, lights, objects |
