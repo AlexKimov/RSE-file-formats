@@ -71,7 +71,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 6 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
 | 7 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**100%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
 | 8 | .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **99%**     |           | Skeleton |
-| 9 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Static 3D objects |
+| 9 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **90%**    |           | Static 3D objects |
 
 **3. Rainbow Six Lockdown**
 
