@@ -63,7 +63,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :--- | :--------- | :----------- | :---------- | :---------- | :---------- |
-| 1 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **70%**      |           | Character 3D model |
+| 1 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **90%**      |           | Character 3D model |
 | 2 | .dam        | [DAM(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rsp).bt)        | **90%**      |          | Character animation data |
 | 3 | .dmp        | [DMP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DMP.bt)        | **80%**      |          | Level light |
 | 4 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%** |           | Level |
