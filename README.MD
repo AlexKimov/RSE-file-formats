@@ -51,13 +51,13 @@ https://github.com/boristsr/RainbowSixFileConverters.
 **2. RainBow Six**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
-| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .crp        | [CRP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP.bt)        | **80%**      |           | Character 3D model |
-| 2 | .dam        | [DAM(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rs).bt)        | **10%**      |          | Character animation data |
-| 3 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **50%**  |           | level |
-| 4 | .skl       | [SKL(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(rs).bt)         | **10%**     |           | Skeleton |
-| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
-| 6 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **40%**      |          | Static 3D objects |
+| :--- | :--------- | :----------- | :---------- | :---------- | :---------- |
+| 1 | .crp        | [CRP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rs).bt)        | **99%**      |           | Character 3D model |
+| 2 | .dam        | [DAM(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rs).bt)        | **99%**      |          | Character animation data |
+| 3 | .map       | [MAP(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rs).bt)    | **70%**  |           | level |
+| 4 | .skl       | [SKL(rs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(rs).bt)         | **99%**     |           | Skeleton |
+| 5 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**100%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 6 | .sob       | [SOB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB.bt)        | **99%**      |          | Static 3D objects |
 
 **3. Rainbow Six Rogue Spear**
 
