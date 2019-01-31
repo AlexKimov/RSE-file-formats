@@ -3,242 +3,208 @@
 //
 //      File: SOB.bt
 //   Authors: Alexandr Evdokimov
-//   Version: 0.6
+//   Version: 1.0
 //   Purpose: Rainbow six .sob file format
 // File Mask: .sob
 // 
 //   History: 
 //
+//   2019.01 v1.0
 //   2018.04 v0.6 
 //   2016    v0.5 initial release
 //------------------------------------------------
 
-struct {
-  UINT Length; // 
-  char Text[Length]; // 
-} BEGINMODEL_STRING <name="BEGINMODEL">;
-
-typedef struct { 
-        UINT Length;  
-        char Text[Length] <optimize=false>;
-      } CString <optimize=false>; 
+string readCString()
+{
+  local uint Length;
+  local string Name;
+  Length = ReadInt(FTell());
+  FSkip(4);
+  Name = ReadString(FTell());
+  FSkip(-4);
+  return Name;
+};
 
 typedef struct {
-  struct {
-    UINT SectionSize;
-    UINT ID; // 2
+  UINT Red;
+  UINT Green;
+  UINT Blue; 
+} COLOR;
 
-    UINT Length; // 
-    char Text[Length]; //
-    if (Text == "Version") {
-      UINT value;
-      struct {    
-        UINT Length; // 
-        char Text[Length]; //
-      } MATERIALNAME_STRING <name="Material Name">;
-    }; 
+typedef enum <ubyte> {
+  no = 0,
+  yes = 1
+} BOOL; // bool data type
+
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {
+  UINT SectionSize;
+  UINT ID;
+  if (readCString() == "Version")
+  {
     struct {    
-      UINT Length; // 
-      char Text[Length]; //
-   } TEXTURENAME_STRING <name="Texture FileName">; 
-  } HEADER <name="Header">;
+      CSTRING Name <name="Version">; 
+      UINT Value;
+    } VERSION;
+  }  
+  CSTRING Name <name="Name">; 
+} SECTION_HEADER <name="Header">;
 
+typedef enum <uint> {
+  Opaque = 0, 
+  unknown = 1,
+  LookupCXP = 3
+} ALPHA_METHOD;
 
+typedef struct {     
+  UINT x;
+  UINT y;
+  UINT z;
+} VECTOR3_LONG; 
 
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+} VECTOR3; 
+
+typedef struct {     
+  FLOAT x;
+  FLOAT y;
+  FLOAT z;
+  FLOAT w;  
+} VECTOR4; 
+
+typedef struct { 
+  FLOAT x;
+  FLOAT y;  
+} POINT2;
+
+// BeginModel token
+
+CSTRING BeginModel <name="BeginModel token">;
+
+//--------------------
+// MaterialList
+// --------------------
+
+typedef struct {
+  SECTION_HEADER Header;
+  CSTRING Name <name="Texture filename">; 
   struct { 
     FLOAT Opacity;
     FLOAT Emissive; // 0    
-    UINT AlphaMethod; // 0 - Opaque, 1 - unknown, 3 - Lookup CXP or opaque
-    struct {              
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Ambient; 
-    struct {           
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Diffuse;   
-    struct { 
-      UINT Red; //
-      UINT Green; //
-      UINT Blue; //
-    } Specular;
+    ALPHA_METHOD alpha; // 0 - Opaque, 1 - unknown, 3 - Lookup CXP or opaque
+    COLOR Ambient; 
+    COLOR Diffuse;   
+    COLOR Specular;
     FLOAT SpecularLevel; //o.o5
-    BYTE twoSided;
-  } Properties;
+    BOOL twoSided;
+  } MATERIAL_PROPERTIES <name="Properties">;
 } MATERIAL <name=MaterialName>;
 
-string MaterialName(MATERIAL &material) {
-  return "Name: " + material.HEADER.TEXTURENAME_STRING.Text;
+string MaterialName(MATERIAL &material) 
+{
+  return "Name: " + material.Header.Name.Text;
 } 
 
 struct {  
-  struct { 
-    UINT SectionSize;
-    UINT ID; //8
-    struct {
-      UINT Length; // 
-      char Text[Length]; // 
-    } MATERIALLIST_STRING;
-  } HEADER <name="1.0 MaterialList section header">;
-    
-  struct {
-    UINT Count <name="Materials Count">;
+  SECTION_HEADER Header;    
+  UINT Count <name="Number of materials">;
+  typedef struct (int arraySize) {
+    MATERIAL array[arraySize] <optimize=false>;
+  } MATERIALS; 
+  MATERIALS Materials(Count) <name="Materials">; 
+} MATERIAL_LIST <name="Material list">;
 
-    typedef struct (int arraySize) {
-      MATERIAL array[arraySize] <optimize=false>;
-    } MATERIAL_ARRAY; 
-
-    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
-  } Materials <name="1.1 Materials section">;
-
-} MATERIALLIST <name="MaterialList section">;
-
+//--------------------
+// GeometryList
+// --------------------
 
 typedef struct  { 
    struct { 
      UINT Count; 
-     CString Name; 
+     CSTRING Name; 
    } HEADER; 
-
-   //Check(HEADER.Name.Length, 5, "AAAAA");
-
-   struct {
-     UINT VertexCount;
-     UINT VertexIndices[VertexCount];
-
-     UINT FaceCount; 
-     UINT FaceIndices[FaceCount];
-   } ARRAYS <name="Indexes">;  
+   UINT Count;
+   UINT VertexIndexes[Count];
+   UINT Count; 
+   UINT FaceIndexes[Count];
    UINT GeometryFlags;  // Each bit corresponds to another flag on this mesh, such as Collision, Climbable, Invisible etc.
-   CString String <name="String">;  
-    
+   CSTRING Name <name="String">;      
    UINT Unknown ;       
-} OBJECT <name=objectName>;
+} MESH <name=objectName>;
 
-string objectName(OBJECT &object) {
-  return object.HEADER.Name.Text;
+string objectName(MESH &Mesh) 
+{
+  return Mesh.HEADER.Name.Text;
 }
 
 typedef struct {
-     struct { 
-       UINT SectionSize;
-       UINT ID; // 7
-   
-       CString Text;
-       if (Text.Text == "Version") { 
-         UINT value;
 
-         CString OBJECT_NAME;
-         UINT A;
-         UINT B;
-       };
-     } HEADER <name="Header">;  
+  SECTION_HEADER Header;
+  if (exists(Header.VERSION))
+  {
+    UINT Unknown; 
+    UINT Unknown; 
+  }; 
 
-    struct {
-      UINT VertexCount;  
-      typedef struct {     
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-       } Vertex <name="Vertex">;
-      typedef struct (int arraySize) {
-        Vertex array[arraySize];
-      } VERTEX_ARRAY;     
-      VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
-    } VERTICES <name="Vertices">;
+  UINT Count <name="Number of vertexes">;  
+  typedef struct (int arraySize) {
+    VECTOR3 array[arraySize];
+  } VERTEXES;     
+  VERTEXES Vertexes(Count ) <name="Vertexes">;
 
-    struct {
-       UINT Count; 
-       typedef struct {
-         struct {
-           FLOAT X;
-           FLOAT Y;
-           FLOAT Z;
-         } NORMAL;
-         struct {
-           FLOAT U;
-           FLOAT V;
-         } UV;
-         FLOAT Unknown;
-         struct {
-           UINT Red;
-           UINT Green;
-           UINT Blue;
-         } Color;
-        } VertexParameter <name="Vertex Parameter">;
-       typedef struct (int arraySize) {
-         VertexParameter array[arraySize] <optimize=false>;
-       } VERTEX_PARAMETER_ARRAY;
-       VERTEX_PARAMETER_ARRAY FArray(Count) <name="Vertex data array">; 
-     } VERTEX_PARAMS_ARRAY <name="Vertex Parameters">;
+  struct {
+    UINT Count; 
+    typedef struct {
+      VECTOR3 Normal <name="Normal">; 
+      POINT2 UV <name="UV">;
+      FLOAT Unknown;                        
+      COLOR Color <name="Color">;
+    } V_DATA; 
+    V_DATA VertexData[Count] <name="Vertex parameters">; 
+  } VERTEX_DATA <name="Vertex data">;
 
-     struct {
-       UINT Count <name = "Face Count">; 
-       typedef struct {     
-         struct {
-           UINT I1;
-           UINT I2;
-           UINT I3;
-         } VERTEX_INDICES <name="Vertex indices">;  
-         struct {
-           UINT I1;
-           UINT I2;
-           UINT I3;
-         } VERTEX_PARAM_INDICES <name="Vertex Param indices">;  
-         struct {
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
-           FLOAT MN;
-         } FACE_NORMAL;
-         UINT MaterialIndex;
-       } FACE  <name="Face">;
-       typedef struct (int arraySize) {
-          FACE array[arraySize] <optimize=false>;
-       } FACE_ARRAY;
-       FACE_ARRAY FaceArray(Count)  <name="Faces">; 
-     } FACE_DATA <name="Face Definitions">;
+  struct {   
+    UINT Count;
+    typedef struct {  
+      VECTOR3_LONG Indexes <name="Vertex indices">;
+      VECTOR3_LONG Indexes <name="Vertex Param indices">;
+      VECTOR3 Normal <name="Normal">;
+      UINT Unknown;
+      UINT MaterialIndex;  
+    } FACE  <name="Face">;
+    FACE FaceData[Count]  <name="Faces">; 
+  } FACE_DATA <name="Face data">;
 
-    struct {
-      UINT Count; 
-      typedef struct (int arraySize) {
-        OBJECT array[arraySize] <optimize=false>;
-      } OBJECTS;
-      OBJECTS ObjArray(Count); 
-    }  OBJECTSA <name="Meshes">; 
-} DATA <name=ObjectName>;  
+  struct { 
+    UINT Count; 
+    typedef struct (int arraySize) {
+      MESH array[arraySize] <optimize=false>;
+    } MESH_ARRAY;
+    MESH_ARRAY Meshes(Count); 
+  } MESHES <name="Meshes">; 
+} OBJECT <name=ObjectName>;  
 
-string ObjectName(DATA &data) {
-  if (exists(data.HEADER.OBJECT_NAME))
-    return "Name: " + data.HEADER.OBJECT_NAME.Text;
-  else
-    return "Name: " + data.Text;
+string ObjectName(OBJECT &object) 
+{
+  return "Name: " + object.Header.Name.Text;
 }
 
 struct {   
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 7
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } GEOMETRYLIST_STRING;
-  } HEADER <name="GeometryList Header">;  
-
- UINT Count <name="Object Count">;
- struct {
-  
-    typedef struct (int arraySize) {
-      DATA array[arraySize] <optimize=false>;
-    } GEOMETRY_DATA_ARRAY; 
-
-    GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
- } SOB_GEOMETRY_DATA <name="Geometry data">; 
+  SECTION_HEADER Header;
+  UINT Count <name="Object Count">;
+  typedef struct (int arraySize) {
+    OBJECT array[arraySize] <optimize=false>;
+  } OBJECTS;     
+  OBJECTS Objects(Count) <name="Objects">; 
 }  GEOMETRYLIST  <name="GeometryList Section">;
 
-struct {
-  UINT Length; // 
-  char Text[Length]; // 
-} EndModelString <name="ENDMODEL">;
+// EndModel token
+
+CSTRING EndModel <name="EndModel token">;
