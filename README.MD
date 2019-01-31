@@ -16,7 +16,7 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 * Python scripts and even more by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
 
-## Games
+## Games and formats
 
 | №     | Game | Platform | Year | File extensions |
 | :--- | :-- | :------ | :------ | :------ |
@@ -39,7 +39,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 **1. Ghost Recon 1, The Sum Of All Fears**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
-| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
+| :--- | :--------- | :----------- | :---------- | :---------- | :---------- |
 | 1 | .anm        | [ANM(gr).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ANM(gr).bt)        | **100%**      | [ANM file format](https://github.com/AlexKimov/RSE-file-formats/wiki/ANM-File-Format)          |  Animation data |
 | 2 | .bmf        | [BMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/BMF.bt)        | **100%**      | [BNF file format](https://github.com/AlexKimov/RSE-file-formats/wiki/BNF-File-Format)           | Charater animation data |
 | 3 | .chr        | [CHR.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CHR.bt)        | **100%**      | [CHR file format](https://github.com/AlexKimov/RSE-file-formats/wiki/CHR-File-Format)          | Character 3D model |
@@ -62,15 +62,15 @@ https://github.com/boristsr/RainbowSixFileConverters.
 **3. Rainbow Six Rogue Spear**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
-| :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **70%**      |           | character 3D model |
-| 2 | .dam        | [DAM(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rsp).bt)        | **10%**      |          | Character animation data |
+| :--- | :--------- | :----------- | :---------- | :---------- | :---------- |
+| 1 | .crp        | [CRP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/CRP(rsp).bt)    | **70%**      |           | Character 3D model |
+| 2 | .dam        | [DAM(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DAM(rsp).bt)        | **90%**      |          | Character animation data |
 | 3 | .dmp        | [DMP.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/DMP.bt)        | **80%**      |          | Level light |
 | 4 | .map       | [MAP(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(rsp).bt)   | **70%** |           | Level |
 | 5 | .qob       | [QOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(rsp).bt)        | **95%**      |      | 3D objects |
 | 6 | .rob       | [ROB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/ROB.bt)        | **70%**      |           | 3D objects |
-| 7 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
-| 8 | .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **10%**     |           | Skeleton |
+| 7 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**100%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
+| 8 | .skl       | [SKL(RSP).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SKL(RSP).bt)         | **99%**     |           | Skeleton |
 | 9 | .sob       | [SOB(rsp).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SOB(rsp).bt) | **40%**    |           | Static 3D objects |
 
 **3. Rainbow Six Lockdown**
@@ -132,10 +132,3 @@ https://github.com/boristsr/RainbowSixFileConverters.
 * [SOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/SOBtoObj.1sc) - convert **SOB** (Rainbow six) to **Obj**.
 * [QOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/QOBtoObj.1sc) - convert **QOB** (Ghost Recon) to **Obj**.
 * [CHRtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/CHRtoObj.1sc) - convert **CHR** (Ghost Recon) to **Obj**.
-
-## More formats
-**1.** [Sea dogs (2000), Age of Sail 2 (2001)](https://github.com/AlexKimov/seadogs-file-formats)
-
-**2.** [Hitman Сodename 47, Hitman 2 Silent Assassin](https://github.com/AlexKimov/hitman-file-formats)
-
-**3.** [Hard Truck 1/2, RignRoll](https://github.com/AlexKimov/HardTruck-RignRoll-file-formats)
