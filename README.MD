@@ -29,7 +29,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 7 | Ghost Recon (Desert Siege, Island Thunder) | PC |2001 - 2003 | .chr, .map, .pob, .qob, .rsb, .anm, .bmf  |
 | 8 | Freedom First Resistance  | PC | 2000  | .rsb, .map, .qob, .noz, .rsa, .dam |
 | 9 | Rogue Spear (Urban Operations, Covert Ops, Black Thorn) | PC |1999 - 2001  | .rsb, .map, .sob, .rob, .qob, .skl, .dam, .dmp |
-| 10 | Shadow Watch  | PC | 2000  | .r16  |
+| 10 | Shadow Watch  | PC | 2000  | .r16, .smf  |
 | 11 | Force 21  | PC | 1999  | .rsb, .kit, .gee, .tgz  |
 | 12 | Dominant Species  |  PC | 1998 | .rsb, .crp, .cmf, .dam  |
 | 13 | Rainbow six (Eagle Watch) | PC | 1998 |  .rsb, .crp, .skl, .sob, .bcl, .map, .dam  |
@@ -98,7 +98,7 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 1  | .kit        | [KIT.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/KIT.bt)        | **50%**     |          |   3D Model                         |
 | 2 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
 
-**6. Freedome First Resistance level**
+**6. Freedom First Resistance**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
@@ -106,14 +106,15 @@ https://github.com/boristsr/RainbowSixFileConverters.
 | 2 | .map       | [MAP(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/MAP(ffs).bt)   | **70%** |           | level |
 | 3 | .noz       | [NOZ.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/NOZ.bt)   | **90%** |           | character model |
 | 4 | .qob       | [QOB(ffs).bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/QOB(ffs).bt)        | **95%**      |      | 3D objects |
-| 5 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **100%**      |           | Animations |   
+| 5 | .rsa       | [RSA.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSA.bt)        | **100%**      |           | game archive |   
 | 6 | .rsb       | [RSB.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/RSB.bt)        | [**95%**](https://github.com/AlexKimov/RSE-file-formats/issues?q=is%3Aissue+is%3Aopen+label%3AGRoriginal)      | [RSB file format](https://github.com/AlexKimov/RSE-file-formats/wiki/RSB-File-Format)          | Texture |
 
 **7. Shadow Watch**
 
 | № | Format       | Template name     | Progress     | Specs | Description |
 | :---: | :---------: | :-----------: | :----------: | :----------: | :----------: |
-| 1 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **85%**      |           |Texture file |
+| 1 | .r16       | [R16.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/R16.bt)        | **90%**      |           |Texture file |
+| 2 | .smf       | [SMF.bt](https://github.com/AlexKimov/RSE-file-formats/blob/master/010Editor-templates/SMF.bt)        | **99%**      |           | game archive |
 
 **8. Ghost Recon 2**
 
@@ -129,7 +130,9 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 ### Scripts
 
-* [RSBtoBMP.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/RSBtoBMP.1sc) - convert **RSB**, **R16**, **XPR** to **BMP** and **DDS** (files with DXT compression). Supported games: Rainbow six (1998), Rogue Spear (1999 - 2001), Ghost Recon (2001 - 2003), Sum Of All Fears (2002), Rainbow 6 LockDown (2005), partly Ghost Recon 2 XBOX (2004). 
-* [SOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/SOBtoObj.1sc) - convert **SOB** (Rainbow six) to **Obj**.
-* [QOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/QOBtoObj.1sc) - convert **QOB** (Ghost Recon) to **Obj**.
-* [CHRtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/CHRtoObj.1sc) - convert **CHR** (Ghost Recon) to **Obj**.
+* [RSBtoBMP.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/RSBtoBMP.1sc) - convert **RSB**, **R16**, **XPR** to **BMP** and **DDS** (files with DXT compression). Supported games: Rainbow six (1998), Rogue Spear (1999 - 2001), Ghost Recon (2001 - 2003), Sum Of All Fears (2002), Rainbow 6 LockDown (2005), partly Ghost Recon 2 XBOX (2004)
+* [SOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/SOBtoObj.1sc) - convert **SOB** (Rainbow six) to **Obj**
+* [QOBtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/QOBtoObj.1sc) - convert **QOB** (Ghost Recon) to **Obj**
+* [CHRtoObj.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/CHRtoObj.1sc) - convert **CHR** (Ghost Recon) to **Obj**
+* [UnpackSMF.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/UnpackSMF.1sc) - unpack **SMF** archive (Shadow Watch)
+* [UnpackRSA.1sc](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/UnpackRSA.1sc) - unpack **RSA** archive (Freedom First Resistance)
