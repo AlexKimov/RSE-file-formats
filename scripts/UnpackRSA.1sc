@@ -1,0 +1,48 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+
+local uint Pos, Size, Offset, Length, i, Count, FileIndex, NewFileIndex;
+local string Path;
+local uchar Name[256];
+local char Buffer[10000000];
+
+FSkip(6);
+Count = ReadInt(FTell());
+FSkip(8);
+
+FileIndex = GetFileNum();
+
+Path = FileNameGetPath(GetFileName());
+
+for (i = 0; i < Count; ++i) 
+{
+  Length = ReadInt(FTell());
+  FSkip(4);
+  Memset(Name, 0, 256);
+  ReadBytes(Name, FTell(), Length);
+  FSkip(Length);
+  Size = ReadInt(FTell());  
+  FSkip(4);
+  Offset = ReadInt(FTell());  
+  FSkip(4);  
+  Pos = FTell();
+
+  FSeek(Offset); 
+  ReadBytes(Buffer, FTell(), Size);
+  FileNew("Hex");
+  WriteBytes(Buffer, 0, Size);
+  FileSave(Path + Name);
+  FileClose();
+  FileSelect(FileIndex);
+  FSeek(Pos);
+};
+

@@ -1,0 +1,62 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local uint Pos, i, count, Size, offset, FileIndex;
+local char Buffer[50000000];
+local char HeaderBuffer[20];
+local string Path, Name;
+local uchar ID[4];
+
+FileIndex = GetFileNum();
+Path = FileNameGetPath(GetFileName());
+
+FSkip(4);
+count = ReadInt();
+FSkip(12);
+
+for (i = 0; i < count; ++i) 
+{
+  Size = ReadInt();
+  FSkip(4);
+  offset = ReadInt();
+  FSkip(4);
+  ReadBytes(HeaderBuffer, FTell(), 20);
+  HeaderBuffer[18] = 't';
+  HeaderBuffer[19] = 'a';
+  FSkip(20);
+  Pos = FTell();
+  FSeek(offset); 
+
+  ReadBytes(Buffer, offset, Size);
+
+  SPrintf(Name, "%i.wav", i + 1);
+  
+  FileNew("Hex");
+
+  // wav header
+  ID = "RIFF";
+  WriteBytes(ID, 0, 4);
+  WriteInt(4, Size + 36);
+  ID = "WAVEfmt ";
+  WriteBytes(ID, 8, 8);
+  WriteInt(16, 16);
+  WriteBytes(HeaderBuffer, 20, 20);
+  WriteInt(40, Size);
+  // wav data
+  WriteBytes(Buffer, 40, Size);
+
+  //
+  FileSave(Path + Name);
+  FileClose();
+  FileSelect(FileIndex);
+  FSeek(Pos);
+};
+
