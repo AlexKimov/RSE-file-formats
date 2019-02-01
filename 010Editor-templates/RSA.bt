@@ -10,64 +10,49 @@
 //   History: 
 // 
 //------------------------------------------------
+
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
 struct {
- struct {
-    char Text[3]; // 
-  } RSA_STRING <name="File ID (Signature)">;
- struct {
-  } DATETIME <name="File DATETIME">;
-} HEADER <name="RSA Header", fgcolor=cBlack, bgcolor=0xccff66>;
+  CHAR Magic[4] <name="File ID (Signature)">;
+  UINT16 Version;
+} HEADER <name="File Header", fgcolor=cBlack, bgcolor=0xccff66>;
 
-BYTE A;
-BYTE B;
-BYTE C;
+UINT FileCount;
+UINT Unknown; // 0
 
-UINT AnimationsCount;
-UINT A;
+typedef struct { 
+  CSTRING Name; //
+  UINT Size;
+  UINT Offset;  
+} FILE_RECORD <name=getName>;
 
-typedef struct {   
-  UINT Length; 
-  char Text[Length]; //
-  UINT SectionSize;
-  UINT Offset;
-} AnimationName <optimize=false, name=anName>;
-
-string anName(AnimationName &animation) {
-  return "Name: " + animation.Text;
+string getName(FILE_RECORD &rec) {
+  return "Name: " + rec.Name.Text;
 };
 
 typedef struct (int arraySize) {
-  AnimationName array[arraySize] <optimize=false>;
-} Animation_Name_Array;     
-Animation_Name_Array AnimationNameArray(AnimationsCount) <name="Animation Name List">; 
+  FILE_RECORD array[arraySize] <optimize=false>;
+} FILE_TABLE;     
+FILE_TABLE Table(FileCount) <name="File List">; 
 
-typedef struct {
-  FLOAT Count;
+local uint i;
+typedef struct (uint index) {
+  local uint fileindex;
+  fileindex = index; 
+  FSeek(Table.array[i].Offset);
+  FSkip(Table.array[i].Size);
+} FILE <name=getFileName>;
 
-  UINT Count;
-  UINT CountA;
-  UINT Count;
+string getFileName(FILE &File)
+{
+  return Table.array[File.fileindex].Name.Text;
+}
 
-  struct {
-    UINT CountK;
-    UINT Count;
-    UINT Count;
-    FLOAT B;
-    struct {
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-      FLOAT W;
-    } K[CountK];
-  } B[CountA];
-  UINT Length; 
-  char Text[Length]; //
-    UINT C[3];
-    UINT D[3]; 
-} Animation;
-
-typedef struct (int arraySize) {
-  Animation array[arraySize] <optimize=false>;
-} Animations;     
-Animations AnimationArray(AnimationsCount) <name="Animations List">; 
- 
+struct {
+  for (i = 0; i < FileCount; ++i) 
+    FILE File(i);
+} FILES <name="Files">;
