@@ -23,7 +23,12 @@ struct settingsImportUI
   path = "",
   scaleCoeff = 1,
   texFormatExt = ".bmp",
-  procSubfolders = false
+  procSubfolders = false,
+  fn loadFromIni filename =
+  (
+    local settings = settings(this)
+    settings.loadFromIniFile filename "settings"
+  )   
 )
 
 struct stringsImportUI
@@ -60,7 +65,12 @@ struct stringsImportUI
   pathToFolder = "Path to folder:",
   filesInFolder = "Files: %d" ,
   formaNotSupported = "Format %s is not supported.",
-  errorReadFile = "Error. Can't read from the file %s."  
+  errorReadFile = "Error. Can't read from the file %s.", 
+  fn loadFromIni filename =
+  (
+    local sets = settings(this)
+    sets.loadFromIniFile filename "strings"
+  )     
 )
 
 struct qobImportUI
@@ -101,10 +111,10 @@ struct qobImportUI
     (
       dialogs.caption = strings.importDialogCaption
       dialogs.types = strings.importDialogTypes  
-      dialogs.openFileDialog &fname "rb" 
+      filestream = dialogs.openFileDialog &fname "rb" 
       filename = fname       
     )  
-    if filename != undefined then 
+    if filestream != undefined then 
     (    
       local ext = fileUtils.getFileExtenion filename 
       file = case (ext) of
@@ -112,29 +122,24 @@ struct qobImportUI
         (strings.formatsArray[1]): qobjectFile()
         (strings.formatsArray[2]): characterFile()
         (strings.formatsArray[3]): pobjectFile()
-        (strings.formatsArray[4]): mapFile()
-        (strings.formatsArray[5]): bmFile()        
+        (strings.formatsArray[4]): mapFile()      
       )  
-
-      file.filename = filename
       file.object.name = fileUtils.getFileName filename
-      if file.openFile("rb") != undefined then
+      file.openStream filestream filename
+      if file.readFile() then
       (
-        if file.readFile() then
-        (
-          getFileInformation file
-          model = greModel file.object
-          model.isTextured = settings.isTextured
-          model.showHPs = settings.showHPs
-          model.showSkeleton = settings.showSkeleton
-          model.texturesPath = settings.path
-          --model.texturesPath = "F:/git/gre-templates/scripts/3dsmax/output/"
-          model.scale = settings.scaleCoeff
-          model.texFormat = settings.texFormatExt
-          setUnits (strings.unitsList[settings.unitsType] as Name)
-          model.createScene()       
-        )
-      )        
+        getFileInformation file
+        model = greModel file.object
+        model.isTextured = settings.isTextured
+        model.showHPs = settings.showHPs
+        model.showSkeleton = settings.showSkeleton
+        model.texturesPath = settings.path
+        --model.texturesPath = "F:/git/gre-templates/scripts/3dsmax/output/"
+        model.scale = settings.scaleCoeff
+        model.texFormat = settings.texFormatExt
+        setUnits (strings.unitsList[settings.unitsType] as Name)
+        model.createScene()       
+      )      
       file.closeFile()       
     )    
   ),

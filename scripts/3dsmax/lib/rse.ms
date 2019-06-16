@@ -1,24 +1,31 @@
 /*
-  type definitions
+  rse objects
 */
-
 
 /*
-  -------------------
-  rs - Rainbow six 1
-  rsp - Rogue Spear (Rainbow six 1)
-  gr - Ghost Recon
-  --------------------
+  ---------------------------------
+  rs - Rainbow Six 1
+  rsp - Rogue Spear
+  ffr - Freedom: First Resistance
+  gr - Ghost Recon, The Sum of All Fears
+  rsl - Rainbow Six Lockdown
+  ---------------------------------
 */
 
-struct rseConst
+struct rseConsts
 (
-  rs = 1001,
-  rsp = 1002,
-  gr = 1003
+  rs = 1,
+  rsp = 2,
+  ffr = 3,
+  gr = 4,
+  rsl = 5,
+  greSkeletonBoneNames = #("SpineRoot01", "SpineLow", "SpineMid", "SpineTop", \
+    "Neck2", "Neck", "Head", "RBicep", "RForearm", "RHand", "LBicep", \
+    "LForearm", "LHand", "RThigh", "RCalf", "RFoot", "RToe", "LThigh", "LCalf",\
+    "LFoot", "LToe")
 ) 
 
-rseConsts = rseConst()
+rseGlobals = rseConsts()
 
 /*
   --------------------------
@@ -26,59 +33,12 @@ rseConsts = rseConst()
   --------------------------
 */
 
-struct greHeader
-(
-  id = -1,
-  size = -1,
-  version = -1,
-  name = ""
-)
-
-struct greMaterialParameters
-(
-  opacity = 0,
-  faceted = false,
-  ambientColor = (color 0 0 0 0),
-  diffuseColor = (color 0 0 0 0), 
-  specularColor = (color 0 0 0 0),
-  specularLevel = 0.0,
-  twoSided = false
-)
-
-struct greMaterial
-(
-  header = greHeader(),
-  params = greMaterialParameters()
-)
-
-struct greTextureParameters
-(
-  opacityType = -1,
-  isTiled = 0,
-  SelfIllumination = 0.0 
-)
-
-struct greTexture
-(
-  header = greHeader(),
-  params = greTextureParameters()
-)
-
 struct grePoint
 (
   name = "",
   matrix = matrix3 0
 )
 
-struct greMeshParameters
-(
-  detailedDarkmap = false,
-  isDetailTexture = false,
-  materialIndex = -1,
-  isTextured = false,
-  textureIndex = -1,
-  detailTextureIndex = -1
-)
 
 struct greName
 (
@@ -86,92 +46,89 @@ struct greName
   str = ""
 )
 
-struct greMesh
+struct greMaterialListHeader
 (
-  params = greMeshParameters(),
-  faceIndexArray = #(),
-  faceNormalArray = #(),
-  uvArray = #(),
-  uvIndexArray = #(), 
-  vertexNormalArray = #(),
-  faceColorArray = #()
+  id = 8,
+  size = -1,
+  version = 2,
+  name = "MaterialList"
 )
 
-struct greGeometryObject
+struct greMaterialHeader
 (
-  header = greHeader(),
-  darkMappped = 0,
-  castShadows = 0,
-  vertexArray = #(),
-  meshes = #()
+  id = 38,
+  size = -1,
+  version = 2,
+  name = ""
 )
 
-struct grecolObjects
+struct greTextureHeader
 (
-  vertexesy = #(),
-  facesy = #()
+  id = 8,
+  size = -1,
+  version = 3,
+  name = ""
 )
 
-struct grePolygon
+struct greGeometryObjectHeader
 (
-  name = "",
-  collidable = -1,
-  carvingBoundary = -1,
-  surfaceProperty = -1
+  id = 3,
+  size = -1,
+  version = 8,
+  name = ""
 )
 
-struct greUnknown
+struct greGeometryObjectExtHeader
 (
-  polygon = grePolygon(),
-  faces = #()
+  id = 35,
+  size = -1,
+  version = 8,
+  name = ""
 )
 
-struct greGeometryObjectExt
+struct greGeometryListHeader
 (
-  header = greHeader(),
-  darkMappped = 0,
-  castShadows = 0,
-  vertexArray = #(),
-  meshes = #(),
-  tagPoints = #(), 
-  colObjects = grecolObjects(),
-  polygons = #(),
-  unknowns = #()  
+  id = 7,
+  size = -1,
+  version = 1,
+  name = "GeometryList"
 )
 
-struct greWeightedBone
+struct greObjectListHeader
 (
-  name = "",
-  weight = 0
+  id = 10,
+  size = -1,
+  version = 5,
+  name = "ObjectList"
 )
 
-struct greBoneWeight
+struct greNodeHeader
 (
-  name = "",
-  vertexIndex = 0,
-  bones = #() 
+  id = 47,
+  size = -1,
+  version = 5,
+  name = ""
 )
 
-struct greCharacterBones 
+struct greBoneHeader
 (
-  header = greHeader(),
-  position = (Point3 0 0 0),
-  rotation = quat 0,
-  unknown = 0,
-  connectedBones = #()
+  id = 37,
+  version = 1,
+  name = ""
 )
 
-struct greWeightedBone
+struct greWeightsHeader
 (
-  name = "",
-  weight = 0.0
+  id = 1,
+  name = ""
 )
 
-struct greVertexWeight
+struct greSkeletonAnimations
 (
-  name = "",
-  vertexIndex = -1,
-  bones = #()
+  time = 2.0,
+  frameCount = 0,
+  boneCount = 21,
+  skeletonAnimations = #()
 )
 
 struct greCharacterModel
@@ -180,8 +137,8 @@ struct greCharacterModel
   materials = #(),
   textures = #(),
   geometryObjects = #(),
-  bones = greCharacterBones(),
-  vertexWeights = #() 
+  bones,
+  weights = #() 
 ) 
 
 struct grePObject 
@@ -218,95 +175,18 @@ struct greQObject
   points = #()   
 )
 
-struct animationNode
-(
-  p
-)
-
-struct particleNode
-(
- p
-)
-
-struct lightNode
-(
- p
-)
-
-struct greNode
-(
-  header = greHeader(),
-  taggingProperties = "",
-  params,
-  matrix = matrix3 0, 
-  childNodes = #()
-) 
-
-struct greCharacterAnimations
-(
-  framesPerMin = 2.0,
-  frameCount = 0,
-  boneCount = 21,
-  boneAnimations = #()
-)
-
-struct greBoneAnimation
-(
-  name = "",
-  positionKeys = #(),
-  rotationKeys = #()
-)
-
-struct grePosKey
-(
-  frame = 0,
-  position = (point3 0 0 0)
-)
-
-struct greRotKey
-(
-  frame = 0,
-  rotation = (quat 0 0 0 0)  
-)
-
 /*
-  --------------------------
+  ------------------------------
   Rainbow six 1/2 engine structs
-  --------------------------
+  ------------------------------
 */
 
-struct rsHeader
-(
-  id = -1,
-  size = -1,
-  version = -1,
-  name = ""
-)
-
-struct rsMaterialParameters
-(
-  opacity = 0,
-  selfUllumination = 1,
-  transparencyType = 3,
-  ambientColor = (color 0 0 0),
-  diffuseColor = (color 0 0 0), 
-  specularColor = (color 0 0 0),
-  specularLevel = 0.0,
-  twoSided = false
-)
-
-struct rsMaterial
-(
-  header = rsHeader(),
-  params = rsMaterialParameters()
-)
-
-struct rsGeometryObject
-(
-  header = greHeader(),
-  vertexArray = #(),
-  meshes = #()
-)
+--struct rsGeometryObject
+--(
+--  header = greHeader(),
+--  vertexArray = #(),
+--  meshes = #()
+--)
 
 struct rsSObject
 (

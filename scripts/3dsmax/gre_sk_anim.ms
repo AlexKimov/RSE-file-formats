@@ -1,180 +1,253 @@
 /*
-
+  Author: AlexKimov
+  Description: Ghost Recon (2001) character animation import/export script
+  Version: 0.1
 */
 
 filein "lib/ms.ms"
-filein "lib/max.ms"
+filein "lib/settings.ms"
 filein "lib/bmf.ms"
 filein "lib/chr.ms"
 filein "lib/rse.ms"
-filein "lib/rse_model.ms"
-filein "lib/skeleton.ms"
+filein "lib/rse_viewer.ms"
+filein "lib/rse_skeleton.ms"
+filein "lib/rse_animations.ms"
+filein "lib/utils.ms"
+filein "lib/rse_header.ms"
 
 struct settingsUI
 (
   showLinks = true,
+  subfolders = false,
   boneHeight = 1,
   boneWidth = 1,
   taper = 10,
   wirecolor = yellow,
-  procSubfolders = false  
+  procSubfolders = false,
+  bmfFolder,
+  showModel = false,
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "settings"
+  )    
 )
 
 struct stringsUI
 (
   rolloutTitle = "Skeleton and Animations",
-  groupCaption = "Bones Properties",
-  buttonCreateCaption = "Add skeleton",
-  buttonLoadCaption = "Load from .chr",
+  boneSettingsCaption = "Skeleton",
+  groupBoneSettingsCaption = "Bone parameters:",
+  buttonCreateCaption = "Add standard skeleton",
+  buttonLoadCaption = "Load from .chr file",
   editboneWidthTitle = "width",
   editboneHeightTitle = "height",
   spinnerTaperCaption = "taper",
   colpickerCaption = "wirecolor",
   checkboxShowLinksCaption = "Show links",
-  buttonLoadAnimCaption  = "Load anim.",
-  buttonListCaption  = "Get files",
+  buttonLoadAnimCaption  = "Load selected .bmf file",
+  buttonListCaption  = "Get animation list",
   bmfsFolderTitle = "Open folder",
-  listboxCaption = "Animations",
-  radioCaption = "Add animation to bones",
-  radioLabels = #("by names in file", "by selected objects"),
-  filesNotFound = "Files not found in %s."  
+  rolloutAnimationCaption = "Animations",
+  radioCaption = "Apply animation to:",
+  radioLabels = #("names", "selection"),
+  filesNotFound = "Files not found in %s." ,
+  checkboxSubfoldersCaption = "Search in subfolders",
+  groupAnimationCaption = "Animate skeleton",
+  rolloutExportTitle = "Export",
+  buttonExportCaption = "Save to .bmf",
+  fileSaved = "File was successfully saved.",
+  checkboxshowModelCaption = "Show model",
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "settings"
+  )    
 )
 
-struct greSkeleton
+struct greSkeletonAnimationsUI
 (
   settings,
-  strings,
-  bmfList = #(),
-  dialog =
+  strings,  
+  skeletonRollout =
   (
-    rollout dialog strings.rolloutTitle
+    rollout skeletonRollout strings.boneSettingsCaption
     (
-      local owner = if owner != undefined do owner
+      local owner = if owner != undefined do owner   
       
-      groupBox group_settings owner.strings.groupCaption pos:[10, 5] \
-      width:180 height:90
-      
-      spinner spinner__boneWidth owner.strings.editboneWidthTitle \
-        fieldWidth:30 type:#float align:#right pos:[21, 25]
-      spinner spinner_boneHeight owner.strings.editboneHeightTitle \
-        fieldWidth:30 type:#float align:#right pos:[17, 48] 
+      groupBox group_boneSettings owner.strings.groupBoneSettingsCaption \
+        pos:[5, 0] width:175 height:133 
         
+      spinner spinner__boneWidth owner.strings.editboneWidthTitle \
+        fieldWidth:60 type:#float align:#right pos:[50, 20] \
+        range:[0, 100, owner.settings.boneWidth]
+      spinner spinner_boneHeight owner.strings.editboneHeightTitle \
+        fieldWidth:60 type:#float align:#right pos:[46, 40] \
+        range:[0, 100, owner.settings.boneHeight]        
       spinner spinner_boneTaper owner.strings.spinnerTaperCaption \
-        range:[0, 100, 1] type:#integer fieldWidth:30 pos:[114, 25] 
+        range:[0, 100, owner.settings.taper] type:#integer fieldWidth:60 \
+        pos:[50, 60]      
       colorpicker colpicker_wirecolor owner.strings.colpickerCaption \
-        color:yellow modal:false pos:[95, 48]
+        color:settings.wirecolor modal:false pos:[31, 84]       
       checkbox checkbox_showLinks owner.strings.checkboxShowLinksCaption \
-        checked:owner.settings.showLinks pos:[22, 70]       
-      button button_create owner.strings.buttonCreateCaption width:80 \
-        pos:[15, 100] 
-      button button_loadFromFile owner.strings.buttonLoadCaption width:80 \
-        pos:[104, 100] 
-      
-      listbox listbox_animationList owner.strings.listboxCaption pos:[10, 125] \
-        width:179
-      radiobuttons radio_type owner.strings.radioCaption \
-        labels:owner.strings.radioLabels align:#left    
-      button button_getAnimationList owner.strings.buttonListCaption \
-        width:80 pos:[15, 335] 
-      button button_loadAnimation owner.strings.buttonLoadAnimCaption \
-        width:80 pos:[103, 335]       
+        checked:owner.settings.showLinks pos:[77, 110]       
+      button button_create owner.strings.buttonCreateCaption width:120 \
+        pos:[30, 140] 
+      checkbox checkbox_showModel owner.strings.checkboxshowModelCaption \
+        checked:owner.settings.showModel pos:[30, 165]           
+      button button_loadFromFile owner.strings.buttonLoadCaption width:120 \
+        pos:[30, 182]    
       on button_create pressed do
       (
-        owner.createStandardSkeleton()
+        owner.addStandardSkeleton()
       )
       on button_loadFromFile pressed do
       (
-        owner.loadFromFile()         
-      ) 
+        owner.loadFromCharacterFile()         
+      )         
+    ) 
+  ),
+  animationsRollout =
+  (
+    rollout animationsRollout strings.rolloutAnimationCaption
+    (
+      local owner = if owner != undefined do owner    
+      listbox listbox_animationList height:14 width:180 pos:[2, 3]
+      checkbox checkbox_subfolders owner.strings.checkboxSubfoldersCaption \
+        checked:owner.settings.subfolders pos:[30, 202]             
+      button button_getAnimationList owner.strings.buttonListCaption \
+        width:120  pos:[30, 222]  
+      groupBox group_addAnimation owner.strings.groupAnimationCaption \
+        pos:[2, 250] width:180 height:70 
+      radiobuttons radio_type \
+        labels:owner.strings.radioLabels pos:[30, 269]                           
+      button button_loadAnimation owner.strings.buttonLoadAnimCaption \
+        width:120 pos:[30, 289] 
       on button_getAnimationList pressed do
       (
-        owner.getAnimationList()
+        owner.getAnimationFilesList()
       )     
       on button_loadAnimation pressed do
       (
         owner.addAnimationToSkeleton()
-      )       
+      )         
+    )    
+  ), 
+  exportRollout =
+  (
+    rollout exportRollout strings.rolloutExportTitle
+    (
+      local owner = if owner != undefined do owner     
+      	  
+      --groupBox group_exportAnimation owner.strings.groupExportCaption \
+        --width:180 height:43 pos:[10, 463]   
+		
+      radiobuttons radio_type labels:owner.strings.radioLabels pos:[30, 0]           
+      button button_export owner.strings.buttonExportCaption \
+        width:120 pos:[30, 20]           
+      on button_export pressed do
+      (
+        owner.exportToBMF()
+      )     
+    )
+  ),
+  dialog =
+  (
+    rollout dialog strings.rolloutTitle
+    (     
+      subrollout subroll_container "container" height:605 width:196 pos:[2, 2]
+      on dialog resized point do
+      (
+        subroll_container.height = dialog.height
+      )      
     )     
   ),
-  fn getAnimationList =
+  fn exportToBMF = 
   (
-    --local bmfsFolder = dialogs.openFolder strings.bmfsFolderTitle
-    this.dialog.listbox_animationList.items = #()
-    bmfsFolder = "F:/SteamLibrary/steamapps/common/Ghost Recon/Data/Motion/"
-    if bmfsFolder != undefined then
+    bmf = boneMovementsFile()
+    if bmf.openFile("wb") != undefined then
+    (   
+      for boneName in rseConsts.standardGREBoneNames do
+      (
+        boneAnimation = rseAnimation.create()                    
+        append bmf.rseObject.boneAnimations boneAnimation
+      )
+      if frameCount > 0 then
+      (
+        bmf.rseObject.frameCount = frameCount
+        if bmf.writeFile() then
+          dialogs.showMessage strings.fileSaved
+      ) 
+      bmf.closeFile()        
+    )
+  ),
+  fn getAnimationFilesList =
+  (
+    if settings.bmfFolder == undefined then
+      settings.bmfFolder = dialogs.openFolder strings.bmfsFolderTitle
+    else
     (
-      if settings.procSubfolders then
-        files = utils.findFiles bmfsFolder "*.bmf"
-      else
-        files = getFiles (bmfsFolder + "*.bmf")
-      if files.count > 0 then
-      (    
-        bmfList = files
-        filenames = \
-          (for filename in files collect (fileUtils.getFileName filename))
-        this.dialog.listbox_animationList.items = filenames 
-      )    
+      files = fileUtils.findFiles settings.bmfFolder "*.bmf" \
+        subfolders:settings.procSubfolders
+      if files.count > 0 then    
+        this.animationsRollout.listbox_animationList.items = 
+        (
+          for filename in files collect \
+            (fileUtils.getFileName filename ext:true)
+        )    
       else 
         dialogs.showMessage \
-          (formattedprint bmfsFolder format:strings.filesNotFound)         
+          (formattedprint settings.bmfFolder format:strings.filesNotFound)         
     )    
   ),
   fn addAnimationToSkeleton =
   (
-    if (this.dialog.listbox_animationList.selection > 0) then
+    if (this.animationsRollout.listbox_animationList.selection > 0) then
     (
-      filename = bmfList[this.dialog.listbox_animationList.selection]
-      bmf = boneMovementsFile()
-      bmf.filename = filename
+      filename = (settings.bmfFolder + \ 
+        this.animationsRollout.listbox_animationList.selected)
+      bmf = boneMovementsFile filename:filename
       if bmf.openFile("rb") != undefined then
       (
         if bmf.readFile() then
         ( 
-          max.animation.setLength bmf.object.frameCount
-          for i = 1 to bmf.object.boneCount do 
-          (
-            bone = getNodeByName bmf.object.boneAnimations[i].name
-            if bone != undefined then
-            (
-              for keyIndex = 2 to bone.position.controller.keys.count do
-                max.controller.delKey bone.position.controller --index:keyIndex
-              for keyIndex = 2 to bone.rotation.controller.keys.count do
-                max.controller.delKey bone.rotation.controller --index:keyIndex
-                        
-              max.controller.addKey bone.position.controller 0 
-              max.controller.addKey bone.rotation.controller 0 
-              for index = 2 to bmf.object.boneAnimations[i].positionKeys.count do
-              (
-                key = bmf.object.boneAnimations[i].positionKeys[index]
-                max.controller.addKey bone.position.controller key.frame \
-                  value:key.position
-              )  
-              for index = 2 to bmf.object.boneAnimations[i].rotationKeys.count do
-              (
-                key = bmf.object.boneAnimations[i].rotationKeys[index]
-                max.controller.addKey bone.rotation.controller key.frame \
-                  value:key.rotation
-              ) 
-            )            
-          )
-        )        
+          skeletonAnimations = rseSkeletonAnimationViewer()
+		  skeletonAnimations.create bmf.rseObject
+        ) 
+        bmf.closeFile() 		
       )      
     )
   ),  
-  fn loadFromFile =
+  fn loadFromCharacterFile =
   (
     chr = characterFile()
     if chr.openFile("rb") != undefined then
     (
-      chr.readSkeleton()
-      model = greModel chr.object
-      model.createSkeleton()
+      if settings.showModel then
+        result = chr.readSkeleton()
+      else
+        result = chr.readFile() 
+      if result then
+      (  
+        chr.closeFile()      
+        viewer = rseViewer chr.rseObject
+        viewer.settings.isTextured = false
+        viewer.createScene()
+      )      
     )        
   ),
-  fn createStandardSkeleton =
+  fn addStandardSkeleton =
   (
-    standardSkeleton = skeletonModel settings
-    standardSkeleton.create()
+    skeletonViewer = greSkeletonModelViewer()
+    skeletonViewer.create (greStandardSkeleton())
+  ),
+  fn show =
+  (
+    createDialog dialog width:200 pos:mouse.screenpos \
+      style:#(#style_sysmenu, #style_resizing, #style_titlebar) lockWidth: true
+    AddSubRollout dialog.subroll_container skeletonRollout
+    AddSubRollout dialog.subroll_container animationsRollout
+    AddSubRollout dialog.subroll_container exportRollout rolledUp:true   
   ),
   fn init =
   (
@@ -182,11 +255,20 @@ struct greSkeleton
       settings = settingsUI()
     if strings == undefined then  
       strings = stringsUI()
-    dialog.owner = this 
-    createDialog dialog width:198 pos:mouse.screenpos \
-      style:#(#style_toolwindow, #style_sysmenu)     
+    skeletonRollout.owner = this
+    animationsRollout.owner = this
+    exportRollout.owner = this       
   ),
+  fn close = try (destroyDialog dialog) catch(),    
   on create do init()
 )
 
-characterSkeleton = greSkeleton()
+fn main =
+(
+  skeletonUI = greSkeletonAnimationsUI()
+  skeletonUI.settings.bmfFolder = \
+    "E:/SteamLibrary/steamapps/common/Ghost Recon/Data/Motion/"
+  skeletonUI.show()	
+)
+
+main()

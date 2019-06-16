@@ -2,15 +2,15 @@
 
 */
 
-filein "dialogs.ms"
 filein "rse.ms"
 filein "rse_formats_io.ms"
 filein "utils.ms"
+filein "dialogs.ms"
 
 struct bmfStrings
 (
-  openFileCaption = "Open chr file",
-  saveFileCaption = "Save chr file",
+  openFileCaption = "Open bmf file",
+  saveFileCaption = "Save bmf file",
   types = "Ghost Recon character animation (*.bmf)|*.bmf",
   errorWriteFile = "Error. Can't write to the file %s.",
   errorReadFile = "Error. Can't read from the file %s."
@@ -18,57 +18,52 @@ struct bmfStrings
 
 struct boneMovementsFile
 (
-  filename,
-  filestream,
-  reader,   
-  object = greCharacterAnimations(),
-  strings = bmfStrings(),  
+  strings = bmfStrings(),
+  rseObject = greSkeletonAnimations(), 
+  filename,  
+  fstream,
+  freader,
+  fwriter,   
   fn readHeader =
   (
-    object.framesPerMin = ReadFloat filestream
-    object.frameCount = ReadLong filestream
-    object.boneCount = ReadLong filestream    
+    rseObject.time = ReadFloat fstream
+    rseObject.frameCount = ReadLong fstream    
   ),
-  fn readBoneAnimations =
+  fn readAnimations =
   (
-    for i = 1 to object.boneCount do 
-    (
-      boneAnimation = greBoneAnimation()
-      boneAnimation.name = reader.readName()
-      count = ReadLong filestream
-      for frame = 1 to count do
-      (
-        posKey = grePosKey()
-        posKey.frame = ReadLong filestream
-        posKey.position = reader.readPoint3Values()
-        append boneAnimation.positionKeys posKey
-      )
-      count = ReadLong filestream
-      for frame = 1 to count do
-      (
-        rotKey = greRotKey()
-        rotKey.frame = ReadLong filestream
-        rotKey.rotation = reader.readQuatValues()
-        append boneAnimation.rotationKeys rotKey      
-      )  
-      append object.boneAnimations boneAnimation         
-    )
+    rseObject.skeletonAnimations = freader.readSkeletonAnimations()
   ),  
   fn readFile =
   (
     readHeader()
-    readBoneAnimations()   
+    readAnimations()   
     result = true  
   ),
+  fn writeHeader = 
+  (
+    WriteFloat fstream rseObject.time
+    WriteLong fstream rseObject.frameCount 
+  ),
+  fn writeAnimations = 
+  (
+    fwriter.writeSkeletonAnimations rseObject.skeletonAnimations
+  ),  
   fn writeFile =
   (
-    --writeHeader()
-    --writeAnimations()
+    writeHeader()
+    writeAnimations()
+    result = true
   ),
   fn closeFile =
   (
-    fclose filestream
+    fclose fstream
   ),
+  fn openStream fstream =
+  (
+    this.fstream = fstream
+    freader = rseFormatReader(fstream)
+    writer = rseFormatWriter(fstream)     
+  ),  
   fn openFile mode =
   (
     dialogs.types = strings.types
@@ -77,9 +72,13 @@ struct boneMovementsFile
     else
       dialogs.caption = strings.saveFileCaption
     local fname = filename
-    filestream = dialogs.openFileDialog &fname mode
-    filename = fname 
-    reader = formatReader(filestream)   
-    result = filestream      
+    fstream = dialogs.openFileDialog &fname mode
+    if fstream != undefined then
+    (
+      filename = fname 
+      freader = rseFormatReader(fstream)
+      fwriter = rseFormatWriter(fstream)       
+    )       
+    result = fstream      
   )   
 )

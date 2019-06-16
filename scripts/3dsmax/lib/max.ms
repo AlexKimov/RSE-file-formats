@@ -30,26 +30,28 @@ struct skinModifier
   (
     result = skin()
   ),
-  fn applyToMesh msh active:true =
+  fn applyToMesh msh =
   (
     skinmod = this.create()
     addModifier msh skinmod
-    if active then modPanel.setCurrentObject skinmod
+    setCommandPanelTaskMode #modify
+    modPanel.setCurrentObject skinmod
     result = skinmod
   ),
-  fn setVertexWeight skinMod vertexId bone weight =
+  fn setVertexWeight skinMod vertexId boneID vertexWeight =
   (
-    skinOps.SetVertexWeights skinMod vertexId bone weight
+    skinOps.replaceVertexWeights skinMod vertexId boneID vertexWeight
   ),
-  fn addBone skinMod bone =
+  fn addBone skinMod skeletonBone =
   (
-    skinOps.addBone skinMod bone 1 
+    skinOps.addBone skinMod skeletonBone 1 
   ),
-  fn addBonesToMesh msh boneArray =
+  fn attachBonesToMesh msh boneArray =
   (
     skinmod = this.applyToMesh msh
-    for bone in boneArray do
-      this.addBone skinmod bone
+    for skeletonBone in boneArray do
+      this.addBone skinmod skeletonBone  
+    modPanel.setCurrentObject skinmod       
     result = skinmod 
   )  
 )
@@ -62,17 +64,19 @@ struct maxController
     if value != unsupplied then
       key.value = value
   ),
-  fn delKey controller index: =
+  fn deleteAllKeys controller =
   (
-    if index == unsupplied then
-    (
-      deleteKeys controller #allKeys
-    )  
-    else
-    (
-      deleteKey controller index
-    )  
-  )
+    deleteKeys controller #allKeys 
+  ),
+  fn deleteKeysByRange controller startFrame endFrame =
+  (
+  	for x in controller.keys.count to 1 by -1 do
+  	(
+  	  if (controller.keys[x].time >= startFrame) and \
+        (controller.keys[x].time <= endFrame) do 
+        deleteKey controller x
+  	)
+  )  
 )
 
 struct maxModifier
@@ -98,7 +102,7 @@ struct maxBones
   )
 )
 
-struct nodOp
+struct maxNodeOp
 (
   fn addToGroup obj objs =
   (
@@ -149,6 +153,84 @@ struct slateMatEditor
   )  
 )
 
+struct maxMaterial
+(
+  fn createMaterialFromBitmap filename =
+  (
+    bitmapTexture = this.openBitmapFile fileName
+    if bitmapTexture != undefined then
+    (
+      mat = this.createBitmapMaterial bitmapTexture
+      mat.name = material.header.name 
+      result = mat
+    )     
+  ),
+  fn createBitmapBlendMaterial bitmapImageArray =
+  (  
+    blendmat = blend
+    blendmat.map1 = standardMaterial \
+      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[1]) showInViewport:true
+    blendmat.map2 = standardMaterial \
+      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[2]) showInViewport:true 
+    blendmat.mask = gradient  
+    result = blendmat    
+  ),  
+  fn createBitmapMultiMaterial bitmapImageArray isTexBlended =
+  (  
+    if isTexBlended then
+      numsubs = bitmapImageArray.count + 1
+    else
+      numsubs = bitmapImageArray.count
+    multimat = multimaterial numsubs:numsubs
+    for i = 1 to bitmapImageArray.count do
+      multimat[i] = standardMaterial \
+      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[i]) showInViewport:true
+    if isTexBlended != unsupplied and isTexBlended then
+      multimat[multimat.count + 1] = createBitmapBlendMaterial bitmapImageArray
+    result = multimat  
+  ),
+  fn addMaterialToMesh msh mat =
+  (
+  	msh.material = mat
+  ),  
+  fn openBitmapFile filename =
+  (
+    --try
+    --(
+      openBitMap filename
+    --)  
+    --catch
+    --(
+    --  messageBox ("Can't open bitmap file " + filename + ".")
+    --  result = undefined
+    --)  
+  ),
+  fn createBitmapMaterial bitmapImage =
+  (
+    result = standardMaterial diffuseMap:(bitmaptexture bitmap:bitmapImage) \
+      showInViewport:true
+  ),  
+  fn createBitmap imageData imageWidth imageHeight filename =
+  (
+  	b = bitmap imageWidth imageHeight color:white 
+	b.filename = filename + ".bmp"
+    for line = 0 to (imageHeight - 1) do
+    (
+      row = #()
+      for col = (line*imageWidth + 1) to (line + 1)*imageWidth do 
+        append row imageData[col]
+      setPixels b [0, line] row
+    )       
+    save b    
+	result = b
+  ),
+  fn addBitmapToMesh msh bitmapImage =
+  (
+  	msh.material = standardMaterial \
+      diffuseMap:(bitmaptexture bitmap:bitmapImage) showInViewport:true
+  )    
+)
+
 struct max3ds
 (
   strings,
@@ -159,6 +241,7 @@ struct max3ds
   modifiers, 
   controller,
   animation,
+  material,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -180,12 +263,9 @@ struct max3ds
   (
     result = getNumVerts msh 
   ),
-  fn getMeshVerts mesh =
+  fn getMeshVerts msh =
   (
-    vertArray = #()
-    for i = 1 to mesh.numVerts do 
-      append vertArray (getVert mesh i)
-  	result = vertArray
+    result = (for i = 1 to msh.numVerts collect (getVert msh i))
   ),
   fn getFaceColor mesh =
   (
@@ -272,69 +352,6 @@ struct max3ds
   	meshop.slice msh #all planeNormal offset delete:true
   	update msh
   ),
-  fn createBitmapMaterial bitmapImage =
-  (
-    mat = standardMaterial diffuseMap:(bitmaptexture bitmap:bitmapImage) \
-      showInViewport:true
-  ),
-  fn createBitmapBlendMaterial bitmapImageArray =
-  (  
-    blendmat = blend
-    blendmat.map1 = standardMaterial \
-      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[1]) showInViewport:true
-    blendmat.map2 = standardMaterial \
-      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[2]) showInViewport:true 
-    blendmat.mask = gradient  
-    result = blendmat    
-  ),  
-  fn createBitmapMultiMaterial bitmapImageArray isTexBlended =
-  (  
-    if isTexBlended then
-      numsubs = bitmapImageArray.count + 1
-    else
-      numsubs = bitmapImageArray.count
-    multimat = multimaterial numsubs:numsubs
-    for i = 1 to bitmapImageArray.count do
-      multimat[i] = standardMaterial \
-      diffuseMap:(bitmaptexture bitmap:bitmapImageArray[i]) showInViewport:true
-    if isTexBlended != unsupplied and isTexBlended then
-      multimat[multimat.count + 1] = createBitmapBlendMaterial bitmapImageArray
-    result = multimat  
-  ), 
-  fn addMaterialToMesh msh mat =
-  (
-  	msh.material = mat
-  ),  
-  fn addBitmapToMesh msh bitmapImage =
-  (
-  	msh.material = standardMaterial diffuseMap:(bitmaptexture bitmap:bitmapImage) showInViewport:true
-  ),  
-  fn openBitmapFile filename =
-  (
-    --try
-    --(
-      openBitMap filename
-    --)  
-    --catch
-    --(
-    --  messageBox ("Can't open bitmap file " + filename + ".")
-    --  result = undefined
-    --)  
-  ),
-  fn createBitmap imageData imageWidth imageHeight filename =
-  (
-  	b = bitmap imageWidth imageHeight color:white 
-	b.filename = filename + ".bmp"
-    for line = 0 to (imageHeight - 1) do
-    (
-      row = #()
-      for col = (line*imageWidth + 1) to (line + 1)*imageWidth do 
-        append row imageData[col]
-      setPixels b [0, line] row
-    )       
-    save b    
-	result = b
-  ),
   fn createHelperPoint name transformMatrix:(matrix3 1) =
   (
     hpoint = point()
@@ -346,12 +363,13 @@ struct max3ds
   (
     if strings == undefined then
       strings = maxStrings()
-    sme = slateMatEditor()
-    bones = maxBones()
-    nodes = nodOp()
-    modifiers = maxModifier()  
-    controller = maxController()
-    animation = maxAnimation()    
+    this.sme = slateMatEditor()
+    this.bones = maxBones()
+    this.nodes = maxNodeOp()
+    this.modifiers = maxModifier()  
+    this.controller = maxController()
+    this.animation = maxAnimation()
+    this.material = maxMaterial() 
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle

@@ -99,19 +99,27 @@ struct fileUtils
   (
     result = getFilenamePath filename
   ),
-  fn getFileName filename =
+  fn getFileName filename ext:false =
   (
-    getFilenameFile filename
+    if ext then
+      filenameFromPath filename
+    else
+      getFilenameFile filename
   ),
-  fn findFiles directory pattern =
+  fn findFiles directory pattern subfolders:false =
   (
-    dir_array = GetDirectories (dir + "/*")
-    for dir in dirArray do
-      join dirArray (GetDirectories (dir + "/*"))
-    local files = #()
-    for file in dirArray do
-      join files (getFiles (file + pattern))
-    result = my_files
+    local files = #()  
+    if subfolders then
+    (
+      dir_array = GetDirectories (directory + "/*")
+      for dir in dirArray do
+        join dirArray (GetDirectories (dir + "/*"))
+      for file in dirArray do
+        join files (getFiles (file + pattern)) 
+    )
+    else
+      files = getFiles (directory + pattern)
+    result = files  
   )  
  )
  
