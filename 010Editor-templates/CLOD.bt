@@ -11,12 +11,19 @@
 //   History: 
 //------------------------------------------------
 
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {    
+  CSTRING Name <name="Version">; 
+  UINT Value;
+} VERSION; 
+
 struct {
-  UINT length;
-  char Version[length];
-  UINT value;
-  UINT length;
-  char Name[length];  
+  VERSION Version;
+  CSTRING Name;  
 } Header;
 
 UINT Count;

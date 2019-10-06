@@ -105,7 +105,7 @@ string MaterialName(MATERIAL &material) {
 } 
 
 string TextureName(TEXTURE &texture) {
-  return "FileName: " + texture.Header.Name.Text;
+  return "FileName: " + texture.Name.Text;
 } 
 
 struct {  
@@ -177,11 +177,11 @@ struct {
         typedef struct (int arraySize) {
           VECTOR_SHORT array[arraySize];
         } FACE_INDEXES;          
-        FACE_INDEXES FaceIndexes(Count) <name="Indexes">;    
+        FACE_INDEXES FaceIndexes(Count) <name="Face Indexes">;    
         typedef struct (int arraySize) {
           VECTOR_SHORT array[arraySize];
         } TEXTURE_INDEXES;          
-        TEXTURE_INDEXES TextureIndexes(Count) <name="Indexes">;    
+        TEXTURE_INDEXES TextureIndexes(Count) <name="Texture Indexes">;    
  
         UINT VertexCount;
         UINT TextureCount;         

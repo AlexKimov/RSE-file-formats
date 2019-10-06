@@ -24,8 +24,9 @@ void ReadBone(uint count, string ParentName)
     length = ReadInt(FTell());
     FSkip(4);
     name = ReadString(FTell());
-    Printf("%s = BoneSys.createBone [0,0,0] [0,0,0] [0,0,0]\n%s.name = \"%s\"\n", name, name, name);
-    Printf("%s.width = 1\n%s.height = 1\n%s.taper = 100\n%s.wirecolor = yellow\n%s.showlinks = true\n", name, name, name, name, name);
+    Printf("name = \"%s\",\n", name);
+    //Printf("%s = BoneSys.createBone [0,0,0] [0,0,0] [0,0,0]\n%s.name = \"%s\"\n", name, name, name);
+    //Printf("%s.width = 1\n%s.height = 1\n%s.taper = 100\n%s.wirecolor = yellow\n%s.showlinks = true\n", name, name, name, name, name);
 
     FSkip(length);
 
@@ -35,8 +36,9 @@ void ReadBone(uint count, string ParentName)
     FSkip(4);
     Z = ReadFloat(FTell());
     FSkip(4);
-    SPrintf(MatrixStr, "pos = (point3 %f %f %f)\n", X, Y, Z);
-    Printf(MatrixStr);
+    //SPrintf(MatrixStr, "pos = (point3 %f %f %f)\n", X, Y, Z);
+    //Printf(MatrixStr);
+    Printf("position = (point3 %f %f %f),\n", X, Y, Z);
 
     X = ReadFloat(FTell());
     FSkip(4);
@@ -46,21 +48,25 @@ void ReadBone(uint count, string ParentName)
     FSkip(4);
     W = ReadFloat(FTell());
     FSkip(4);
-    SPrintf(MatrixStr, "matrix = inverse ((quat %f %f %f %f) as matrix3)\n", X, Y, Z, W);
-    Printf(MatrixStr); 
-    Printf("matrix.position = pos\n"); 
-    if (name != "SpineRoot01")
-      Printf("%s.parent = %s\n", name, ParentName);
-    if (name != "SpineRoot01")
-      Printf("%s.transform = matrix*%s.transform\n", name, ParentName);
-    else
-      Printf("%s.transform = matrix\n", name);
+    Printf("rotation = (quat %f %f %f %f),\n", X, Y, Z, W);
+    //SPrintf(MatrixStr, "matrix = inverse ((quat %f %f %f %f) as matrix3)\n", X, Y, Z, W);
+    //Printf(MatrixStr); 
+    //Printf("matrix.position = pos\n"); 
+    //if (name != "SpineRoot01")
+    //  Printf("%s.parent = %s\n", name, ParentName);
+    //if (name != "SpineRoot01")
+    //  Printf("%s.transform = matrix*%s.transform\n", name, ParentName);
+    //else
+    //  Printf("%s.transform = matrix\n", name);
 
     FSkip(4);
     numb = ReadInt(FTell());
+    Printf("children = %d,\n", numb); 
     FSkip(4); 
     ReadBone(numb, name);
   };
 };
+
+FSkip(110203);
 
 ReadBone(1, "");

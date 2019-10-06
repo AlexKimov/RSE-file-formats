@@ -33,7 +33,7 @@ typedef enum <ubyte> {
     yes
 } BOOL; // bool data type
 
-typedef enum <uint> {
+typedef enum <int> {
   DXT1,
   DXT2, DXT3, DXT4,
   DXT5,
@@ -119,7 +119,7 @@ typedef enum <uint>  {
   damage texture when shot. 
 */
 
-typedef enum <uint> {
+typedef enum <int> {
   NONE, 
   Carpet, 
   Concrete, 
@@ -184,7 +184,7 @@ struct {
     }; 
     BIT_MASK BitMask;  
     if (version >= 9) { 
-      UINT UnknownValue; // 
+      INT UnknownValue; // 
       DXT_TYPE dxtType <name="DXT type">;
       if ((dxtType >= 0) & (dxtType < 5)) {
         locals.DXT = 1;
@@ -204,11 +204,10 @@ typedef struct{
   ubyte Alpha   <name="Alpha">; 
 } PALETTE_COLOR <name="Palette Color">;
 
-if (HEADER.version == 0) {
-  if (HEADER.Palette == 1) {   
+
+if (exists(HEADER.Palette))
+  if (HEADER.Palette == 1)  
     PALETTE_COLOR palette[256] <name="8-bit Palette">;
-  };
-};
 
 BitfieldDisablePadding(); 
 
@@ -315,10 +314,10 @@ if (HEADER.version == 0) {
   if (HEADER.Palette == 1) { 
     BIT_MASK BitMask;
     typedef struct {   
-      //ubyte Alpha : BitMask.alpha_bits <name="Alpha">; 
       ubyte Red   : BitMask.red_bits <name="Red">;
       ubyte Green : BitMask.green_bits <name="Green">;
-      ubyte Blue  : BitMask.blue_bits <name="Blue">; 
+      ubyte Blue  : BitMask.blue_bits <name="Blue">;
+      ubyte Alpha : BitMask.alpha_bits <name="Alpha">;  
     } PIXEL2 <name="Pixel">;
     typedef struct (int arraySize) {
       PIXEL2 array[arraySize];
