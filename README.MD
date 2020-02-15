@@ -141,3 +141,8 @@ https://github.com/boristsr/RainbowSixFileConverters.
 #### Noesis
 * [fmt_rse_rsb.py](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/noesis/fmt_rse_rsb.py) - open .rsb files
 
+---
+
+#Описание проекта
+
+Группа vk: https://vk.com/greredux
