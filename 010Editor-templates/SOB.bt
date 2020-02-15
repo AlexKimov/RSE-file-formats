@@ -177,7 +177,7 @@ typedef struct {
       VECTOR3_LONG Indexes <name="Vertex Param indices">;
       VECTOR3 Normal <name="Normal">;
       UINT Unknown;
-      UINT MaterialIndex;  
+      INT MaterialIndex;  
     } FACE  <name="Face">;
     FACE FaceData[Count]  <name="Faces">; 
   } FACE_DATA <name="Face data">;
