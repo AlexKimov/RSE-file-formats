@@ -90,17 +90,17 @@ struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } FACE_INDEXES <name="Face index">;  
+    } FACE_INDEXES <name="indexes">;  
     struct {
       UINT I1;
       UINT I2;
       UINT I3;
-    } UV_INDEXES <name="Texture coordinates index">;  
-    UINT TexureIndex;
-    UINT Unknown;
-  } PINDEX <name="Index">;
+    } UV_INDEXES <name="Texture coordinates indexes">;  
+    UINT MaterialIndex;
+    UINT Unknown; // color ?
+  } PINDEX <name="Vertex">;
   PINDEX Indexes[Count] <optimize=false>;
-} INDEXES <name="Indexes">;
+} INDEXES <name="Face data">;
 
 //-------------------------------------------------
 
@@ -135,7 +135,7 @@ struct {
     } COLOR;
   } Face <name="Face">;
   Face FaceArray[FaceCount] <optimize=false>;
-} POLYGONS <name="Faces">;
+} POLYGONS <name="Vertex data">;
 
 //-------------------------------------------------
 
