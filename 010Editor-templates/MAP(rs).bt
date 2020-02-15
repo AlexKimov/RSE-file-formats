@@ -59,9 +59,9 @@ typedef struct {
 
 typedef enum <uint> {
   Opaque = 0, 
-  unknown = 1,
-  LookupCXP = 3
-} ALPHA_METHOD <name="File Header">;
+  Wrap = 1,
+  Clamp = 3
+} TEXTURE_ADDRESS_MODE <name="Texture address mode">;
 
 typedef struct {
   UINT Red;
@@ -87,8 +87,8 @@ typedef struct {
   CSTRING Name <name="Texture filename">; 
   struct { 
     FLOAT Opacity;
-    FLOAT Emissive; // 0    
-    ALPHA_METHOD alpha; // 0 - Opaque, 1 - unknown, 3 - Lookup CXP or opaque
+    FLOAT EmissiveStrength; // 0    
+    TEXTURE_ADDRESS_MODE Mode;
     COLOR Ambient; 
     COLOR Diffuse;   
     COLOR Specular;
@@ -104,9 +104,11 @@ string MaterialName(MATERIAL &material) {
 struct {  
   SECTION_HEADER Header;    
   UINT Count <name="Number of materials">;
+
   typedef struct (int arraySize) {
     MATERIAL array[arraySize] <optimize=false>;
   } MATERIALS; 
+
   MATERIALS Materials(Count) <name="Materials">; 
 } MATERIAL_LIST <name="Material list">;
 
@@ -131,9 +133,9 @@ typedef struct  {
    CSTRING String <name="String">;  
     
    UINT Unknown ;       
-} OBJECT <name=objectName>;
+} AOBJECT <name=objectName>;
 
-string objectName(OBJECT &object) {
+string objectName(AOBJECT &object) {
   return object.HEADER.Name.Text;
 }
 
@@ -209,17 +211,17 @@ typedef struct {
     struct {
       UINT Count; 
       typedef struct (int arraySize) {
-        OBJECT array[arraySize] <optimize=false>;
-      } OBJECTS;
-      OBJECTS ObjArray(Count); 
-    }  OBJECTSA <name="Meshes">; 
+        AOBJECT array[arraySize] <optimize=false>;
+      } AOBJECTS;
+      AOBJECTS ObjArray(Count); 
+    }  MESHES <name="Meshes">; 
 } OBJECT <name=ObjectName>;  
 
-string ObjectName(DATA &data) {
+string ObjectName(OBJECT &data) {
   if (exists(data.HEADER.OBJECT_NAME))
-    return "Name: " + OBJECT.Header.Name.Text;
+    return "Name: " + data.Header.Name.Text;
   else
-    return "Name: " + OBJECT.Text;
+    return "Name: " + data.Text;
 }
 
 struct {   
@@ -243,7 +245,7 @@ struct {
       UINT Length;  
       char Text[Length];  
     } PORTALLIST_STRING;
-  } HEADER <name="PORTALList Header">;   
+  } HEADER <name="Header">;   
 
   UINT Count;
 
@@ -298,7 +300,7 @@ struct {
       UINT Length;  
       char Text[Length];  
     } LIGHTLIST_STRING;
-  } HEADER <name="LIGHTList Header">;  
+  } HEADER <name="Header">;  
 
   UINT Count; 
   typedef struct {
