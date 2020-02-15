@@ -140,6 +140,9 @@ https://github.com/boristsr/RainbowSixFileConverters.
 
 #### Noesis
 * [fmt_rse_rsb.py](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/noesis/fmt_rse_rsb.py) - open .rsb files
+* [fmt_rse_crp.py](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/noesis/fmt_rse_crp.py) - open .crp files
+* [fmt_rse_chr.py](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/noesis/fmt_rse_chr.py) - open .chr files
+* [fmt_rse_sob.py](https://github.com/AlexKimov/RSE-file-formats/blob/master/scripts/noesis/fmt_rse_sob.py) - open .sob files
 
 ---
 
