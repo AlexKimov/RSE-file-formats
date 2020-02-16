@@ -102,7 +102,9 @@ void ReadBone()
   BYTE Cycle;
   if (Cycle == 1)
     ReadBone(); 
+
   BONE Bone;
+
 };
 
 ReadBone();
