@@ -9,20 +9,23 @@
 //   History: 
 //------------------------------------------------
 
-local uint count = 75;
-
 UINT FrameCount; 
 
 struct {
   struct {
     UINT BonesCount; // 18
+    struct { 
+      FLOAT A;
+      FLOAT B;
+      FLOAT C;
+    } POSITION;
     typedef struct {
-      BYTE X;
-      BYTE Y;
-      BYTE Z;
-      BYTE W;
-    } Bone_Pos;
-    Bone_Pos BonePosArray[count];
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      FLOAT W;
+    } ROTATION <name="Quat">;
+    ROTATION Rot[BonesCount];
   } Frames[FrameCount] <optimize=false, name="Frame">;
 } MOTION_DATA;
 
