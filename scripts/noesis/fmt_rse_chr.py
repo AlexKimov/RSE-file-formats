@@ -1,6 +1,7 @@
 from inc_noesis import *
 import os
-
+import noewin
+import noewinext
 
 SECTION_HEADER_SHORT = 0
 SECTION_HEADER_LONG = 1 
@@ -9,6 +10,10 @@ SECTION_HEADER_LONG = 1
 def registerNoesisTypes():
     handle = noesis.register( \
         "Ghost Recon / The Sum of All Fears (2001) character model", ".chr")
+        
+    noesis.addOption(handle, "-nogui", "disables UI", 0)    
+    noesis.addOption(handle, "-animation", "bmf file", noesis.OPTFLAG_WANTARG)
+    
     noesis.setHandlerTypeCheck(handle, grCharacterModelCheckType)
     noesis.setHandlerLoadModel(handle, grCharacterModelLoadModel)
         
@@ -395,6 +400,7 @@ class grBoneAnimations:
 class grSkeletalAnimations:
     def __init__(self):
         self.animations = []
+        self.filename = ""
         
     def readHeader(self, reader):
         self.time = self.reader.readFloat()
@@ -420,14 +426,93 @@ class grSkeletalAnimations:
                 
         #except:
             #return None        
-        
+     
+
+
+class GRCharacterViewSettingsDialogWindow:
+    def __init__(self):
+        self.options = {"Filename": ""}
+        self.isCanceled = True
+        self.animationListBox = None
+        self.bmfPathEditBox = None
+        self.bmfDir = ""
+
+    def buttonGetAnimationListOnClick(self, noeWnd, controlId, wParam, lParam):
+        dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with animation files")
+        self.bmfDir = dialog.getOpenFolderName() 
+
+        if self.bmfDir != None:
+            self.bmfPathEditBox.setText(self.bmfDir)
+
+            for file in os.listdir(self.bmfDir):
+                if file.endswith(".bmf"):
+                    self.animationListBox.addString(file)
+                     
+        return True
+
+    def buttonLoadOnClick(self, noeWnd, controlId, wParam, lParam):    
+        filename = self.animationListBox.getStringForIndex(self.animationListBox.getSelectionIndex())
+    
+        if filename != None:
+            self.options["Filename"] = os.path.join(self.bmfDir, filename) 
+            
+        self.isCanceled = False
+        self.noeWnd.closeWindow()   
+
+        return True
+
+    def buttonCancelOnClick(self, noeWnd, controlId, wParam, lParam):
+        self.isCanceled = True
+        self.noeWnd.closeWindow()
+
+        return True
+
+    def create(self):
+        self.noeWnd = noewin.NoeUserWindow("Load Ghost Recon character model", "openModelWindowClass", 385, 230)
+        noeWindowRect = noewin.getNoesisWindowRect()
+
+        if noeWindowRect:
+            windowMargin = 100
+            self.noeWnd.x = noeWindowRect[0] + windowMargin
+            self.noeWnd.y = noeWindowRect[1] + windowMargin
+
+        if self.noeWnd.createWindow():
+            self.noeWnd.setFont("Arial", 12)
+
+            self.noeWnd.createStatic("Path to .bmf files", 5, 5, 110, 20)
+            # choose path to textures
+            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, True)
+            self.bmfPathEditBox = self.noeWnd.getControlByIndex(index)
+
+            self.noeWnd.createStatic("Animation:", 5, 57, 80, 20)
+            index = self.noeWnd.createListBox(5, 75, 275, 140)
+            self.animationListBox = self.noeWnd.getControlByIndex(index)
+
+            self.noeWnd.createButton("Open", 290, 27, 80, 21, self.buttonGetAnimationListOnClick)
+            
+            self.noeWnd.createButton("Load", 290, 135, 80, 30, self.buttonLoadOnClick)
+            self.noeWnd.createButton("Cancel", 290, 170, 80, 30, self.buttonCancelOnClick)
+
+            self.noeWnd.doModal()
+            
         
 def grCharacterModelCheckType(data):
 
 	return 1     
     
 
-def grCharacterModelLoadModel(data, mdlList): 
+def grCharacterModelLoadModel(data, mdlList):
+    dialogWindow = GRCharacterViewSettingsDialogWindow()
+    
+    if noesis.optWasInvoked("-animation"):
+        animFilename = noesis.optGetArg("-animation")
+    
+    if not noesis.optWasInvoked("-nogui"): 
+        dialogWindow.create()
+    
+        if dialogWindow.isCanceled:
+            return 1
+
     grCharacterModel = GRCharacterModel(NoeBitStream(data))
     grCharacterModel.read()
     
@@ -445,6 +530,7 @@ def grCharacterModelLoadModel(data, mdlList):
             filename = grCharacterModel.textures[i].filename.split(".")[0]            
             textureName = "{}{}.rsb".format(texturesPath, filename)               
             texture = rapi.loadExternalTex(textureName)
+
             if texture != None:
                 textures.append(texture)            
                 material = NoeMaterial(grCharacterModel.materials[i].name, textureName)
@@ -455,7 +541,6 @@ def grCharacterModelLoadModel(data, mdlList):
             materials = []
             textures = []  
     
-    #noesis.logPopup()
     
     # show meshes
     for model in grCharacterModel.models:
@@ -465,6 +550,7 @@ def grCharacterModelLoadModel(data, mdlList):
                 rapi.rpgSetMaterial(grCharacterModel.materials[msh.materialIndex].name)  
                 
             rapi.immBegin(noesis.RPGEO_TRIANGLE)
+            
             for i in range(msh.faceCount):
                 textIndexes = msh.textureIndexes[i]
                 faceIndexes = msh.faceIndexes[i]
@@ -475,13 +561,16 @@ def grCharacterModelLoadModel(data, mdlList):
                     rapi.immUV2(uv.getStorage()) 
                     
                     vIndex = faceIndexes.getStorage()[k]
+                    
+                    for bone in grCharacterModel.weights[vIndex].bones:
+                        index = grCharacterModel.getBoneIndexByName(bone.name)
+                        rapi.immBoneIndex([index])
+                        rapi.immBoneWeight([bone.weight])                      
+                    
                     vertex =  model.vertexes[vIndex]           
                     rapi.immVertex3(vertex.getStorage())
                     
-                    #for bone in grCharacterModel.weights[vIndex].bones:
-                        #index = grCharacterModel.getBoneIndexByName(bone.name)
-                        #rapi.immBoneIndex([index])
-                        #rapi.immBoneWeight([bone.weight])                    
+                  
                     
             rapi.immEnd()              
 
@@ -501,42 +590,47 @@ def grCharacterModelLoadModel(data, mdlList):
    
         bonePName = bone.parentName
         bones.append(NoeBone(bone.index, boneName, boneMat, bonePName, bone.parentIndex))
-      
-    #noesis.logPopup()  
+       
     # load animations from .bmf file
-    boneAnimationsFile = grSkeletalAnimations()
-    boneAnimationsFile.read("E:/ridingshotgundeath1.bmf")
-
-    # create animations
-    index = 0
-    kfBones = []
-    for boneAnimations in boneAnimationsFile.animations:
-        index = grCharacterModel.getBoneIndexByName(boneAnimations.name)
-        keyFramedBone = NoeKeyFramedBone(index)
-        
-        rkeys = []
-        for rotKey in boneAnimations.rotKeys:
-            rkeys.append(NoeKeyFramedValue(rotKey.time, \
-                NoeQuat(rotKey.rot.getStorage())))
-        keyFramedBone.setRotation(rkeys)
-        
-        pkeys = []
-        for posKey in boneAnimations.posKeys:
-            pkeys.append(NoeKeyFramedValue(posKey.time, \
-                NoeVec3(posKey.pos.getStorage()))) 
-                
-        keyFramedBone.setTranslation(pkeys)
-        
-        kfBones.append(keyFramedBone)   
-        
-    anims = []        
-    anim = NoeKeyFramedAnim(boneAnimationsFile.filename, bones, kfBones)
-    anims.append(anim)
+    if dialogWindow.options["Filename"]:
+        boneAnimationsFile = grSkeletalAnimations()
+        boneAnimationsFile.read(dialogWindow.options["Filename"])
     
-    #print(kfBones[0].)
+        # create animations
+        index = 0
+        kfBones = []
+    
+        index = 0
+        for boneAnimations in boneAnimationsFile.animations:
+            #index = grCharacterModel.getBoneIndexByName(boneAnimations.name)
+            keyFramedBone = NoeKeyFramedBone(index)
+        
+            rkeys = []
+            for rotKey in boneAnimations.rotKeys:
+                rkeys.append(NoeKeyFramedValue(rotKey.time, \
+                    NoeQuat(rotKey.rot.getStorage()).toMat43(1).toQuat()))  
                 
+            pkeys = []
+            for posKey in boneAnimations.posKeys:
+                pkeys.append(NoeKeyFramedValue(posKey.time, \
+                    NoeVec3(posKey.pos.getStorage()))) 
+          
+            keyFramedBone.setRotation(rkeys)          
+            keyFramedBone.setTranslation(pkeys)
+        
+            kfBones.append(keyFramedBone)
+            index += 1        
+        
+        anims = []        
+        anim = NoeKeyFramedAnim(boneAnimationsFile.filename, bones, kfBones, 1)
+        anims.append(anim)
+    
+
+        mdl.setAnims(anims)
+    
     mdl.setBones(bones)
-    mdl.setAnims(anims)
+
+    
     # set materials
     if materials:    
         mdl.setModelMaterials(NoeModelMaterials(textures, materials)) 
