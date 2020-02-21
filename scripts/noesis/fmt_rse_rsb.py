@@ -3,9 +3,10 @@ from inc_noesis import *
 
 def registerNoesisTypes():
     handle = noesis.register( \
-        "Red Storm Bitmap (Rainbow six 1/2, Ghost Recon 1)", ".rsb")
+        "Red Storm Bitmap (Rainbow six 1/2, Ghost Recon)", ".rsb")
     noesis.setHandlerTypeCheck(handle, rsbCheckType)
     noesis.setHandlerLoadRGBA(handle, rsbLoadRGBA)
+    
     return 1
 
     
@@ -30,7 +31,7 @@ class RSBImage:
         self.bitsBlue = filereader.readUInt()
         self.bitsAlpha = filereader.readUInt()  
         self.bitDepth = int((self.bitsRed + self.bitsGreen + self.bitsBlue + \
-            self.bitsAlpha)/8) 
+            self.bitsAlpha)/8)       
             
     def getPalettedImage(self, filereader):
         imageSize = self.imageWidth*self.imageHeight  
@@ -113,6 +114,8 @@ class RSBImage:
         # else:
             # return imageBuffer # just copy RGB88 data from file 
 
+
+
         if self.bitDepth != 3: 
             if self.bitDepth == 4:
                 format = "b8g8r8a8"
@@ -129,6 +132,7 @@ class RSBImage:
             return imageData                
         else:
             return imageBuffer
+               
                  
     def getDXTImage(self, filereader):
         if self.dxtType == 0:     
@@ -160,7 +164,7 @@ class RSBImage:
         
         if self.version >= 9: 
             self.reader.seek(4, NOESEEK_REL)         
-            self.dxtType = self.reader.readUInt() # DXT -1, 1..5
+            self.dxtType = self.reader.readInt() # DXT -1, 1..5
              
         return 0
         
@@ -181,7 +185,7 @@ def rsbCheckType(data):
     return 1
   
   
-def rsbLoadRGBA(data, texList):
+def rsbLoadRGBA(data, texList): 
     rsb = RSBImage(NoeBitStream(data))
     
     if rsb.readHeader() != 0:
@@ -205,7 +209,8 @@ def rsbLoadRGBA(data, texList):
             textureType = noesis.NOESISTEX_DXT5
     if rsb.bitDepth == 3:             
       textureType = noesis.NOESISTEX_RGB24 
-                      
+                    
+                 
     texList.append(NoeTexture("rsbitmaptex", rsb.imageWidth, rsb.imageHeight, \
         rsb.read(options), textureType))    
         
