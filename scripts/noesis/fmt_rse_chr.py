@@ -386,14 +386,14 @@ class GRBoneAnimations:
         
         self.posKeyCount = reader.readUInt() 
         for i in range(self.posKeyCount):
-            key = grPosKey()
+            key = GRPosKey()
             key.read(reader)
             
             self.posKeys.append(key)
             
         self.rotKeyCount = reader.readUInt()            
         for i in range(self.rotKeyCount):
-            key = grRotKey()
+            key = GRRotKey()
             key.read(reader)
             
             self.rotKeys.append(key)         
@@ -411,7 +411,7 @@ class GRSkeletalAnimations:
         
     def readBoneAnimations(self, reader):
         for i in range(self.boneCount):
-            boneAnimations = grBoneAnimations()
+            boneAnimations = GRBoneAnimations()
             boneAnimations.read(reader)
             
             self.animations.append(boneAnimations)
@@ -442,6 +442,8 @@ class GRCharacterViewSettingsDialogWindow:
     def buttonGetAnimationListOnClick(self, noeWnd, controlId, wParam, lParam):
         dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with animation files")
         self.bmfDir = dialog.getOpenFolderName() 
+
+        self.bmfDir = "F:\SteamLibrary\steamapps\common\Ghost Recon\Data\Motion"
 
         if self.bmfDir != None:
             self.bmfPathEditBox.setText(self.bmfDir)
@@ -534,15 +536,17 @@ def grCharacterModelLoadModel(data, mdlList):
         materials = []
         textures = [] 
         for i in range(grCharacterModel.textureCount):        
-            filename = grCharacterModel.textures[i].filename.split(".")[0]            
-            textureName = "{}{}.rsb".format(texturesPath, filename)               
+            filename = grCharacterModel.textures[i].filename.split(".")[0]          
+            textureName = "{}{}.rsb".format(texturesPath, filename) 
+                         
             texture = rapi.loadExternalTex(textureName)
+            if texture == None:
+                texture = NoeTexture(textureName, 0, 0, bytearray())
 
-            if texture != None:
-                textures.append(texture)            
-                material = NoeMaterial(grCharacterModel.materials[i].name, textureName)
-                material.setFlags(noesis.NMATFLAG_TWOSIDED, 1)
-                materials.append(material)
+            textures.append(texture)            
+            material = NoeMaterial(grCharacterModel.materials[i].name, textureName)
+            material.setFlags(noesis.NMATFLAG_TWOSIDED, 1)
+            materials.append(material)
         
         if len(textures) != grCharacterModel.textureCount:
             materials = []
@@ -600,7 +604,7 @@ def grCharacterModelLoadModel(data, mdlList):
        
     # load animations from .bmf file
     if dialogWindow.options["Filename"]:
-        boneAnimationsFile = grSkeletalAnimations()
+        boneAnimationsFile = GRSkeletalAnimations()
         boneAnimationsFile.read(dialogWindow.options["Filename"])
     
         # create animations
