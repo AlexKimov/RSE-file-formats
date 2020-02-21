@@ -7,7 +7,8 @@
 //   Purpose: Ghost Recon QOB file
 //
 //   History: 
-// 
+//
+//   2019.02 v1.2
 //   2019.01 v1.1
 //   2018.11 v1.0 
 //   2016.10 v0.2 initial release
@@ -89,7 +90,8 @@ typedef struct {
 
 typedef struct {
   SECTION_HEADER Header;
-  BOOL Unknown;
+  if (Header.VERSION.Value > 1)
+      BOOL Unknown;
   CSTRING Name <name="Texture .rsb file name">;   
   struct { 
     UINT TransparencyType;  // 0 2 3
@@ -129,11 +131,14 @@ struct {
 
 struct {   
   SECTION_HEADER Header; 
-  UINT Count <name="Number of models">;
+  UINT Count <name="Number of objects">;
   typedef struct {
-    SECTION_HEADER Header;       
-    BOOL DarkMapped <name="DarkMapped">; 
-    BOOL CastShadows <name="CastShadows">;      
+    SECTION_HEADER Header;
+    if (Header.VERSION.Value > 6)
+    {
+      BOOL DarkMapped <name="DarkMapped">; 
+      BOOL CastShadows <name="CastShadows">; 
+    };       
     struct {
       UINT Count <name="Number of vertexes">;    
       typedef struct (int arraySize) {
@@ -145,9 +150,17 @@ struct {
     UINT Count <name="Number of meshes">; 
     typedef struct {
       struct {
-        BYTE Unknown; // 1
-        BYTE DetailedDarkmap;
-        BYTE DetailTexture;
+        if (Header.VERSION.Value > 6)
+        {
+          BYTE Unknown; // 1
+          BYTE DetailedDarkmap;
+          BYTE DetailTexture;
+        }
+        else 
+        {
+          BYTE Unknown[6];
+        }
+
         UINT MaterialIndex;
         UINT isTextured;
         if (isTextured > 0) 
@@ -205,7 +218,7 @@ struct {
   typedef struct (int arraySize) {
     OBJECT array[arraySize] <optimize=false>;
   } OBJECTS;     
-  OBJECTS Objects(Count) <name="Meshes">;   
+  OBJECTS Objects(Count) <name="Objects">;   
 } GEOMETRY_LIST  <name="Geometry List">;
 
 //--------------------
