@@ -3,6 +3,7 @@ import os
 import noewin
 import noewinext
 
+
 SECTION_HEADER_SHORT = 0
 SECTION_HEADER_LONG = 1 
 
@@ -20,7 +21,7 @@ def registerNoesisTypes():
     return 1 
     
     
-class vector4F:
+class Vector4F:
     def read(self, reader):
         self.x = reader.readFloat()
         self.y = reader.readFloat()
@@ -31,7 +32,7 @@ class vector4F:
         return (self.x, self.y, self.z, self.w)    
     
     
-class vector2F:
+class Vector2F:
     def read(self, reader):
         self.x = reader.readFloat()
         self.y = reader.readFloat()
@@ -40,7 +41,7 @@ class vector2F:
         return (self.x, self.y)  
         
         
-class vector3UI16:
+class Vector3UI16:
     def read(self, reader):
         self.x = reader.readShort()
         self.y = reader.readShort()
@@ -50,7 +51,7 @@ class vector3UI16:
         return (self.x, self.y, self.z)
         
         
-class vector3F:
+class Vector3F:
     def read(self, reader):
         self.x = reader.readFloat()
         self.y = reader.readFloat()
@@ -60,7 +61,7 @@ class vector3F:
         return (self.x, self.y, self.z) 
     
     
-class greColor:
+class GREColor:
     def __init__(self):
         self.Red = 0
         self.Green = 0
@@ -74,18 +75,18 @@ class greColor:
         self.Alpha = reader.readFloat()       
 
 
-class grMaterial: 
+class GRMaterial: 
     def __init__(self):
         self.opacity = 0
         self.unknown = 0
-        self.ambientColor = greColor()
-        self.diffuseColor = greColor()
-        self.specularColor = greColor()
+        self.ambientColor = GREColor()
+        self.diffuseColor = GREColor()
+        self.specularColor = GREColor()
         self.specularLevel = 0
         self.twoSided = 0
         
     def read(self, reader):
-        header = greHeader()
+        header = GREHeader()
         header.read(reader)    
         self.name = header.name
         self.opacity = reader.readUInt()        
@@ -97,7 +98,7 @@ class grMaterial:
         self.twoSided = reader.readUByte()        
 
 
-class grTexture: 
+class GRTexture: 
     def __init__(self):
         self.filename = ""
         self.transparencyType = 0
@@ -112,7 +113,7 @@ class grTexture:
         self.selfIllumination = reader.readFloat()            
    
    
-class greHeader:  
+class GREHeader:  
     def __init__(self):
         self.size = 0          
         self.id = 0
@@ -133,7 +134,7 @@ class greHeader:
             self.name = str        
             
     
-class grModelMesh:
+class GRModelMesh:
     def __init__(self):  
         self.uvs = []
         self.faceIndexes = []
@@ -154,12 +155,12 @@ class grModelMesh:
         reader.seek(16*self.faceCount, NOESEEK_REL)
                 
         for i in range(self.faceCount):
-            indexes = vector3UI16() 
+            indexes = Vector3UI16() 
             indexes.read(reader)              
             self.faceIndexes.append(indexes)
             
         for i in range(self.faceCount):
-            indexes = vector3UI16() 
+            indexes = Vector3UI16() 
             indexes.read(reader)              
             self.textureIndexes.append(indexes)   
 
@@ -168,14 +169,14 @@ class grModelMesh:
         reader.seek(12*self.vCount, NOESEEK_REL)            
         
         for i in range(self.vCount*self.tCount):
-            uv = vector2F() 
+            uv = Vector2F() 
             uv.read(reader)              
             self.uvs.append(uv) 
 
         reader.seek(16*self.vCount, NOESEEK_REL)                      
 
         
-class grModel:    
+class GRModel:    
     def __init__(self):  
         self.vertexes = []
         self.meshes = [] 
@@ -183,20 +184,20 @@ class grModel:
     def read(self, reader):
         self.vertexCount = reader.readUInt()        
         for i in range(self.vertexCount): 
-            vertex = vector3F()
+            vertex = Vector3F()
             vertex.read(reader)
             
             self.vertexes.append(vertex)
         
         self.meshCount = reader.readUInt()        
         for i in range(self.meshCount):            
-            modelMesh = grModelMesh()
+            modelMesh = GRModelMesh()
             modelMesh.read(reader)
 
             self.meshes.append(modelMesh)         
    
    
-class grModelBone:
+class GRModelBone:
     def __init__(self):
         self.parentName = ""
         self.parentIndex = -1
@@ -204,12 +205,12 @@ class grModelBone:
         self.transMatrix = NoeMat43()
         
     def read(self, reader):
-        header = greHeader()
+        header = GREHeader()
         header.read(reader, SECTION_HEADER_SHORT) 
         self.name = header.name       
-        self.pos = vector3F()
+        self.pos = Vector3F()
         self.pos.read(reader)
-        self.rot = vector4F()
+        self.rot = Vector4F()
         self.rot.read(reader)        
         reader.seek(4, NOESEEK_REL)           
         self.childCount = reader.readUInt()         
@@ -222,7 +223,7 @@ class grModelBone:
         return transMatrix       
 
 
-class grBoneWeight:
+class GRBoneWeight:
     def __init__(self):
         self.name = ""
         self.weight = 0
@@ -233,7 +234,7 @@ class grBoneWeight:
         self.weight = reader.readFloat()
         
         
-class grModelVertexWeight:
+class GRModelVertexWeight:
     def __init__(self):
         self.bones = []
         
@@ -241,7 +242,7 @@ class grModelVertexWeight:
         self.vertexIndex = reader.readUInt()     
         boneCount = reader.readUInt()
         for i in range(boneCount):
-            boneWeight = grBoneWeight()
+            boneWeight = GRBoneWeight()
             boneWeight.read(reader)
             self.bones.append(boneWeight)
             
@@ -264,13 +265,13 @@ class GRCharacterModel:
         return 1    
                 
     def readMaterialList(self, reader):
-        header = greHeader()
+        header = GREHeader()
         header.read(self.reader) 
       
         # materials
         self.materialCount = self.reader.readUInt()
         for i in range(self.materialCount):      
-            mat = grMaterial()
+            mat = GRMaterial()
             mat.read(self.reader)
             
             self.materials.append(mat)
@@ -278,28 +279,28 @@ class GRCharacterModel:
         # textures  
         self.textureCount = self.reader.readUInt()        
         for i in range(self.textureCount):
-            header = greHeader()
+            header = GREHeader()
             header.read(self.reader) 
             
             self.reader.seek(1, NOESEEK_REL) # unknown parameter
             
-            texture = grTexture()
+            texture = GRTexture()
             texture.read(self.reader)
             
             self.textures.append(texture)                           
             
     def readGeometryList(self, reader):
-        header = greHeader()
+        header = GREHeader()
         header.read(self.reader)      
         
         self.modelCount = self.reader.readUInt()
         for i in range(self.modelCount):
-            header = greHeader()
+            header = GREHeader()
             header.read(self.reader) 
             
             self.reader.seek(2, NOESEEK_REL)  
             
-            model = grModel()  
+            model = GRModel()  
             model.read(reader) 
 
             self.models.append(model)            
@@ -312,7 +313,7 @@ class GRCharacterModel:
                 return bone.index            
        
     def readBone(self, reader, parentName = None, parentIndex = -1):      
-        skeletonBone = grModelBone()
+        skeletonBone = GRModelBone()
         skeletonBone.read(reader)
         skeletonBone.parentIndex = parentIndex        
         if parentName != None:
@@ -329,19 +330,20 @@ class GRCharacterModel:
         reader.seek(4, NOESEEK_REL) # unknown parameter    
         self.name = reader.readString()
         
-        header = greHeader()
+        header = GREHeader()
         header.read(reader, SECTION_HEADER_SHORT) 
         
         vertexCount = reader.readUInt()
         for i in range(vertexCount):
-            vertexWeight = grModelVertexWeight()
+            vertexWeight = GRModelVertexWeight()
             vertexWeight.read(reader)            
         
             self.weights.append(vertexWeight)
             
     def read(self):
-        #noesis.logPopup()
-        self.readFileHeader(self.reader)   
+        if self.readFileHeader(self.reader) == 0:        
+            return 0 
+            
         self.readMaterialList(self.reader)
         self.readGeometryList(self.reader)
               
@@ -353,27 +355,27 @@ class GRCharacterModel:
         self.readBoneWeights(self.reader)   
         
         
-class grPosKey:
+class GRPosKey:
     def __init__(self):
         self.time = 0
-        self.pos = vector3F() 
+        self.pos = Vector3F() 
     
     def read(self, reader):
         self.time = reader.readUInt()         
         self.pos.read(reader)
             
         
-class grRotKey:
+class GRRotKey:
     def __init__(self):
         self.time = 0
-        self.rot = vector4F()
+        self.rot = Vector4F()
         
     def read(self, reader):
         self.time = reader.readUInt()         
         self.rot.read(reader)
                     
         
-class grBoneAnimations:
+class GRBoneAnimations:
     def __init__(self):
         self.posKeys = []
         self.rotKeys = []
@@ -397,7 +399,7 @@ class grBoneAnimations:
             self.rotKeys.append(key)         
         
         
-class grSkeletalAnimations:
+class GRSkeletalAnimations:
     def __init__(self):
         self.animations = []
         self.filename = ""
@@ -480,8 +482,8 @@ class GRCharacterViewSettingsDialogWindow:
             self.noeWnd.setFont("Arial", 12)
 
             self.noeWnd.createStatic("Path to .bmf files", 5, 5, 110, 20)
-            # choose path to textures
-            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, True)
+            # choose path
+            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, False)
             self.bmfPathEditBox = self.noeWnd.getControlByIndex(index)
 
             self.noeWnd.createStatic("Animation:", 5, 57, 80, 20)
@@ -497,8 +499,13 @@ class GRCharacterViewSettingsDialogWindow:
             
         
 def grCharacterModelCheckType(data):
-
-	return 1     
+    reader = NoeBitStream(data)
+    
+    reader.seek(8, NOESEEK_REL)
+    if reader.readString() != "BeginModel":        
+        return 0      
+            
+    return 1     
     
 
 def grCharacterModelLoadModel(data, mdlList):
@@ -602,7 +609,6 @@ def grCharacterModelLoadModel(data, mdlList):
     
         index = 0
         for boneAnimations in boneAnimationsFile.animations:
-            #index = grCharacterModel.getBoneIndexByName(boneAnimations.name)
             keyFramedBone = NoeKeyFramedBone(index)
         
             rkeys = []
