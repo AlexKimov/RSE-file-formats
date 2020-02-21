@@ -3,13 +3,16 @@ import os
 import noewin
 import noewinext
 
+
 SECTION_HEADER_SHORT = 0
 SECTION_HEADER_LONG = 1 
 
 
 def registerNoesisTypes():
     handle = noesis.register( \
-        "Ghost Recon / The Sum of All Fears (2001, 2002) model", ".qob")
+        "Ghost Recon / The Sum of All Fears (2001, 2002) qob model", ".qob")
+    
+    noesis.addOption(handle, "-nogui", "disables UI", 0)   
     
     noesis.setHandlerTypeCheck(handle, grModelCheckType)
     noesis.setHandlerLoadModel(handle, grModelLoadModel)
@@ -115,7 +118,7 @@ class GRTexture:
         self.isTiled = 0
         self.selfIllumination = 0   
         
-    def read(self, reader): 
+    def read(self, reader):    
         reader.seek(4, NOESEEK_REL)    
         self.filename = reader.readString()
         self.transparencyType = reader.readUInt()
@@ -150,9 +153,13 @@ class GRMesh:
         self.faceIndexes = []
         self.textureIndexes = []
     
-    def read(self, reader):                           
-        reader.seek(2, NOESEEK_REL)
-        detailTexture = reader.readUByte()  
+    def read(self, reader, version): 
+        if version > 6:    
+            reader.seek(2, NOESEEK_REL)
+            detailTexture = reader.readUByte()
+        else:
+            reader.seek(6, NOESEEK_REL)        
+        
         self.materialIndex = reader.readUInt()                 
         if reader.readUInt() > 0:
             self.textureIndex = reader.readUInt()        
@@ -191,7 +198,7 @@ class GRObject:
         self.vertexes = []
         self.meshes = [] 
         
-    def read(self, reader):
+    def read(self, reader, version):
         self.vertexCount = reader.readUInt()        
         for i in range(self.vertexCount): 
             vertex = Vector3F()
@@ -202,7 +209,7 @@ class GRObject:
         self.meshCount = reader.readUInt()        
         for i in range(self.meshCount):            
             modelMesh = GRMesh()
-            modelMesh.read(reader)
+            modelMesh.read(reader, version)
 
             self.meshes.append(modelMesh)         
   
@@ -251,7 +258,8 @@ class GRModel:
             header = GREHeader()
             header.read(self.reader) 
             
-            self.reader.seek(1, NOESEEK_REL) # unknown parameter
+            if header.version > 1:
+                self.reader.seek(1, NOESEEK_REL) # unknown parameter
             
             texture = GRTexture()
             texture.read(self.reader)
@@ -267,10 +275,11 @@ class GRModel:
             header = GREHeader()
             header.read(self.reader) 
             
-            self.reader.seek(2, NOESEEK_REL)  
+            if header.version > 6:
+                self.reader.seek(2, NOESEEK_REL)  
             
             model = GRObject()  
-            model.read(reader) 
+            model.read(reader, header.version) 
 
             self.models.append(model)            
 
@@ -294,6 +303,60 @@ class GRModel:
         self.reader.seek(4, NOESEEK_REL)
         if self.reader.readString() != "EndModel":        
             return 0                              
+          
+
+class GRModelViewSettingsDialogWindow:
+    def __init__(self):
+        self.options = {"TextureDir": ""}
+        self.isCanceled = True
+        self.texturePathEditBox = None
+
+    def buttonGetTexturePathOnClick(self, noeWnd, controlId, wParam, lParam):
+        dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with texture files")
+        folder = dialog.getOpenFolderName() 
+
+        if folder != None:
+            self.texturePathEditBox.setText(folder)
+                     
+        return True
+
+    def buttonLoadOnClick(self, noeWnd, controlId, wParam, lParam):    
+        self.options["TextureDir"] = self.texturePathEditBox.getText()
+            
+        self.isCanceled = False
+        self.noeWnd.closeWindow()   
+
+        return True
+
+    def buttonCancelOnClick(self, noeWnd, controlId, wParam, lParam):
+        self.isCanceled = True
+        self.noeWnd.closeWindow()
+
+        return True
+
+    def create(self):
+        self.noeWnd = noewin.NoeUserWindow("Load Ghost Recon qob model", "openModelWindowClass", 385, 120)
+        noeWindowRect = noewin.getNoesisWindowRect()
+
+        if noeWindowRect:
+            windowMargin = 100
+            self.noeWnd.x = noeWindowRect[0] + windowMargin
+            self.noeWnd.y = noeWindowRect[1] + windowMargin
+
+        if self.noeWnd.createWindow():
+            self.noeWnd.setFont("Arial", 12)
+
+            self.noeWnd.createStatic("Path to texture folder", 5, 5, 180, 20)
+            # choose path to textures
+            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, False)
+            self.texturePathEditBox = self.noeWnd.getControlByIndex(index)
+
+            self.noeWnd.createButton("Open", 290, 27, 80, 21, self.buttonGetTexturePathOnClick)
+            
+            self.noeWnd.createButton("Load", 5, 60, 80, 30, self.buttonLoadOnClick)
+            self.noeWnd.createButton("Cancel", 90, 60, 80, 30, self.buttonCancelOnClick)
+
+            self.noeWnd.doModal()
             
         
 def grModelCheckType(data):
@@ -301,7 +364,18 @@ def grModelCheckType(data):
 	return 1     
     
 
-def grModelLoadModel(data, mdlList):
+def grModelLoadModel(data, mdlList): 
+    texturesPath = ""
+    
+    if not noesis.optWasInvoked("-nogui"): 
+        openDialog = GRModelViewSettingsDialogWindow()
+        openDialog.create()
+    
+        if openDialog.isCanceled:
+            return 1
+        
+        texturesPath = openDialog.options["TextureDir"]   
+    
     grModel = GRModel(NoeBitStream(data))
     if grModel.read() == 0:
         return 1
@@ -311,14 +385,13 @@ def grModelLoadModel(data, mdlList):
     #transMatrix = NoeMat43( ((1, 0, 0), (0, 0, 1), (0, -1, 0), (0, 0, 0)) ) 
     #rapi.rpgSetTransform(transMatrix)      
     
-    texturesPath = "F:/Games/Tom Clancys Ghost Recon/Mods/Origmiss/Textures/"
     # load textures
     if grModel.materials:
         materials = []
         textures = [] 
         for i in range(grModel.textureCount):        
             filename = grModel.textures[i].filename.split(".")[0]            
-            textureName = "{}{}.rsb".format(texturesPath, filename)               
+            textureName = "{}/{}.rsb".format(texturesPath, filename)               
             texture = rapi.loadExternalTex(textureName)
 
             if texture != None:
