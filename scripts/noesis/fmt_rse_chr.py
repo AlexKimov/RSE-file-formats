@@ -2,7 +2,7 @@ from inc_noesis import *
 import os
 import noewin
 import noewinext
-
+import re
 
 SECTION_HEADER_SHORT = 0
 SECTION_HEADER_LONG = 1 
@@ -13,7 +13,9 @@ def registerNoesisTypes():
         "Ghost Recon / The Sum of All Fears (2001) character model", ".chr")
         
     noesis.addOption(handle, "-nogui", "disables UI", 0)    
-    noesis.addOption(handle, "-animation", "bmf file", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-animationdir", "directory for bmf file", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-texturedir", "directory for texture file", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-actorfile", "actor file name", noesis.OPTFLAG_WANTARG)
     
     noesis.setHandlerTypeCheck(handle, grCharacterModelCheckType)
     noesis.setHandlerLoadModel(handle, grCharacterModelLoadModel)
@@ -428,22 +430,46 @@ class GRSkeletalAnimations:
                 
         #except:
             #return None        
-     
-
-
+ 
+ 
+class GRActor:
+    def __init__(self):
+        self.modelFace = ""
+        
+    def read(self, filename): 
+        with open(filename, "r") as xmlfile:
+            lines = xmlfile.readlines()
+            
+        if lines is not None:            
+            if lines[0].rstrip() == "<ActorFile>":
+            
+                modelFace = re.search('>.*<', lines[6])
+                if modelFace is not None:
+                    self.modelFace = modelFace.group(0)[1:-1]
+                
+                
 class GRCharacterViewSettingsDialogWindow:
     def __init__(self):
-        self.options = {"Filename": ""}
+        self.options = {"AnimationFile": "", "TextureFolder": "", "ActorFileName": ""}
         self.isCanceled = True
         self.animationListBox = None
         self.bmfPathEditBox = None
+        self.texturePathEditBox = None
+        self.actorFileNameEditBox = None
         self.bmfDir = ""
 
     def buttonGetAnimationListOnClick(self, noeWnd, controlId, wParam, lParam):
-        dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with animation files")
-        self.bmfDir = dialog.getOpenFolderName() 
+        dir = self.bmfPathEditBox.getText().strip()
+        if dir != "":
+            if os.path.isdir(dir):
+                self.bmfDir = os.path.isdir(self.bmfPathEditBox.getText())
+            else:  
+                self.bmfDir = None
+        else:
+            dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with animation files")
+            self.bmfDir = dialog.getOpenFolderName() 
 
-        self.bmfDir = "F:\SteamLibrary\steamapps\common\Ghost Recon\Data\Motion"
+        #self.bmfDir = "F:\SteamLibrary\steamapps\common\Ghost Recon\Data\Motion"
 
         if self.bmfDir != None:
             self.bmfPathEditBox.setText(self.bmfDir)
@@ -453,12 +479,36 @@ class GRCharacterViewSettingsDialogWindow:
                     self.animationListBox.addString(file)
                      
         return True
-
+        
+    def buttonGetActorFileNameOnClick(self, noeWnd, controlId, wParam, lParam):
+        dialog = noewinext.NoeUserDialog("Choose actor (.act) File")
+        actorFileName = dialog.getOpenFileName()
+        
+        if actorFileName != None:
+            self.actorFileNameEditBox.setText(actorFileName)
+        
+        return True        
+        
+    def buttonGetTexturePathOnClick(self, noeWnd, controlId, wParam, lParam):
+        dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with texture files")
+        textureDir = dialog.getOpenFolderName()
+        
+        if textureDir != None:
+            self.texturePathEditBox.setText(self.textureDir)
+        
+        return True
+        
     def buttonLoadOnClick(self, noeWnd, controlId, wParam, lParam):    
         filename = self.animationListBox.getStringForIndex(self.animationListBox.getSelectionIndex())
     
         if filename != None:
-            self.options["Filename"] = os.path.join(self.bmfDir, filename) 
+            self.options["AnimationFile"] = os.path.join(self.bmfDir, filename) 
+        
+        self.options["TextureFolder"] = self.texturePathEditBox.getText()
+        self.options["ActorFileName"] = self.actorFileNameEditBox.getText()
+        
+        #self.options["TextureFolder"] = "F:\SteamLibrary\steamapps\common\Ghost Recon\Mods\Origmiss\Textures\Allied"
+        #self.options["ActorFileName"] = "F:\SteamLibrary\steamapps\common\Ghost Recon\Mods\Mp2\Actor\MP Actor Files\Platoon 1\mp_plt1_dem.atr"
             
         self.isCanceled = False
         self.noeWnd.closeWindow()   
@@ -472,7 +522,7 @@ class GRCharacterViewSettingsDialogWindow:
         return True
 
     def create(self):
-        self.noeWnd = noewin.NoeUserWindow("Load Ghost Recon character model", "openModelWindowClass", 385, 230)
+        self.noeWnd = noewin.NoeUserWindow("Load Ghost Recon character model", "openModelWindowClass", 430, 405)
         noeWindowRect = noewin.getNoesisWindowRect()
 
         if noeWindowRect:
@@ -481,21 +531,33 @@ class GRCharacterViewSettingsDialogWindow:
             self.noeWnd.y = noeWindowRect[1] + windowMargin
 
         if self.noeWnd.createWindow():
-            self.noeWnd.setFont("Arial", 12)
+            self.noeWnd.setFont("Arial", 14)
 
-            self.noeWnd.createStatic("Path to .bmf files", 5, 5, 110, 20)
-            # choose path
-            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, False)
-            self.bmfPathEditBox = self.noeWnd.getControlByIndex(index)
-
-            self.noeWnd.createStatic("Animation:", 5, 57, 80, 20)
-            index = self.noeWnd.createListBox(5, 75, 275, 140)
-            self.animationListBox = self.noeWnd.getControlByIndex(index)
-
-            self.noeWnd.createButton("Open", 290, 27, 80, 21, self.buttonGetAnimationListOnClick)
+            self.noeWnd.createStatic("Path to texture folder", 5, 5, 140, 20)
+            # 
+            index = self.noeWnd.createEditBox(5, 24, 330, 40, "", None, True)
+            self.texturePathEditBox = self.noeWnd.getControlByIndex(index)
             
-            self.noeWnd.createButton("Load", 290, 135, 80, 30, self.buttonLoadOnClick)
-            self.noeWnd.createButton("Cancel", 290, 170, 80, 30, self.buttonCancelOnClick)
+            self.noeWnd.createButton("Open", 340, 24, 80, 21, self.buttonGetTexturePathOnClick)
+
+            self.noeWnd.createStatic("Path to actor (.act) file", 5, 70, 140, 20)
+            # 
+            index = self.noeWnd.createEditBox(5, 90, 330, 40, "", None, True)
+            self.actorFileNameEditBox = self.noeWnd.getControlByIndex(index)            
+            self.noeWnd.createButton("Open", 340, 90, 80, 21, self.buttonGetActorFileNameOnClick)
+
+            self.noeWnd.createStatic("Path to .bmf files", 5, 140, 140, 20)
+            # 
+            index = self.noeWnd.createEditBox(5, 160, 330, 20, "", None, False, False)
+            self.bmfPathEditBox = self.noeWnd.getControlByIndex(index)
+            self.noeWnd.createButton("Open", 340, 160, 80, 21, self.buttonGetAnimationListOnClick)
+            
+            self.noeWnd.createStatic("Animations:", 5, 190, 80, 20)
+            index = self.noeWnd.createListBox(5, 210, 330, 175)
+            self.animationListBox = self.noeWnd.getControlByIndex(index)
+            
+            self.noeWnd.createButton("Load", 340, 310, 80, 30, self.buttonLoadOnClick)
+            self.noeWnd.createButton("Cancel", 340, 345, 80, 30, self.buttonCancelOnClick)
 
             self.noeWnd.doModal()
             
@@ -511,16 +573,22 @@ def grCharacterModelCheckType(data):
     
 
 def grCharacterModelLoadModel(data, mdlList):
+    #noesis.logPopup()
     dialogWindow = GRCharacterViewSettingsDialogWindow()
     
-    if noesis.optWasInvoked("-animation"):
-        animFilename = noesis.optGetArg("-animation")
+    texturePath = ""
+    actorFileName = ""
+    #if noesis.optWasInvoked("-animation"):
+        #animFilename = noesis.optGetArg("-animation")
     
     if not noesis.optWasInvoked("-nogui"): 
         dialogWindow.create()
     
         if dialogWindow.isCanceled:
             return 1
+            
+        texturePath = dialogWindow.options["TextureFolder"]
+        actorFileName = dialogWindow.options["ActorFileName"]
 
     grCharacterModel = GRCharacterModel(NoeBitStream(data))
     grCharacterModel.read()
@@ -530,14 +598,19 @@ def grCharacterModelLoadModel(data, mdlList):
     #transMatrix = NoeMat43( ((1, 0, 0), (0, 0, 1), (0, -1, 0), (0, 0, 0)) ) 
     #rapi.rpgSetTransform(transMatrix)      
     
-    texturesPath = ""
+    if actorFileName:
+        actorFile = GRActor()
+        actorFile.read(actorFileName)
+    
     # load textures
     if grCharacterModel.materials:
         materials = []
         textures = [] 
-        for i in range(grCharacterModel.textureCount):        
-            filename = grCharacterModel.textures[i].filename.split(".")[0]          
-            textureName = "{}{}.rsb".format(texturesPath, filename) 
+        for i in range(grCharacterModel.textureCount):           
+            textureName = os.path.join(texturePath, grCharacterModel.textures[i].filename) 
+            if actorFileName and actorFile.modelFace: 
+                if grCharacterModel.textures[i].filename == "head.rsb":
+                    textureName = os.path.join(texturePath, actorFile.modelFace) 
                          
             texture = rapi.loadExternalTex(textureName)
             if texture == None:
@@ -547,11 +620,8 @@ def grCharacterModelLoadModel(data, mdlList):
             material = NoeMaterial(grCharacterModel.materials[i].name, textureName)
             material.setFlags(noesis.NMATFLAG_TWOSIDED, 1)
             materials.append(material)
-        
-        if len(textures) != grCharacterModel.textureCount:
-            materials = []
-            textures = []  
-    
+   
+ 
     
     # show meshes
     for model in grCharacterModel.models:
@@ -573,15 +643,18 @@ def grCharacterModelLoadModel(data, mdlList):
                     
                     vIndex = faceIndexes.getStorage()[k]
                     
-                    for bone in grCharacterModel.weights[vIndex].bones:
-                        index = grCharacterModel.getBoneIndexByName(bone.name)
-                        rapi.immBoneIndex([index])
-                        rapi.immBoneWeight([bone.weight])                      
+                    i = 0
                     
+                    indexes = []
+                    weights = []
+                    for bone in grCharacterModel.weights[vIndex].bones:
+                        indexes.append(grCharacterModel.getBoneIndexByName(bone.name))
+                        weights.append(bone.weight)
+                    rapi.immBoneIndex(indexes)
+                    rapi.immBoneWeight(weights) 
+                                           
                     vertex =  model.vertexes[vIndex]           
                     rapi.immVertex3(vertex.getStorage())
-                    
-                  
                     
             rapi.immEnd()              
 
@@ -591,27 +664,31 @@ def grCharacterModelLoadModel(data, mdlList):
     bones = []
     for bone in grCharacterModel.skeleton:
         boneName = bone.name
+        
         if bone.parentName != "":
             parentMat = grCharacterModel.skeleton[bone.parentIndex].transMatrix
-            boneMat = bone.getTransMat()*parentMat
+            boneMat = bone.getTransMat() * parentMat
             bone.transMatrix = boneMat
-        else:          
+        else:         
+            #bone.transMatrix = bone.getTransMat() * bone.getTransMat().inverse()
             bone.transMatrix = bone.getTransMat()
-            boneMat = bone.transMatrix 
+            boneMat = bone.transMatrix
    
         bonePName = bone.parentName
         bones.append(NoeBone(bone.index, boneName, boneMat, bonePName, bone.parentIndex))
        
     # load animations from .bmf file
-    if dialogWindow.options["Filename"]:
+    if dialogWindow.options["AnimationFile"]:
         boneAnimationsFile = GRSkeletalAnimations()
-        boneAnimationsFile.read(dialogWindow.options["Filename"])
+        boneAnimationsFile.read(dialogWindow.options["AnimationFile"])
     
         # create animations
         index = 0
         kfBones = []
     
         index = 0
+        
+        # animation
         for boneAnimations in boneAnimationsFile.animations:
             keyFramedBone = NoeKeyFramedBone(index)
         
