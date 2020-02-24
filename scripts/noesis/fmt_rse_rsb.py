@@ -118,7 +118,7 @@ class RSBImage:
 
         if self.bitDepth != 3: 
             if self.bitDepth == 4:
-                format = "b8g8r8a8"
+                format = "a8r8g8b8"
             else:
                 if self.bitsGreen == 6:
                     format = "b5g6r5"
