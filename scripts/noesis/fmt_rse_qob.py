@@ -322,6 +322,7 @@ class GRModelViewSettingsDialogWindow:
 
     def buttonLoadOnClick(self, noeWnd, controlId, wParam, lParam):    
         self.options["TextureDir"] = self.texturePathEditBox.getText()
+        #self.options["TextureDir"] = "F:\SteamLibrary\steamapps\common\Ghost Recon\Mods\Mp2\Textures"
             
         self.isCanceled = False
         self.noeWnd.closeWindow()   
@@ -394,11 +395,14 @@ def grModelLoadModel(data, mdlList):
             textureName = "{}/{}.rsb".format(texturesPath, filename)               
             texture = rapi.loadExternalTex(textureName)
 
-            if texture != None:
-                textures.append(texture)            
-                material = NoeMaterial(grModel.materials[i].name, textureName)
-                material.setFlags(noesis.NMATFLAG_TWOSIDED, 1)
-                materials.append(material)
+            texture = rapi.loadExternalTex(textureName)
+            if texture == None:
+                texture = NoeTexture(textureName, 0, 0, bytearray())
+
+            textures.append(texture)            
+            material = NoeMaterial(grModel.materials[i].name, textureName)
+            material.setFlags(noesis.NMATFLAG_TWOSIDED, 1)
+            materials.append(material)
         
         if len(textures) != grModel.textureCount:
             materials = []
