@@ -112,7 +112,7 @@ struct {
       FLOAT Z;
   } VERTEX <name="Vertex">;
   VERTEX Vertexes[Count] <optimize=false>;
-} OCCLISION <name="Occlusion Data">;
+} VERTEXES_STATIC <name="Static/Bind pos">;
 
 //-------------------------------------------------
 struct {
