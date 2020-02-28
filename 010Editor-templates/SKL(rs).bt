@@ -38,9 +38,11 @@ typedef struct {
 UINT BoneCount;
 
 typedef struct {
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z; 
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+  } VOFFSET <name="Relative position to parent bone?">; 
   // 
   FLOAT X;   
   FLOAT Y;
