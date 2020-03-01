@@ -11,7 +11,9 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 
 #### Discussions
 * ghostrecon.net forum ([link](http://www.ghostrecon.net/forums/index.php?/topic/61545-gr-community-sdk/));
-* [Discord](https://discord.gg/bbE8BRU)
+* <a href="https://discord.gg/bbE8BRU"><img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" /></a>
+
+
 ## Other
 * Python scripts and even more by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
