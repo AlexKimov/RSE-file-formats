@@ -103,7 +103,6 @@ string getBoneName(BONE &Bone)
 
 void ReadBone()
 {  
-  a = -1;
   BYTE Cycle;
   if (Cycle == 1)
     ReadBone();
