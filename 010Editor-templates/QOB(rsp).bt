@@ -4,7 +4,7 @@
 //      File: QOB(rsp).bt
 //   Authors: Alexander Evdokimov
 //   Version: 0.2
-//   Purpose: Ghost Recon QOB file
+//   Purpose: Rogue Spear QOB file
 // File Mask: *.qob
 //
 //   History: 
@@ -17,85 +17,91 @@ typedef enum <ubyte> {
     yes
 } BOOL; // bool data type
 
-struct {   
- struct {
-    UINT Length;  
-    char String[Length];  
-  } Begin_Model_String <name="QOB FileID">; 
-} QOB_FILE_HEADER <name="QOB Header", fgcolor=cBlack, bgcolor=0xccff66>;
-
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
 
 typedef struct {
-  struct {
-    UINT SectionSize;
-    UINT MN;
+  UINT SectionSize;
+  UINT ID;
+  
+  CSTRING Name;
+  if (Name.Text == "Version") {
+      UINT Value;
+      CSTRING Name <name="Name">;
+  };
+} HEADER <name="Header">;
 
-      struct {    
-        UINT Length; // 
-        char Text[Length]; //
-        UINT value;
-      } VERSION; 
+typedef struct {            
+  FLOAT Red; 
+  FLOAT Green; 
+  FLOAT Blue; 
+  FLOAT Alpha;
+} COLOR4F; 
 
-    struct {    
-       UINT Length; // 
-       char Text[Length]; //
-    } MATERIALNAME_STRING <name="Material Name">; 
-  } HEADER <name="Header">;
+typedef struct {            
+  FLOAT x; 
+  FLOAT y; 
+  FLOAT z; 
+} VECTOR3F; 
 
-  struct {    
-    UINT Length; // 
-    char Text[Length]; //
- } MATERIALNAME_STRING <name="Texture FileName">; 
+typedef struct {            
+  FLOAT x; 
+  FLOAT y;  
+} VECTOR2F; 
+
+typedef struct {            
+  UINT16 x; 
+  UINT16 y;
+  UINT16 z;   
+} VECTOR3U16;
+
+//--------------------
+// File header
+// --------------------
+
+struct {   
+  CSTRING Name <name="QOB FileID">; 
+} QOB_FILE_HEADER <name="QOB Header", fgcolor=cBlack, bgcolor=0xccff66>;
+
+//--------------------
+// MATERIALLIST
+// --------------------
+
+typedef struct {
+  HEADER header;
+   
+  CSTRING Name <name="Texture filename">; 
 
   struct { 
     FLOAT Opacity;
-    FLOAT SelfUllimination;
-    UINT MN; 
-    struct {            
-      FLOAT Red; //
-      FLOAT Green; //
-      FLOAT Blue; //
-      FLOAT mn;
-    } Ambient; 
-    struct {      
-      FLOAT Red; //
-      FLOAT Green; //
-      FLOAT Blue; //
-      FLOAT MN; //
-    } Diffuse;   
-    struct { 
-      FLOAT Red; //
-      FLOAT Green; //
-      FLOAT Blue; //
-      FLOAT MN; //
-    } Specular;
+    FLOAT Unknown;
+    UINT Unknown; 
+    COLOR4F Ambient; 
+    COLOR4F Diffuse;   
+    COLOR4F Specular;
     FLOAT SpecularLevel; //o.o5
     BYTE twoSided;
-  } Properties;
+  } MATERIAL_PROPERTIES;
 } MATERIAL <name=MaterialName>;
 
 string MaterialName(MATERIAL &material) {
-  return "Name: " + material.HEADER.MATERIALNAME_STRING.Text + " ";
+  return "Name: " + material.header.Name.Text + " ";
 } 
 
 struct {  
-  struct { 
-    UINT SectionSize;
-    UINT MN;
-    struct {
-      UINT Length; // 
-      char Text[Length]; // 
-    } MATERIALLIST_STRING;
-  } HEADER <name="1.0 MaterialList section header">;
+
+  HEADER Header <name="Section header">;
     
   struct {
-    UINT Count <name="Materials Count">;
+    UINT Count <name="Number of materials">;
 
     typedef struct (int arraySize) {
       MATERIAL array[arraySize] <optimize=false>;
     } MATERIAL_ARRAY; 
 
-    MATERIAL_ARRAY MaterialArray(Count) <name="Material Array">; 
+    MATERIAL_ARRAY MaterialArray(Count) <name="Materials">; 
   } Materials <name="1.1 Materials section">;
 
 } MATERIALLIST <name="MaterialList section">;
@@ -104,158 +110,98 @@ struct {
 // QOBGEOMETRYLIST
 // --------------------
 
-struct {   
 
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 7
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } GEOMETRYLIST_STRING;
-  } HEADER <name="GeometryList Header">;  
+typedef struct {
+   UINT MaterialIndex;
 
- UINT Count <name="Object Count">;
+   struct {
+      UINT FaceCount; 
 
- struct {
-
- typedef struct { 
-    //  section header 
-    struct { 
-      UINT SectionSize;
-      UINT MN; // 3
-      struct {    
-        UINT Length;  
-        char String[Length]; 
-        UINT number; // 1
-      } VERSION_STRING; 
-
-      struct {
-        UINT Length;  
-        char Text[Length];  
-      } NAME_STRING;
-    } SECTION_HEADER <name="Section header">; 
-
-    struct {
-      UINT VertexCount;  
       typedef struct {     
         FLOAT X;
         FLOAT Y;
         FLOAT Z;
-       } Vertex;    
+        FLOAT Distance;
+       } FACE_NORMALS;
+
       typedef struct (int arraySize) {
-        Vertex array[arraySize];
-      } VERTEX_ARRAY;     
-      VERTEX_ARRAY VertexArray(VertexCount) <name="Vertex array">; 
-    } VERTICES <name="Vertex section">;
+        FACE_NORMALS array[arraySize];
+      } FACE_NORMALS_ARRAY;
+      
+      FACE_NORMALS_ARRAY FacesNormalsArray(FaceCount) <name="Normals">;
+
+      typedef struct (int arraySize) {
+        VECTOR3U16 array[arraySize] <name="Vertex indexes">;
+      } FACE_INDEXES;
+      
+      FACE_INDEXES FaceIndexes(FaceCount) <name="Face Indexes">;
+
+      typedef struct (int arraySize) {
+        VECTOR3U16 array[arraySize];
+      } UV_INDEXES;
+      
+      UV_INDEXES TextureCoordanatesIndexes(FaceCount) <name="Texture Indices">;
+
+  } Faces <name="Faces">;
+
+  struct {  
+    UINT VertexCount;
+     
+    typedef struct (int arraySize) {
+      VECTOR3F array[arraySize] <name="Normal">;
+    } NORMALS;
+    
+    NORMALS Normals(VertexCount) <name="Vertex Normals">;
+    
+    typedef struct (int arraySize) {
+       VECTOR2F array[arraySize] <name="UV">;
+    } UV_COORDINATES;
+    
+    UV_COORDINATES TextureCoordinates(VertexCount) <name="Texture coordinates">; 
+      
+    typedef struct (int arraySize) {
+       COLOR4F array[arraySize] <optimize=false, name="RGB color">;
+    } FACE_COLOR; 
+    FACE_COLOR FaceColor(VertexCount) <name="Faces colors">; 
+
+  } TEXTUREVERTICIES <name="Texture data">;   
+} MESH <name="Mesh">; 
+
+
+struct {   
+  HEADER Header <name="GeometryList Header">;  
+
+  UINT Count <name="Object Count">;
+
+  typedef struct { 
+    //  section header 
+    HEADER Header <name="Section header">; 
+
+    UINT VertexCount;  
+ 
+    typedef struct (int arraySize) {
+      VECTOR3F array[arraySize] <name="Vertex">;
+    } VERTEXES;     
+    VERTEXES VertexArray(VertexCount) <name="Vertexes">; 
 
     UINT MeshCount;  //
-    typedef struct {
-        struct {
-          UINT MaterialIndex;
-       } PARAMETERS;
-    
-       struct {
-          UINT FaceCount; 
-    
-          typedef struct {     
-            FLOAT X;
-            FLOAT Y;
-            FLOAT Z;
-            FLOAT MN;
-           } FACE_NORMALS;
-    
-          typedef struct (int arraySize) {
-            FACE_NORMALS array[arraySize];
-          } FACE_NORMALS_ARRAY;
-          
-          FACE_NORMALS_ARRAY FacesNormalsArray(FaceCount) <name="Face Normals">;
-        
-          typedef struct  {
-            UINT16 Vertex1;
-            UINT16 Vertex2;
-            UINT16 Vertex3;
-          } FACE_INDICIES;
-    
-          typedef struct (int arraySize) {
-            FACE_INDICIES array[arraySize];
-          } FACE_INDICIES_ARRAY;
-          
-          FACE_INDICIES_ARRAY FaceIndiciesArray(FaceCount) <name="Face Indices">;
-    
-          typedef struct  {
-            UINT16 Vertice1;
-            UINT16 Vertice2;
-            UINT16 Vertice3;
-          } TEXTURE_INDICIES;
-    
-          typedef struct (int arraySize) {
-            TEXTURE_INDICIES array[arraySize];
-          } TEXTURE_INDICIES_ARRAY;
-          
-          TEXTURE_INDICIES_ARRAY TextureIndiciesArray(FaceCount) <name="Texture Indices">;
-    
-        } Faces <name="Faces">;
-    
-      struct {  
-        UINT VertexCount;
-        //NT TextureCount;
-          
-        typedef struct   {
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-        } QOBNORMALSCOORDINATES;
-         
-        typedef struct (int arraySize) {
-          QOBNORMALSCOORDINATES array[arraySize];
-        } QOBNORMALSCOORDINATESARRAY;
-        
-        QOBNORMALSCOORDINATESARRAY NormalsCoordinatesArray(VertexCount) <name="Vertex Normals">;
-         
-        typedef struct   {
-          FLOAT U;
-          FLOAT V;
-        } QOBTEXTURECOORDINATES;
-        
-        typedef struct (int arraySize) {
-           QOBTEXTURECOORDINATES array[arraySize];
-        } QOBTEXTURECOORDINATESARRAY;
-        
-        QOBTEXTURECOORDINATESARRAY TextureCoordinatesArray(VertexCount) <name="Texture coordinates">; 
-          
-          typedef struct   {
-            FLOAT Red;  // 0..1 (0..255 in RGB)
-            FLOAT Green;  
-            FLOAT Blue;  
-            FLOAT MN;  
-            //Check(MN, 1, " value");
-          } FACE_COLOR <name="Face RGB color">; 
-          typedef struct (int arraySize) {
-           FACE_COLOR array[arraySize] <optimize=false>;
-          } FACE_COLOR_ARRAY; 
-          FACE_COLOR_ARRAY CoordinatesArray(VertexCount) <name="Faces color array">; 
-
-      } TEXTUREVERTICIES <name="Texture data">;   
-    } GEOMETRY_OBJECT;
 
     typedef struct (int arraySize) {
-      GEOMETRY_OBJECT array[arraySize] <optimize=false>;
-    } GEOMETRY_OBJECT_ARRAY; 
+      MESH array[arraySize] <optimize=false>;
+    } MESHES; 
     
-    GEOMETRY_OBJECT_ARRAY GeometryObjectArray(MeshCount) <name="Mesh array">; 
+    MESHES Meshes(MeshCount) <name="Mesh array">; 
 
- } GEOMETRY_DATA;  
+ } OBJECT <name="Object">;  
 
   typedef struct (int arraySize) {
-    GEOMETRY_DATA array[arraySize] <optimize=false>;
-  } GEOMETRY_DATA_ARRAY; 
+    OBJECT array[arraySize] <optimize=false>;
+  } OBJECTS; 
 
-  GEOMETRY_DATA_ARRAY GeometryDataArray(Count) <name="Object geometry data array">; 
+  OBJECTS GeometryDataArray(Count) <name="Objects">; 
 
- } QOB_GEOMETRY_DATA <name="Geometry data section">;
   
-} QOBGEOMETRYLIST  <name="2. GeometryList Section">;
+} QOBGEOMETRYLIST  <name="GeometryList Section">;
 
 struct {
   UINT Length;
