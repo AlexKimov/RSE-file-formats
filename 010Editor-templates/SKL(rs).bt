@@ -44,10 +44,12 @@ typedef struct {
     FLOAT Z;
   } VOFFSET <name="Relative position to parent bone?">; 
   // 
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT W;
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } ROTATION <name="Rotation?">;  
   //
   TRANSFORMATION_MATRIX Matrix;
   //
