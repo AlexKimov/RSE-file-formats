@@ -28,7 +28,7 @@ typedef struct {
   FLOAT Green;
   FLOAT Blue; 
   FLOAT Alpha; 
-} COLOR;
+} COLOR4F;
 
 typedef enum <ubyte> {
   no = 0,
@@ -43,14 +43,11 @@ typedef struct {
 typedef struct {
   UINT SectionSize;
   UINT ID;
-  if (readCString() == "Version")
-  {
-    struct {    
-      CSTRING Name <name="Version">; 
-      UINT Value;
-    } VERSION;
-  }  
-  CSTRING Name <name="Name">; 
+  CSTRING Name <name="Version">; 
+  if (Name.Text == "Version") {
+    UINT Value;
+    CSTRING Name <name="Name">;
+  }; 
 } SECTION_HEADER <name="Header">;
 
 typedef enum <uint> {
@@ -69,7 +66,7 @@ typedef struct {
   FLOAT x;
   FLOAT y;
   FLOAT z;
-} VECTOR3; 
+} VECTOR3F; 
 
 typedef struct {     
   FLOAT x;
@@ -98,9 +95,9 @@ typedef struct {
     FLOAT Opacity;
     FLOAT Emissive; // 0    
     ALPHA_METHOD alpha; // 0 - Opaque, 1 - unknown, 3 - Lookup CXP or opaque
-    COLOR Ambient; 
-    COLOR Diffuse;   
-    COLOR Specular;
+    COLOR4F Ambient; 
+    COLOR4F Diffuse;   
+    COLOR4F Specular;
     FLOAT SpecularLevel; //o.o5
     BOOL twoSided;
   } MATERIAL_PROPERTIES;
@@ -123,55 +120,58 @@ struct {
 // GeometryList
 // --------------------
 
+typedef struct {   
+  struct {
+    UINT Index <name="Index of the material">;
+
+    UINT Count <name="Number of faces">;     
+    typedef struct (int arraySize) {
+      VECTOR4 array[arraySize];
+    } NORMALS1;  
+    NORMALS1 Normals(Count) <name="Normals??">; 
+        
+    typedef struct (int arraySize) {
+      VECTOR_SHORT array[arraySize];
+    } FACE_INDEXES;          
+    FACE_INDEXES FaceIndexes(Count) <name="Face Indexes">;  
+
+    typedef struct (int arraySize) {
+      VECTOR_SHORT array[arraySize];
+    } TEXTURE_INDEXES;          
+    TEXTURE_INDEXES TextureIndexes(Count) <name="Texture Indexes">;      
+
+    UINT VertexCount;        
+    typedef struct (int arraySize) {
+      VECTOR3F array[arraySize];
+    } NORMALS2;       
+    NORMALS2 Normals(VertexCount) <name="Normals">;        
+    typedef struct (int arraySize) {
+      POINT2 array[arraySize];
+    } UVs;        
+    UVs TextureCoordinates(VertexCount) <name="Texture coordinates">;           
+    typedef struct (int arraySize) {
+      COLOR4F array[arraySize] <optimize=false,name="RGBA Color">;
+    } VERTEX_COLOR4F; 
+    VERTEX_COLOR4F FaceCOLOR4F(VertexCount) <name="Vertex COLOR4Fs">; 
+  } GEOMETRY_DATA <name="Geometry data section">;
+} MESH <name="Mesh">;
+
 struct {   
   SECTION_HEADER Header;  
   UINT Count <name="Number of the objects">;
   typedef struct {
     SECTION_HEADER Header;
     SECTION_HEADER Header;
+
     UINT Count <name="Number of vertexes">;
   
     typedef struct (int arraySize) {
-      VECTOR3 array[arraySize];
+      VECTOR3F array[arraySize];
     } VERTEXES;     
     VERTEXES Vertexes(Count) <name="Vertexes">; 
 
     UINT Count <name="Number of meshes">; 
-    typedef struct {   
-      struct {
-        UINT Index <name="Index of the material">;
-
-        UINT Count <name="Number of faces">;     
-        typedef struct (int arraySize) {
-          VECTOR4 array[arraySize];
-        } NORMALS1;  
-        NORMALS1 Normals(Count) <name="Normals??">; 
-            
-        typedef struct (int arraySize) {
-          VECTOR_SHORT array[arraySize];
-        } FACE_INDEXES;          
-        FACE_INDEXES FaceIndexes(Count) <name="Face Indexes">;  
-   
-        typedef struct (int arraySize) {
-          VECTOR_SHORT array[arraySize];
-        } TEXTURE_INDEXES;          
-        TEXTURE_INDEXES TextureIndexes(Count) <name="Texture Indexes">;      
- 
-        UINT VertexCount;        
-        typedef struct (int arraySize) {
-          VECTOR3 array[arraySize];
-        } NORMALS2;       
-        NORMALS2 Normals(VertexCount) <name="Normals">;        
-        typedef struct (int arraySize) {
-          POINT2 array[arraySize];
-        } UVs;        
-        UVs TextureCoordinates(VertexCount) <name="Texture coordinates">;           
-        typedef struct (int arraySize) {
-          COLOR array[arraySize] <optimize=false>;
-        } VERTEX_COLOR; 
-        VERTEX_COLOR FaceColor(VertexCount) <name="Vertex colors">; 
-      } GEOMETRY_DATA <name="Geometry data section">;
-    } MESH <name="Mesh">;
+    
     typedef struct (int arraySize) {
       MESH array[arraySize] <optimize=false>;
     } MESHES;     
@@ -190,17 +190,17 @@ struct {
        } Face;
        UINT Unknown; // 0
        UINT Unknown;
-     } CC; 
+     } INDEXES; 
      typedef struct (int arraySize) {
-       CC array[arraySize] <optimize=false>;
-     } CC_ARRAY;
-     CC_ARRAY CCArray(Count) <name="Indexes">; 
+       INDEXES array[arraySize] <optimize=false>;
+     } INDEXES_ARRAY;
+     INDEXES_ARRAY CCArray(Count) <name="Indexes">; 
      UINT Unknown;
      CSTRING Name;
      UINT Unknown; 
      UINT Count;
      UINT16 Index[Count] <name="Index">;
-   } DATA;
+   } UNKNOWN_DATA;
  } OBJECT;
  typedef struct (int arraySize) {
    OBJECT array[arraySize] <optimize=false>;
