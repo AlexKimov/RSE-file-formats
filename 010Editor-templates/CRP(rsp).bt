@@ -12,6 +12,8 @@
 //   2018.05 v0.1 initial release
 //------------------------------------------------
 
+const uint numberOfBones = 18;
+
 struct {
   FLOAT Version <name="Version">; // 1.8
 } HEADER <name="Header">;
@@ -21,44 +23,36 @@ struct {
 struct {
   typedef struct {
     UINT VertexCount <name="Vertex count">;  
+
     struct {
-      typedef struct {
-        UINT I;
-      } INDEX;
-      INDEX IndexArray[VertexCount] <name="Index">;
-     } INDEX_ARRAY <name="Vertex index array">;
+      UINT Index[VertexCount];
+    } INDEX_ARRAY <name="Vertex index array">;
+
     struct {
       typedef struct {
         FLOAT X;
         FLOAT Y;
         FLOAT Z;
       } COORDINATES <name="Vertex">;
+
       COORDINATES CoordinatesArray[VertexCount];
-    } COORDINATES_ARRAY <name="Vertex cordinates array">;
-  } BODYP <optimize=false, name="Body part">;
-  BODYP BodyParts[18];
-} BODY <name="Vertices">;
+
+    } COORDINATES_ARRAY <name="Vertex coordinates array">;
+
+  } BODYP <optimize=false, name="Body part related to bone">;
+
+  BODYP BodyParts[numberOfBones]; // 18 bones total
+} BODY <name="Vertexes related to bones (for animation)">;
 
 //-------------------------------------------------
 
-typedef struct {  
-  FLOAT P1;
-  FLOAT P2;
-  FLOAT P3;
-  FLOAT P2;
-  FLOAT P3;
-  UINT P1;
-  UINT P2;
-  UINT P3; 
-} VERTEX_S;
-
 struct {
   UINT Length;
-  char Name[Length];
+  char Name[Length] <name="Model name">;
   UINT Unknown;
-  BYTE A;
-  BYTE A;
-  BYTE A;
+  BYTE Unknown;
+  BYTE Unknown;
+  BYTE Unknown;
   //
   FLOAT X;
   FLOAT Y;
@@ -72,67 +66,84 @@ struct {
   UINT A;
   if (A > 0)
   {
-    UINT A;
+    UINT Unknown;
   };
   //
-  BYTE A;
-  BYTE B;
+  BYTE Unknown;
+  BYTE Unknown;
   UINT Unknown; 
   // !?? 
   UINT Unknown; 
   //
+} U <name="Unknown">; 
+
+
+typedef struct {  
+  FLOAT Unknown; // 0
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT Unknown; // 0
+  UINT Unknown; // 0
+  UINT Unknown; // 0
+  UINT Unknown; // 0 
+} VERTEX_S <name="Vertex">;
+
+struct {
   UINT Count;
   typedef struct (int arraySize) {
       VERTEX_S array[arraySize] <optimize=false>;
-  } ARRAY;
-  ARRAY Vertexes(Count) <optimize=false>;
-} VERTEXES <name="Vertexes??">;
+  } VERTEXES2;
+  VERTEXES2 Vertexes(Count) <name="Vertexes">;
+} VERTEXES <name="Vertexes (Static Pose)">;
 
 //-------------------------------------------------
 
 UINT MeshCount;
 typedef struct {
   struct {
-  UINT Length;
-  char Name[Length];
-  UINT Unknown;  
-  BYTE A;
-  BYTE A;
-  BYTE A;
-  //
-  FLOAT X;
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT Unknown;
-  //
-  FLOAT X;
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT Unknown;
-  UINT A; 
-  //  
-  if (A > 0)
-  { 
-    if (A == 5)
-      UINT Data[8];
-    UINT B;
-  }  
-  UINT Length;
-  CHAR TextureFileName[Length];
+    UINT Length;
+    char Name[Length];
+    UINT Unknown;  
+    BYTE Unknown;
+    BYTE Unknown;
+    BYTE Unknown;
+    //
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT Unknown;
+    //
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT Unknown;
 
-  UINT A;
-  UINT B;
-  UINT C;
-  UINT D;
-  UINT F;
-  UINT G;
-  FLOAT nn1[4];
-  UINT G;
-  FLOAT nn2[16];
-  UINT F;
-  BYTE A;
-  BYTE A;
-  } UNKNOWN_DATA;
+    UINT TransparencyFlag <name="Effects transparency(BlenMode)??">; // 3, 5
+    //  
+    if (TransparencyFlag > 0)
+    { 
+      if (TransparencyFlag == 5) // transparent
+        UINT Data[8];
+      UINT Unknown; // 12
+    }  
+  
+    UINT Length;
+    CHAR TextureFileName[Length];
+
+    UINT Unknown; // 3, 4
+    UINT Unknown; // 0
+    UINT Unknown; // 1
+    UINT Unknown; // 13
+    UINT Unknown; // 6
+    UINT Unknown; // 0
+    FLOAT Unknown1[4];
+    UINT Unknown; // 7
+    FLOAT Unknown2[16];
+    UINT Unknown; // 0
+    BYTE Unknown; // 1
+    BYTE Unknown; // 1
+  } UNKNOWN_DATA <name="Texture properties?">;
   //
   struct {
     UINT VertexCount;
@@ -141,7 +152,7 @@ typedef struct {
       FLOAT G;
       FLOAT B;
       FLOAT A;
-    } AMBIENT_COLOR[VertexCount]; 
+    } COLOR1[VertexCount]; 
     UINT count2; 
     struct {
       FLOAT A;
@@ -153,7 +164,7 @@ typedef struct {
       FLOAT G;
       FLOAT B;
       FLOAT A;
-    } DIFFUSE_COLOR[VertexCount];  
+    } COLOR2[VertexCount];  
     UINT count4; 
     struct {
       FLOAT U;
@@ -163,29 +174,31 @@ typedef struct {
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
-    } NORMAL1[VertexCount]; 
+    } NORMALS[VertexCount] <name="Normals?">; 
 
-    UINT FaceCount;
-    struct {   
-      struct {
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-        FLOAT Distance;
-      } NORMAL2[FaceCount]; 
-      struct {
-        UINT16 I1;
-        UINT16 I2;
-        UINT16 I3;
-      } FACE_INDEXES[FaceCount]; 
-      struct {
-        UINT16 I1;
-        UINT16 I2;
-        UINT16 I3;
-      } UV_INDEXES[FaceCount];
-    } FACES;
+    struct {
+      UINT FaceCount;
+      struct {   
+        struct {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+          FLOAT Distance;
+        } FACE_NORMAL[FaceCount]; 
+        struct {
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+        } VERT_INDEXES[FaceCount] <name="Vertex indexes">; 
+        struct {
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+        } TEXTURE_UV_INDEXES[FaceCount] <name="UV indexes">;
+      } FACES;
+    } FACE_DATA;
   } GEOMETRY_DATA;       
-} MESH <optimize=false>;
+} MESH <optimize=false, name="Mesh">;
 typedef struct (uint count) {
   MESH  array[count];
 } MESH_ARRAY;
