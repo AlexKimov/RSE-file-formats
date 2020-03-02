@@ -181,6 +181,7 @@ struct {
      UINT Zero;
      UINT Zero;
      UINT Count;
+
      typedef struct {
        struct {
          UINT16 I1;
@@ -191,15 +192,21 @@ struct {
        UINT Unknown; // 0
        UINT Unknown;
      } INDEXES; 
+
      typedef struct (int arraySize) {
        INDEXES array[arraySize] <optimize=false>;
      } INDEXES_ARRAY;
      INDEXES_ARRAY CCArray(Count) <name="Indexes">; 
-     UINT Unknown;
-     CSTRING Name;
-     UINT Unknown; 
-     UINT Count;
-     UINT16 Index[Count] <name="Index">;
+
+     UINT count;
+
+     struct { 
+       CSTRING Name;
+       UINT Unknown; 
+       UINT Count;
+       UINT16 Index[Count] <name="Index">;
+      } UNKNOWN[count] <optimize=false>;
+
    } UNKNOWN_DATA;
  } OBJECT;
  typedef struct (int arraySize) {
