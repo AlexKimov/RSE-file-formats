@@ -62,7 +62,7 @@ typedef struct {
 // --------------------
 
 struct {   
-  CSTRING Name <name="QOB FileID">; 
+  CSTRING Name; 
 } QOB_FILE_HEADER <name="QOB Header", fgcolor=cBlack, bgcolor=0xccff66>;
 
 //--------------------
