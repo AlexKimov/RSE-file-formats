@@ -57,6 +57,16 @@ typedef struct {
   }; 
 } SECTION_HEADER <name="Header">;
 
+typedef struct {
+  UINT ID;
+  CSTRING Name;  
+  if (Name.Text == "Version") 
+  {
+    UINT value;
+    CSTRING Name;
+  }; 
+} SECTION_HEADER_SHORT <name="Header">;
+
 typedef enum <uint> {
   Opaque = 0, 
   Wrap = 1,
@@ -218,10 +228,7 @@ typedef struct {
 } OBJECT <name=ObjectName>;  
 
 string ObjectName(OBJECT &data) {
-  if (exists(data.HEADER.OBJECT_NAME))
     return "Name: " + data.Header.Name.Text;
-  else
-    return "Name: " + data.Text;
 }
 
 struct {   
@@ -293,60 +300,46 @@ string PortalName(PORTAL &portal) {
 //-------------------------------------------------------
 
 struct {
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 1
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } LIGHTLIST_STRING;
-  } HEADER <name="Header">;  
+  SECTION_HEADER Header; 
 
   UINT Count; 
   typedef struct {
-     struct { 
-       UINT SectionSize;
-       UINT ID; // 13
-       UINT Length; // 
-       char Text[Length]; 
-       if (Text == "Version")
-       struct {    
-        //
-         UINT value;
-         UINT Length;  
-         char Text[Length]; 
-         BYTE Y;  
-       } NAME_STRING;
-     } HEADER <name="Header">;   
-     BYTE A;
-     BYTE B;
-     BYTE C;
+     SECTION_HEADER Header;   
+ 
+     BYTE Unknonwn;
+     BYTE Unknonwn;
+     BYTE Unknonwn;
+     BYTE Unknonwn;
+
      TRANSFORMATION_MATRIX TM; 
+
      struct {
        struct {
          UINT R; // 0..255
          UINT G; //
          UINT B;
        } Color;
-       FLOAT ConstantAttenuation; // 1
-       FLOAT LinearAttenuation; // 0
-       FLOAT QuadraticAttenuation; //  0
-       FLOAT Falloff; // 
+
+       FLOAT ConstantAttenuation; 
+       FLOAT LinearAttenuation; 
+       FLOAT QuadraticAttenuation; 
+       FLOAT Falloff; 
        FLOAT Energy;
        BYTE Type;
      } Params;
+
   } LIGHT <name=LightName>;
+
   typedef struct (int arraySize) {
       LIGHT array[arraySize] <optimize=false>;
-  } LIGHT_ARRAY;
-  LIGHT_ARRAY LIGHTArray(Count) <name="Lights">;
+  } LIGHTS;
+
+  LIGHTS Lights(Count) <name="Lights">;
+
 } LIGHTLIST <name="Light List">;
 
 string LightName(LIGHT &light) {
-  if (exists(light.HEADER.NAME_STRING))
-    return "Name: " + light.HEADER.NAME_STRING.Text;
-  else
-    return "Name: " + light.HEADER.Text;
+    return "Name: " + light.Header.Name.Text;
 };
 
 
@@ -355,251 +348,193 @@ string LightName(LIGHT &light) {
 //-------------------------------------------------------
 
 typedef struct {
-  struct { 
-       UINT SectionSize;
-       UINT ID; // 16
-      struct {    
-        UINT Length; // 
-        char Text[Length]; //
-        UINT value;
-      } VERSION; 
-       struct {
-         UINT Length;  
-         char Text[Length];  
-       } NAME;
-       struct {
-         UINT Length;  
-         char Text[Length];  
-       } FileName;
-  } HEADER <name="Header">;
+  SECTION_HEADER Header <name="Header">;
+
+  struct {
+     UINT Length;  
+     char Text[Length];  
+  } FileName;
      
   struct { 
-     switch (HEADER.ID) {
+     TRANSFORMATION_MATRIX TM;
+
+     switch (Header.ID) {
+       // dynamic?
        case 14: {
-         TRANSFORMATION_MATRIX TM <name="Position">;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[3] <optimize=false>; 
-         BYTE A;
-         BYTE B;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[2] <optimize=false>; 
-         UINT AE[3];      
-       };break;
+         CSTRING Name;  
+         CSTRING HIT_Sound <name="Hit Sound">;  
+         CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
+         UINT16 Unknown;  
+         CSTRING CollisionType2d <name="2d Collision Type">; 
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         UINT Unknown0[3];      
+       }; break;
 
        // door
-       case 16: {
-        TRANSFORMATION_MATRIX TM <name="Position">;
-     
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } HIT_Sound <name="Hit Sound">;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } DEBRIS <name="Debris">;  
+       case 16: {    
+         CSTRING Name;   
+         CSTRING HIT_Sound <name="Hit Sound">;  
+         CSTRING DEBRIS <name="Debris">;
 
-         BYTE A;
-         BYTE B;   
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } polygon <name="polygon">; 
+         UINT16 Unknown;  
+         CSTRING CollisionType3d <name="2d Collision Type">;  
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         UINT Unknown0[3];   
+ 
+         CSTRING OPEN_Sound <name="Start sound">;  
+         CSTRING CLOSE_Sound <name="Stop Sound">;  
+         CSTRING NAME;  
 
-         UINT H[3];    
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } OPEN_Sound <name="Start sound">;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } CLOSE_Sound <name="Stop Sound">;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
+         BYTE isOperating;
 
-         BYTE A;
          struct {
-           struct {
-             UINT Length;  
-             char Text[Length];  
-           } Animation_Type <name="Animation Type">; 
+           CSTRING Animation_Type <name="Animation Type">;
+
+           //-None = Nothing
+		   //-one time rotation = Rotates around specified axis one time (a door)
+		   //-one time translation = Moves along specified axit one time 
+		   //-oscilate rotation = Swings back and forth around specified axis (a pendulum)
+		   //-oscilate translation = Moves back and forth along specified axis
+		   //-loop rotation = Continuos rotation around specified axis (a fan)
+
            struct {
              FLOAT X;
              FLOAT Y;
              FLOAT Z;
-           } Direction <name="Direction">;
+           } DIRECTION <name="Direction">;
+
            FLOAT Distance;
            FLOAT Velocity;
          } ANIMATION <name= "Animation">;
-         BYTE A;
-         BYTE B;  
+
+         UINT16 Unknown;  
        }; break;
 
-
+       // ??
        case 17: {
-        TRANSFORMATION_MATRIX TM <name="Position">;
-        struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[3] <optimize=false>;  
-         BYTE A;
-         BYTE B;   
+         CSTRING Name;  
+         CSTRING HIT_Sound <name="Hit Sound">;  
+         CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
+         UINT16 Unknown;  
+         CSTRING CollisionType2d <name="2d Collision Type">; 
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         UINT Unknown0[3];  
+   
+         CSTRING OPEN_Sound <name="Start sound">;  
+         CSTRING CLOSE_Sound <name="Stop Sound">;  
+         CSTRING NAME;  
+ 
+         BYTE isOperating;
+
          struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME2[2] <optimize=false>; 
-         UINT H[3];    
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME3[3] <optimize=false>; 
-         BYTE A;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME <optimize=false>; 
-         FLOAT C[5]; 
+           CSTRING Animation_Type <name="Animation Type">;
+
+           //-None = Nothing
+		   //-one time rotation = Rotates around specified axis one time (a door)
+		   //-one time translation = Moves along specified axit one time 
+		   //-oscilate rotation = Swings back and forth around specified axis (a pendulum)
+		   //-oscilate translation = Moves back and forth along specified axis
+		   //-loop rotation = Continuos rotation around specified axis (a fan)
+
+           struct {
+             FLOAT X;
+             FLOAT Y;
+             FLOAT Z;
+           } DIRECTION <name="Direction">;
+
+           FLOAT Distance;
+           FLOAT Velocity;
+         } ANIMATION <name= "Animation">; 
+
        }; break;
 
+       //switch
        case 19: {
-         TRANSFORMATION_MATRIX TM;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;
-
-         BYTE A;
-         BYTE B; 
+         CSTRING Name;  
+         CSTRING HIT_Sound <name="Hit Sound">;  
+         CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
+         UINT16 Unknown;  
  
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME; 
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME;
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME;
+         CSTRING CollisionType2d <name="2d Collision Type">; 
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         UINT Unknown0[3];
 
-         UINT A;
-         UINT B; 
+         CSTRING Name0[3];  
 
+         BYTE isOperating;
 
          struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME; 
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME;
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME;
+           CSTRING Animation_Type <name="Animation Type">;
 
-         BYTE B;  
- 
-         struct {
-           UINT Length;  
-           char Text[Length] ;  
-         } NAME;   
+           //-None = Nothing
+		   //-one time rotation = Rotates around specified axis one time (a door)
+		   //-one time translation = Moves along specified axit one time 
+		   //-oscilate rotation = Swings back and forth around specified axis (a pendulum)
+		   //-oscilate translation = Moves back and forth along specified axis
+		   //-loop rotation = Continuos rotation around specified axis (a fan)
 
-         BYTE I[25];     
+           struct {
+             FLOAT X;
+             FLOAT Y;
+             FLOAT Z;
+           } DIRECTION <name="Direction">;
+
+           FLOAT Distance;
+           FLOAT Velocity;
+         } ANIMATION <name= "Animation">;   
+
+         UINT Unknown;
+         BYTE Unknown; 
+            
        }; break;
 
        // Glass
        case 20: {
-         TRANSFORMATION_MATRIX TM;
-         BYTE C;
-         FLOAT GG[6];
+         BYTE Unknown;
+         FLOAT Unknown00[6]; // Coordinates?
+
          UINT VertexCount; // 4
-         typedef struct { 
+         struct { 
             FLOAT x;        
             FLOAT y;
             FLOAT z;
-         } Coordinates;  
-         typedef struct (int arraySize) {
-           Coordinates array[arraySize] <optimize=false>;
-         } Coordinates_ARRAY;  
-         Coordinates_ARRAY  CA(VertexCount) <optimize=false>;
+         } Coordinates[VertexCount];
        }; break;
 
+      // touch plate
        case 21: {
-         TRANSFORMATION_MATRIX TM;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         FLOAT YY[6]; 
-         UINT Count;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[Count] <optimize=false>;  
+         CSTRING CollisionType2d <name="2d Collision Type">; 
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         
+         FLOAT Unknown[6];
+ 
+         UINT Count <name="Number of spawn objects">;
+         CSTRING SpawnName[Count] <optimize=false>;  
        }; break;
 
+       // dt plate ?? 
        case 25: {
-         TRANSFORMATION_MATRIX TM;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME; 
-         FLOAT J[6];
-         UINT Count;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[Count] <optimize=false>; 
+         CSTRING CollisionType2d <name="2d Collision Type">; 
+         CSTRING CollisionType3d <name="3d Collision Type">; 
+         
+         FLOAT Unknown[6];
+ 
+         UINT Count <name="Number of spawn objects">;
+         CSTRING SpawnName[Count] <optimize=false>;  
        }; break;   
 
+       // spawn
        case 29: {
-         TRANSFORMATION_MATRIX TM;
          UINT Count;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME[Count] <optimize=false>;  
+         CSTRING NAME[Count] <optimize=false>;  
        }; break;
 
+       // halo
        case 31: {
-         TRANSFORMATION_MATRIX TM;
          UINT Count;
+
          typedef struct {
+           // pos
            FLOAT X; 
            FLOAT Y;        
            FLOAT Z;
@@ -607,242 +542,195 @@ typedef struct {
              UINT Length;  
              char Text[Length];  
            } NAME;             
-         } Q;
+         } HALO;
          typedef struct (int arraySize) {
-           Q array[arraySize] <optimize=false>;
-         } Q_ARRAY;
-         Q_ARRAY QArray(Count);
+           HALO array[arraySize] <optimize=false>;
+         } HALOS;
+         HALOS Halo(Count);
  
        }; break;
 
+       // rt plate
        case 33: {
-         TRANSFORMATION_MATRIX TM;
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         struct {
-           UINT Length;  
-           char Text[Length];  
-         } NAME;  
-         FLOAT YY[7];       
+         CSTRING Name; // type?? 
+         CSTRING Name; // text promt file
+         FLOAT Unknown011[7];       
        }; break;
-
     }; 
   } PROPERTIES;      
 } OBJECT_NAME <name=ObjName>;
 
 string ObjName(OBJECT_NAME &objectname) {
-  return "Name: " + objectname.HEADER.NAME.Text + " ";
+  return "Name: " + objectname.Header.Name.Text + " ";
 }
 
 struct {
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 10
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } LIGHTLIST_STRING;
-  } HEADER <name="ObjectList Header">; 
+  SECTION_HEADER header <name="ObjectList Header">; 
 
   UINT Count; 
 
   typedef struct (int arraySize) {
       OBJECT_NAME array[arraySize] <optimize=false>;
   } OBJECT_NAME_ARRAY;
-  OBJECT_NAME_ARRAY ObjectNameArray(Count) <name="Object Array">;
+
+  OBJECT_NAME_ARRAY ObjectNameArray(Count) <name="Objects">;
   
 } ObjectLIST <name="Object List">;
 
 //-------------------------------------------------------
 // RoomList Section
 //-------------------------------------------------------
+typedef struct {
+  UINT Unknown; // 0
 
-void Nodes() {
-  struct { 
-    UINT ID; //
+  SECTION_HEADER_SHORT Header <name="Header">;   
 
-    UINT Length;  
-    char Text[Length]; 
-    if (Text == "Version") {
-      UINT value; 
-      struct {
-        UINT Length;  
-        char Text[Length];
-      } NAME;
-    };
-  } HEADER <name="Header">;   
- 
+  BYTE Unknown; //0
+  BYTE Unknown; //0 
+  BYTE Unknown; //0
+  BYTE Unknown; //0
+  UINT Unknown; //0
 
-    BYTE A;
-    BYTE B;        
-    if (A == 0) BYTE C;
-    UINT ShermanCount;
-    local uint scount = ShermanCount;
-    //local uint i = 0;
-    //if (B != 1) scount = 1;
-    if (ShermanCount == 0) BYTE A; 
-    struct { 
-     
-      struct { 
-        UINT Length;  
-        char ShermanLevel[Length];
-      } Name <optimize=false>;
-      FLOAT T[6];
-      UINT Count; 
-      FLOAT Z[Count];
-      BYTE Y;
-      if (Y == 1) {
-          UINT AA;
-          struct { 
-            UINT ID; //
-        
-            UINT Length;  
-            char Text[Length]; 
-            if (Text == "Version") {
-              UINT value; 
-              struct {
-                UINT Length;  
-                char Text[Length];
-              } NAME;
-            };
-          } HEADER <name="Header">;   
+  UINT VertexCount;
+  struct {
+     FLOAT X;
+     FLOAT Y;
+     FLOAT Z;
+  } COORDINATES1[VertexCount];
 
-        BYTE A;
-        BYTE B;
-        BYTE C;
-        BYTE D;
-        UINT U;
-        UINT Count;
-        struct {
-           FLOAT P1;
-           FLOAT P2;
-           FLOAT P3;
-        } Coordinate[Count];
-        UINT Count;
-        struct {
-           FLOAT P1;
-           FLOAT P2;
-           FLOAT P3;
-           FLOAT P1;
-           FLOAT P2;
-           FLOAT P3;
-           UINT P1;
-           UINT  P2;
-           UINT  P3;
-        } Coordinate2[Count];
-        UINT Count; 
-        struct {
-           UINT P1[11];
-        } Coordinate3[Count];    
-        UINT Count; 
-        UINT Count;
-        struct {
-          UINT Length;  
-          char Text[Length];
-        } Name <optimize=false>;   
-        UINT Count; 
-        UINT CountA;
-        struct {
-          UINT CountA;
-        } Arr[CountA];
-
-        UINT Count; 
-        struct {
-          UINT Length;  
-          char Text[Length];
-        } Name <optimize=false>;   
-        UINT Count;
-     };
-    } ShermanLevelPlanArea[scount] <optimize=false>;
-
-    UINT Count;
+  UINT VertexParamCount;
+  struct {
     struct {
-      CSTRING TransitionName;
-      CSTRING LevelA;
-      CSTRING LevelB;
-      FLOAT T[4];
-    } ShermanLevelTransition[Count] <optimize=false>;
-  
-    UINT Count;
-    FLOAT arr[Count]; // 1
-    FLOAT T[Count];
-    UINT Count;
-    FLOAT O[Count];
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } NORMAL;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+    } UV;
 
-};
+    FLOAT Unknown;
 
+    COLOR Color;
+  } VERTEX_PARAMS[VertexParamCount];
+
+  UINT FaceCount; 
+  struct {
+    struct {
+      FLOAT I1;
+      FLOAT I2;
+      FLOAT I3;
+    } VERTEX_INDEXES;
+    struct {
+      FLOAT I1;
+      FLOAT I2;
+      FLOAT I3;
+    } PARAM_INDEXES;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      UINT Unknown;
+    } NORMAL;
+    UINT MaterialIndex;
+  } FACES[FaceCount]; 
+   
+  UINT Unknown; 
+  UINT Unknown;
+  CSTRING Name;  
+ 
+  UINT Unknown; 
+  UINT FaceIndicesCount;
+  struct {
+    UINT Index;
+  } FACE_INDICES[FaceIndicesCount];
+
+  UINT Unknown; 
+  CSTRING Name;    
+  UINT Unknown;
+} SHERMAN_LEVEL_PLAN_AREA;
 
 typedef struct {
-  Nodes();   
+  SECTION_HEADER_SHORT Header <name="Header">;  
+ 
+  BYTE Unknown1;
+  BYTE Unknown;        
+  if (Unknown1 == 0) 
+    BYTE Unknown;
+
+  UINT ShermanLevelCount;
+
+  struct {   
+      CSTRING Name;
+
+      FLOAT AABB[6];
+
+      UINT Count; 
+      FLOAT Unknown[Count];
+
+      BYTE hasShermanLevelPlanArea;
+
+      if (hasShermanLevelPlanArea) {
+        SHERMAN_LEVEL_PLAN_AREA ShermanLevelPlanArea;
+      };
+  } SHERMAN_LEVEL[ShermanLevelCount] <optimize=false>;
+
+  UINT Count;
+  struct {
+    CSTRING TransitionName;
+    CSTRING LevelA;
+    CSTRING LevelB;
+    FLOAT Coords[4];
+  } SHERMAN_LEVEL_TRANSITION[Count] <optimize=false>;
+  
+  UINT LevelHeightsCount;
+  FLOAT LevelHeights[LevelHeightsCount * 2]; // 1
+
+  UINT Count;
+  FLOAT Unknown2[Count];   
 } ROOM <name=RoomName>;
 
 string RoomName(ROOM &room) {
-  if (exists(room.HEADER.NAME))
-    return "Room Name: " + room.HEADER.NAME.Text + " ";
-  else
-    return "Room Name: " + room.Text + " ";
+   return "Room Name: " + room.Header.Name.Text + " ";
 }
 
 struct {
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 7
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } ROOMLIST_STRING;
-  } HEADER <name="ROOMList Header">;
-
+  SECTION_HEADER Header <name="ROOMList Header">;
+ 
   UINT Count; 
-
+  
   typedef struct (int arraySize) {
-      ROOM array[arraySize] <optimize=false>;
-  } ROOM_ARRAY;
-  ROOM_ARRAY ROoomArray(Count) <name="data array">;
+     ROOM array[arraySize] <optimize=false>;
+  } ROOMS;
 
-   
+  ROOMS Room(Count) <name="Rooms">; 
 } ROOMLIST <name="Room List">;
 
-UINT L;
+UINT Unknown;
 
 //----------------------------------------------
 // PlanningLevelLIST
 //----------------------------------------------
 
 struct {
-  struct { 
-    UINT ID; // 24
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } PlanningLevelLIST_STRING;
-  } HEADER <name="ROOMList Header">;
+  SECTION_HEADER_SHORT header <name="Header">;
   
-  UINT Count; 
+  UINT Count <name="Number of levels">; 
 
   typedef struct {
-    FLOAT A;
-    FLOAT B;
-    UINT Count;
-    typedef struct {
-    struct {
-      UINT Length;  
-      char Text[Length];
-    } NAME;
-    } A;
-    A MN[Count] <optimize=false>;
-  } II;
+    FLOAT LevelNumber;
+    FLOAT FloorHeight;
+    UINT Count <name="Number of rooms">;
+    CSTRING RoomName[Count] <optimize=false, name="Name">;
+  } LEVEL <name="Level">;
   typedef struct (int arraySize) {
-      II array[arraySize] <optimize=false>;
-  } II_ARRAY;
-  II_ARRAY IIArray(Count) <name="data array">;
- 
-  BYTE Y;
-} PlanningLevelLIST <name="PlanningLevel List">;
+    LEVEL array[arraySize] <optimize=false>;
+  } LEVELS;
 
-struct {
-      UINT Length;  
-      char Text[Length];  
-} EndMap <name="EndMap">;
+  LEVELS Levels(Count) <name="Levels">;
+ 
+  BYTE Unknown;
+} PLANNING_LEVEL_LIST <name="Planning Level List">;
+
+CSTRING EndMap <name="EndMap">;
