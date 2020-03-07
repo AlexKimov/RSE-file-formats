@@ -658,8 +658,6 @@ void NodeTree(UINT NodeCount)
         };
      };              
      UINT Count <name="Number of child nodes">;
-     if (Count > 0)
-       NodeTree(Count);
     };    
   } NODE <name=NodeName>;
   typedef struct (int arraySize) {
