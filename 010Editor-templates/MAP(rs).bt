@@ -245,31 +245,12 @@ struct {
 //-------------------------------------------------
 
 struct {
-  struct { 
-    UINT SectionSize;
-    UINT ID; // 9
-    struct {
-      UINT Length;  
-      char Text[Length];  
-    } PORTALLIST_STRING;
-  } HEADER <name="Header">;   
+  SECTION_HEADER Header <name="Header">;    
 
   UINT Count;
 
   typedef struct {
-    struct { 
-      UINT SectionSize;
-      UINT ID; // 0
-      struct {
-        UINT Length;  
-        char Text[Length]; 
-        UINT value; 
-      } Version;
-      struct {
-        UINT Length;  
-        char Text[Length];
-      } Name;
-    } HEADER <name="Header">; 
+    SECTION_HEADER Header <name="Header">; 
     
     UINT VertexCount;
     typedef struct {
@@ -716,7 +697,7 @@ UINT Unknown;
 struct {
   SECTION_HEADER_SHORT header <name="Header">;
   
-  UINT Count <name="Number of levels">; 
+  UINT LevelCount <name="Number of levels">; 
 
   typedef struct {
     FLOAT LevelNumber;
@@ -728,7 +709,7 @@ struct {
     LEVEL array[arraySize] <optimize=false>;
   } LEVELS;
 
-  LEVELS Levels(Count) <name="Levels">;
+  LEVELS Levels(LevelCount) <name="Levels">;
  
   BYTE Unknown;
 } PLANNING_LEVEL_LIST <name="Planning Level List">;
