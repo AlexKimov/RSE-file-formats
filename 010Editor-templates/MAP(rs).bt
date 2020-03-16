@@ -334,37 +334,41 @@ typedef struct {
   struct {
      UINT Length;  
      char Text[Length];  
-  } FileName;
+  } ObjectName;
      
   struct { 
      TRANSFORMATION_MATRIX TM;
 
      switch (Header.ID) {
-       // dynamic?
+       // Dynamic Object  (i.e. Furniture, Television, something that can change)
        case 14: {
-         CSTRING Name;  
+         CSTRING Name; // None 
          CSTRING HIT_Sound <name="Hit Sound">;  
          CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
-         UINT16 Unknown;  
+         BYTE u1;
+         BYTE u2;   
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
-         UINT Unknown0[3];      
+         UINT Unknown1; //100
+         UINT Unknown2; // 0
+         UINT Unknown3; // 0      
        }; break;
 
-       // door
+       // door / Automatic Door.(uses touchplate to activate - Adtplate)
+			
        case 16: {    
-         CSTRING Name;   
+         CSTRING Name; // None
          CSTRING HIT_Sound <name="Hit Sound">;  
          CSTRING DEBRIS <name="Debris">;
-
-         UINT16 Unknown;  
+         BYTE u1;
+         BYTE u2;  
          CSTRING CollisionType3d <name="2d Collision Type">;  
          CSTRING CollisionType3d <name="3d Collision Type">; 
          UINT Unknown0[3];   
  
          CSTRING OPEN_Sound <name="Start sound">;  
          CSTRING CLOSE_Sound <name="Stop Sound">;  
-         CSTRING NAME;  
+         CSTRING NAME;  // NONE
 
          BYTE isOperating;
 
@@ -391,12 +395,14 @@ typedef struct {
          UINT16 Unknown;  
        }; break;
 
-       // ??
+       // Stationary/Moving Target (shooting range target)
        case 17: {
-         CSTRING Name;  
+         CSTRING Name;  // None 
+         Printf(Name.Text); 
          CSTRING HIT_Sound <name="Hit Sound">;  
          CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
-         UINT16 Unknown;  
+         BYTE u1;
+         BYTE u2;  
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
          UINT Unknown0[3];  
@@ -429,18 +435,21 @@ typedef struct {
 
        }; break;
 
-       //switch
+       // Trigger Switch / Reset Switch
        case 19: {
-         CSTRING Name;  
+         CSTRING Name; // None
          CSTRING HIT_Sound <name="Hit Sound">;  
          CSTRING DEBRIS <name="Debris">;  // Types of debris to spawn when the object is destroyed 
-         UINT16 Unknown;  
+         BYTE u1;
+         BYTE u2;  
  
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
          UINT Unknown0[3];
 
-         CSTRING Name0[3];  
+         CSTRING OPEN_Sound <name="Start sound">;  
+         CSTRING CLOSE_Sound <name="Stop Sound">;  
+         CSTRING NAME;    
 
          BYTE isOperating;
 
@@ -482,32 +491,50 @@ typedef struct {
          } Coordinates[VertexCount];
        }; break;
 
-      // touch plate
+      // Tplate One-time touch plate. (when touched it activates something, can be done in mission editor if NOT for a door)
        case 21: {
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
          
-         FLOAT Unknown[6];
- 
-         UINT Count <name="Number of spawn objects">;
-         CSTRING SpawnName[Count] <optimize=false>;  
+         struct {
+            FLOAT X1;        
+            FLOAT Y1;
+            FLOAT Z1;
+            FLOAT X2;        
+            FLOAT Y2;
+            FLOAT Z2;
+         } TPLATE_COORDINATES;
+        
+         struct {
+           UINT Count <name="Number of spawn objects">;
+           CSTRING Name[Count] <optimize=false>;  
+         } TPLATE_ATTACHMENTS;
        }; break;
 
-       // dt plate ?? 
+       // Automatic door touch plate. (activates whenever touched, is attached to a specific door(s))
        case 25: {
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
          
-         FLOAT Unknown[6];
+         struct {
+            FLOAT X1;        
+            FLOAT Y1;
+            FLOAT Z1;
+            FLOAT X2;        
+            FLOAT Y2;
+            FLOAT Z2;
+         } TPLATE_COORDINATES;
  
-         UINT Count <name="Number of spawn objects">;
-         CSTRING SpawnName[Count] <optimize=false>;  
+         struct {
+           UINT Count <name="Number of spawn objects">;
+           CSTRING Name[Count] <optimize=false>;  
+         } TPLATE_ATTACHMENTS;
        }; break;   
 
        // spawn
        case 29: {
          UINT Count;
-         CSTRING NAME[Count] <optimize=false>;  
+         CSTRING AttachmentName[Count] <optimize=false>;  
        }; break;
 
        // halo
@@ -527,11 +554,10 @@ typedef struct {
          typedef struct (int arraySize) {
            HALO array[arraySize] <optimize=false>;
          } HALOS;
-         HALOS Halo(Count);
- 
+         HALOS Halo(Count); 
        }; break;
 
-       // rt plate
+       // rt plate - Pressure touch plate. (activates whenever touched)
        case 33: {
          CSTRING Name; // type?? 
          CSTRING Name; // text promt file
