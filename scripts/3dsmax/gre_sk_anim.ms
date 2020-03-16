@@ -13,7 +13,6 @@ filein "lib/rse_viewer.ms"
 filein "lib/rse_skeleton.ms"
 filein "lib/rse_animations.ms"
 filein "lib/utils.ms"
-filein "lib/rse_header.ms"
 
 struct settingsUI
 (
@@ -25,7 +24,7 @@ struct settingsUI
   wirecolor = yellow,
   procSubfolders = false,
   bmfFolder,
-  showModel = false,
+  showModel = true,
   fn loadFromIni filename =
   (
     local sets = iniSettings(this)
@@ -35,7 +34,7 @@ struct settingsUI
 
 struct stringsUI
 (
-  rolloutTitle = "Skeleton and Animations",
+  rolloutTitle = "GR character animation tool",
   boneSettingsCaption = "Skeleton",
   groupBoneSettingsCaption = "Bone parameters:",
   buttonCreateCaption = "Add standard skeleton",
@@ -51,13 +50,14 @@ struct stringsUI
   rolloutAnimationCaption = "Animations",
   radioCaption = "Apply animation to:",
   radioLabels = #("names", "selection"),
-  filesNotFound = "Files not found in %s." ,
+  filesNotFound = "Files not found in %." ,
   checkboxSubfoldersCaption = "Search in subfolders",
   groupAnimationCaption = "Animate skeleton",
   rolloutExportTitle = "Export",
   buttonExportCaption = "Save to .bmf",
   fileSaved = "File was successfully saved.",
   checkboxshowModelCaption = "Show model",
+  cantFindSkeleton = "Cant find skeleton in the scene. Create one first.",
   fn loadFromIni filename =
   (
     local sets = iniSettings(this)
@@ -162,7 +162,7 @@ struct greSkeletonAnimationsUI
       )      
     )     
   ),
-  fn exportToBMF = 
+  fn exportAnimationsToBMF = 
   (
     bmf = boneMovementsFile()
     if bmf.openFile("wb") != undefined then
@@ -196,42 +196,55 @@ struct greSkeletonAnimationsUI
             (fileUtils.getFileName filename ext:true)
         )    
       else 
-        dialogs.showMessage \
-          (formattedprint settings.bmfFolder format:strings.filesNotFound)         
+        dialogs.showMessage(formatString settings.bmfFolder strings.filesNotFound)      
     )    
   ),
   fn addAnimationToSkeleton =
   (
     if (this.animationsRollout.listbox_animationList.selection > 0) then
     (
-      filename = (settings.bmfFolder + \ 
+      for boneName in rseGlobals.greSkeletonBoneNames do
+        if getNodeByName(boneName) == undefined then 
+        (
+          dialogs.showMessage strings.cantFindSkeleton
+          return 0
+        )
+      
+      bmfFilename = (settings.bmfFolder + \ 
         this.animationsRollout.listbox_animationList.selected)
-      bmf = boneMovementsFile filename:filename
-      if bmf.openFile("rb") != undefined then
+        
+      bmf = boneMovementsFile()
+      
+      if bmf.openFile "rb" fname:bmfFilename != undefined then
       (
         if bmf.readFile() then
         ( 
           skeletonAnimations = rseSkeletonAnimationViewer()
 		  skeletonAnimations.create bmf.rseObject
         ) 
+        
         bmf.closeFile() 		
       )      
     )
   ),  
   fn loadFromCharacterFile =
-  (
+  (  
+    characterFilename = "F:/SteamLibrary/steamapps/common/Ghost Recon/Mods/Origmiss/Character/Specialists/astra_galinsky.chr"
     chr = characterFile()
-    if chr.openFile("rb") != undefined then
+    
+    if chr.openFile "rb" fname:characterFilename != undefined then
     (
-      if settings.showModel then
+      if not settings.showModel then
         result = chr.readSkeleton()
       else
         result = chr.readFile() 
+        
       if result then
       (  
         chr.closeFile()      
         viewer = rseViewer chr.rseObject
         viewer.settings.isTextured = false
+        
         viewer.createScene()
       )      
     )        
@@ -267,7 +280,7 @@ fn main =
 (
   skeletonUI = greSkeletonAnimationsUI()
   skeletonUI.settings.bmfFolder = \
-    "E:/SteamLibrary/steamapps/common/Ghost Recon/Data/Motion/"
+    "F:/SteamLibrary/steamapps/common/Ghost Recon/Data/Motion/"
   skeletonUI.show()	
 )
 

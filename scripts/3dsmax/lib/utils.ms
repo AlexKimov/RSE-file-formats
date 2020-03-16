@@ -123,5 +123,12 @@ struct fileUtils
   )  
  )
  
+ fn formatString strToFormat fmt =
+ (
+    ssBuffer = StringStream "" 
+    format fmt strToFormat to:ssBuffer
+    result = ssBuffer    
+ )
+ 
 fileUtils = fileUtils()
 converter = converter()

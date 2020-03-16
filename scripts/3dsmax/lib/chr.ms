@@ -143,15 +143,15 @@ struct characterFile
     freader = rseFormatReader(fstream)
     writer = rseFormatWriter(fstream)    
   ),   
-  fn openFile mode =
+  fn openFile mode fname:"" =
   (
     dialogs.types = strings.types
     if mode == "rb" then
       dialogs.caption = strings.openFileCaption
     else
       dialogs.caption = strings.saveFileCaption
-    local fname = filename
-    fstream = dialogs.openFileDialog &fname mode
+
+    fstream = dialogs.openFileDialog fname mode
     if fstream != undefined then
     (
       filename = fname

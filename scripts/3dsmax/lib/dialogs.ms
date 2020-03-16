@@ -45,15 +45,15 @@ struct dialogs
     if isValue txt then  
       result = isnNonNegativeValue txt         
   ),  
-  fn openFileDialog &filename mode =
+  fn openFileDialog filename mode =
   (
   	if filename == undefined or filename == "" then
       filename = 
       (      
 	    if mode == "rb" then 
-          getOpenFileName caption: caption types: types
+          getOpenFileName caption:caption types:types
 	    else
-          getSaveFileName caption: caption types: types
+          getSaveFileName caption:caption types:types
       )  
 	if filename != undefined then
       filestream = fopen filename mode 
