@@ -435,9 +435,8 @@ typedef struct {
     TRANSFORMATION_MATRIX TM; 
 
     switch (Header.ID) {
-      // dynamic object?
+      // Dynamic Object  (i.e. Furniture, Television, something that can change)
       case 14: {
-        //hklhjl();
         TRANSFORMATION_MATRIX TM;
                   
         CSTRING Name;
@@ -507,7 +506,7 @@ typedef struct {
          FLOAT Velocity;          
        }; break;
 
-       // door
+       //  door / Automatic Door.(uses touchplate to activate - Adtplate)
        case 16: {
          TRANSFORMATION_MATRIX TM; 
 
@@ -554,12 +553,20 @@ typedef struct {
          CSTRING Name;           
        }; break;
 
-       // touch plate 
+       //  Tplate One-time touch plate. (when touched it activates something, can be done in mission editor if NOT for a door) 
+       // Automatic door touch plate. (activates whenever touched, is attached to a specific door(s))
        case 25: {
          CSTRING CollisionType2d <name="2d Collision Type">; 
          CSTRING CollisionType3d <name="3d Collision Type">; 
 
-         FLOAT Coords[6];
+         struct {
+            FLOAT X1;        
+            FLOAT Y1;
+            FLOAT Z1;
+            FLOAT X2;        
+            FLOAT Y2;
+            FLOAT Z2;
+         } TPLATE_COORDINATES;
 
          UINT AttachementCount;
          CSTRING AttachementName[AttachementCount] <optimize=false>; 
@@ -584,6 +591,13 @@ typedef struct {
          } HALOS;
          HALOS Halo(Count);
  
+       }; break;
+      // Static world special effects
+     // "steama"	Medium hole in a steam pipe.
+		//"smokestacka"	Medium smoke stack.
+
+       case 36: {
+
        }; break;
     }; 
 } DYN_OBJECT <name=GetDynObjName>;
@@ -720,4 +734,4 @@ struct {
   };
 } PLANNINGLEVEL_LIST <name="10. PlanningLevelList section">;
 
-CSTRING Name <name="File END">;
+CSTRING Name <name="EndMAP">;
