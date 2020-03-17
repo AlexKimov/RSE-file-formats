@@ -272,7 +272,7 @@ struct {
 } PORTALLIST <name="Portal List">;
 
 string PortalName(PORTAL &portal) {
-  return "Name: " + portal.HEADER.Name.Text;
+  return "Name: " + portal.Header.Name.Text;
 };
 
 
@@ -568,7 +568,35 @@ typedef struct {
 } OBJECT_NAME <name=ObjName>;
 
 string ObjName(OBJECT_NAME &objectname) {
-  return "Name: " + objectname.Header.Name.Text + " ";
+  switch (objectname.Header.ID) {
+      case 14:
+        return "Dynamic object | " + "Name: " + objectname.Header.Name.Text + " ";      
+      break;
+      case 16:
+        return "Door | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 17:
+        return "Target | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 19:
+        return "Switch | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 20:
+        return "Glaas | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 21:
+        return "Touch plate | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 29:
+        return "Spawn | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 31:
+        return "Halo | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+      case 33:
+        return "RT plate | " + "Name: " + objectname.Header.Name.Text + " ";       
+      break;
+  }
 }
 
 struct {
