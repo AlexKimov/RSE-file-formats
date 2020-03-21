@@ -14,6 +14,49 @@
 
 const uint numberOfBones = 18;
 
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {
+  UINT Red;
+  UINT Green;
+  UINT Blue;
+  UINT Alpha;
+} VECTOR_4UI;
+
+typedef struct {
+  UINT X;
+  UINT Y;
+  UINT Z;
+} VECTOR_3UI;
+
+typedef struct {
+  UINT16 X;
+  UINT16 Y;
+  UINT16 Z;
+} VECTOR_3UI16;
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} VECTOR_3F;
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+  FLOAT W;
+} VECTOR_4F;
+
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+} VECTOR_2F;
+
 struct {
   FLOAT Version <name="Version">; // 1.8
 } HEADER <name="Header">;
@@ -23,26 +66,16 @@ struct {
 struct {
   typedef struct {
     UINT VertexCount <name="Vertex count">;  
-
     struct {
       UINT Index[VertexCount];
     } INDEX_ARRAY <name="Vertex index array">;
-
     struct {
-      typedef struct {
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } COORDINATES <name="Vertex">;
-
-      COORDINATES CoordinatesArray[VertexCount];
-
-    } COORDINATES_ARRAY <name="Vertex coordinates array">;
-
+       VECTOR_3F CoordinatesArray[VertexCount] <name="Vertex">;
+    } COORDINATES <name="Vertex coordinates array">;
   } BODYP <optimize=false, name="Body part related to bone">;
 
   BODYP BodyParts[numberOfBones]; // 18 bones total
-} BODY <name="Vertexes related to bones (for animation)">;
+} BODY <name="Weight indexes">;
 
 //-------------------------------------------------
 
@@ -147,61 +180,32 @@ typedef struct {
   //
   struct {
     UINT VertexCount;
-    struct {
-      FLOAT R;
-      FLOAT G;
-      FLOAT B;
-      FLOAT A;
-    } COLOR1[VertexCount]; 
+    VECTOR_4F Color[VertexCount]; 
+
     UINT count2; 
+    VECTOR_2F Unnkown[VertexCount*count2];
+
     struct {
-      FLOAT A;
-      FLOAT B;
-    } Unnkown[VertexCount*count2];
-    UINT VertexCount; 
-    struct {
-      FLOAT R;
-      FLOAT G;
-      FLOAT B;
-      FLOAT A;
-    } COLOR2[VertexCount];  
-    UINT count4; 
-    struct {
-      FLOAT U;
-      FLOAT V;
-    } UV_COORDINATES[VertexCount];
-     struct {
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-    } NORMALS[VertexCount] <name="Normals?">; 
+      UINT VertexCount; 
+      VECTOR_4F Color2[VertexCount];  
+      UINT unknown; 
+      VECTOR_2F UVCoordinates[VertexCount];
+      VECTOR_3F Normals[VertexCount] <name="Normals?">; 
+    } VERTEX_ATTRIBUTES;
 
     struct {
       UINT FaceCount;
       struct {   
-        struct {
-          FLOAT X;
-          FLOAT Y;
-          FLOAT Z;
-          FLOAT Distance;
-        } FACE_NORMAL[FaceCount]; 
-        struct {
-          UINT16 I1;
-          UINT16 I2;
-          UINT16 I3;
-        } VERT_INDEXES[FaceCount] <name="Vertex indexes">; 
-        struct {
-          UINT16 I1;
-          UINT16 I2;
-          UINT16 I3;
-        } TEXTURE_UV_INDEXES[FaceCount] <name="UV indexes">;
+        VECTOR_4F FaceNormal[FaceCount]; 
+        VECTOR_3UI16 VertIndexes[FaceCount] <name="Vertex indexes">; 
+        VECTOR_3UI16 TextureUVIndexes[FaceCount] <name="UV indexes">;
       } FACES;
     } FACE_DATA;
   } GEOMETRY_DATA;       
 } MESH <optimize=false, name="Mesh">;
 typedef struct (uint count) {
   MESH  array[count];
-} MESH_ARRAY;
+} MESH_ARRAY <name="Meshes">;
 MESH_ARRAY Meshes(MeshCount) ;
 
 //-------------------------------------------------
