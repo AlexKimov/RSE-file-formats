@@ -38,30 +38,34 @@ typedef struct {
 UINT BoneCount;
 
 typedef struct {
+  // relative
   struct {
     FLOAT X;   
     FLOAT Y;
     FLOAT Z;
-  } VOFFSET <name="Relative position to parent bone?">;
-  //Printf("pos: (point3  %d, %d, %d) ", VOFFSET.X, VOFFSET.Y, VOFFSET.Z); 
+  } POSITION_REL; 
   // 
   struct {
     FLOAT X;   
     FLOAT Y;
     FLOAT Z;
     FLOAT W;
-  } ROTATION <name="Rotation?">;  
+  } ROTATION_REL;
   //
   TRANSFORMATION_MATRIX Matrix;
-  //
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
+  // absolute
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION_ABS;
   // 
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT W;
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } ROTATION_ABS;
   // 
   FLOAT X;   
   FLOAT Y;
