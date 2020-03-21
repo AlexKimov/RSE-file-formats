@@ -42,7 +42,8 @@ typedef struct {
     FLOAT X;   
     FLOAT Y;
     FLOAT Z;
-  } VOFFSET <name="Relative position to parent bone?">; 
+  } VOFFSET <name="Relative position to parent bone?">;
+  //Printf("pos: (point3  %d, %d, %d) ", VOFFSET.X, VOFFSET.Y, VOFFSET.Z); 
   // 
   struct {
     FLOAT X;   
@@ -69,6 +70,7 @@ typedef struct {
   //
   UINT Length;
   CHAR Name[Length];
+  //Printf("\"" + Name + "\", ");
   UINT BoneIndex;
   BYTE A;
   if (A == 1)
