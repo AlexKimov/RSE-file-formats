@@ -40,28 +40,35 @@ struct {
 } FILE_HEADER;
 
 typedef struct {
+  // relative
   struct {
     FLOAT X;   
     FLOAT Y;
     FLOAT Z;
-  } VOFFSET <name="Relative position to parent bone?">; 
+  } POSITION_REL; 
   // 
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT W;
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } ROTATION_REL;
   //
   TRANSFORMATION_MATRIX Matrix;
-  //
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
+  // absolute
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION_ABS;
   // 
-  FLOAT X;   
-  FLOAT Y;
-  FLOAT Z;
-  FLOAT W;
-  // 
+  struct {
+    FLOAT X;   
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } ROTATION_ABS;
+
   FLOAT X;   
   FLOAT Y;
   FLOAT Z;
@@ -71,27 +78,27 @@ typedef struct {
   CHAR Name[Length];
   UINT BoneIndex;
 
-
-
   BYTE A;
   if (A == 1)
   {
-    //
-    FLOAT X;   
-    FLOAT Y;
-    FLOAT Z;
-    //
-    FLOAT Unknown;
-    //
-    FLOAT X;   
-    FLOAT Y;
-    FLOAT Z;
-    //
-    FLOAT X;   
-    FLOAT Y;
-    FLOAT Z;
-    //
-    FLOAT Unknown;
+    struct {
+      //
+      FLOAT X;   
+      FLOAT Y;
+      FLOAT Z;
+      //
+      FLOAT Unknown;
+       //
+      FLOAT X;   
+      FLOAT Y;
+      FLOAT Z;
+      //
+      FLOAT X;   
+      FLOAT Y;
+      FLOAT Z;
+      //
+      FLOAT Unknown;
+    } UNKNOWN;
   }
 } BONE <optimize=false, name=getBoneName>;
 
