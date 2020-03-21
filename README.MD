@@ -17,6 +17,8 @@ About file formats [see WIKI page](https://github.com/AlexKimov/010Editor-Templa
 ## Other
 * Python scripts and even more by Philip Edwards 
 https://github.com/boristsr/RainbowSixFileConverters.
+* What about Rainbow 6 powered by Unreal Engine?
+https://github.com/RainbowRedux/RainbowRedux
 
 ## Games and formats
 
