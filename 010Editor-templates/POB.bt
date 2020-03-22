@@ -560,17 +560,12 @@ typedef struct {
   typedef struct 
   {
     UINT ControllerType; // 3 - Linear Position, 5 - TCB Position
-    if (ControllerType == 3) 
+    FLOAT Unknown; // 0
+    FLOAT Time;
+    VECTOR3 Position; 
+ 
+    if (ControllerType != 3) 
     {
-      FLOAT Unknown; // 0
-      FLOAT Time;
-      VECTOR3 Position;  
-    }
-    else 
-    {
-      FLOAT Unknown; // 0
-      FLOAT Time;
-      VECTOR3 Position; 
       FLOAT Tension;  
       FLOAT Contunioty;
       FLOAT Bias;         
@@ -644,20 +639,20 @@ void NodeTree(UINT NodeCount)
        else   
          BYTE Unknown;
        TRANSFORMATION_MATRIX Matrix;
-       if (Header.ID != 47) {
-         switch (Header.ID) {
-           case 48: 
-             UINT Unknown;
-             break;
-           case 50: 
-             ANIMATION_PROPERTIES AnimationProperties <name="Animation properties">;
-             break;
-           case 51:
-             PARTICLE_NODE_PROPERTIES ParticleProperties <name="Particle properties">;
-             break;
-        };
+
+       switch (Header.ID) {
+         case 48: 
+           UINT Unknown;
+           break;
+         case 50: 
+           ANIMATION_PROPERTIES AnimationProperties <name="Animation properties">;
+           break;
+         case 51:
+           PARTICLE_NODE_PROPERTIES ParticleProperties <name="Particle properties">;
+           break;
      };              
      UINT Count <name="Number of child nodes">;
+     NodeTree(Count);
     };    
   } NODE <name=NodeName>;
   typedef struct (int arraySize) {
