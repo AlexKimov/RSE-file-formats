@@ -11,6 +11,8 @@
 //   History: 
 //------------------------------------------------
 
+local float height, width;
+
 struct {
   UINT16 Height <name="Height">; 
   UINT16 Width <name="Width">;  
@@ -38,21 +40,20 @@ typedef struct {
     ubyte Green : 5 <name="Green">;
     ubyte Red   : 5 <name="Red">;
     ubyte Alpha : 1 <name="Blue">;
-} PIXEL <name="Pixel",size=pixelSize>;  
-
-int pixelSize(PIXEL &pixel) {
-  return 2;
-}
+} PIXEL <name="Pixel">;  
 
 struct {
-  PIXEL PixelArray[HEADER.Height*HEADER.Width] <optimize=false>;
+  height = HEADER.Height;
+  width = HEADER.Width;
+  Printf("%d", height * width);
+  PIXEL PixelArray[height * width] <optimize=false>;
 } PIXEL_DATA <name="Pixel data">;
  
-struct {
+
   struct {
     local int height = HEADER.Height, width = HEADER.Width, i;
   } variables <hidden=true>;
-  if (HEADER.MM == 0) {
+  if (HEADER.MM > 0) {
     while (variables.height >= 1 || variables.width >= 1)
       {
         variables.height = variables.height/2; 
@@ -63,4 +64,3 @@ struct {
          } MM <name="Mip Map">;
       };
   };
-} MM_DATA <name="Mip Mapping">;
