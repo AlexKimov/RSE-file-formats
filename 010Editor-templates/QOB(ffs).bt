@@ -148,7 +148,7 @@ struct {
 
 struct {   
   SECTION_HEADER Header; 
-  UINT Count <name="Number of models">;
+  UINT Count <name="Number of objects">;
   typedef struct {
     SECTION_HEADER Header;       
           
@@ -157,8 +157,8 @@ struct {
       typedef struct (int arraySize) {
         VECTOR3 array[arraySize];
       } VERTEXES;     
-      VERTEXES Vertexes(Count) <name="Vertexes">; 
-    } VERTEXES_SECTION <name="Vertex section">;
+      VERTEXES Vertexes(Count) <name="Vertex">; 
+    } VERTEXES_SECTION <name="Vertexes">;
 
     UINT Count <name="Number of meshes">; 
     typedef struct {
@@ -167,18 +167,19 @@ struct {
           INT MaterialIndex;
         else 
         {
-          UINT isTextured;
-          if (isTextured > 0) 
-            UINT TextureIndex;
+          INT MaterialIndex;
+          UINT TextureIndex;
           struct {
-            INT Unknown;   
+            INT Unknown;
+            if (Header.VERSION.Value == 4) 
+              INT SelfIlluminationMap;   
             if (Header.VERSION.Value > 4) 
             { 
-              INT SelfIlluminationMap;
               INT SpecularMap;
               INT BumpMap;
               INT ReflectionMap;
               INT MapCount;
+              INT Unknown;
             }; 
           } MAPPING;
         }; 
@@ -228,7 +229,7 @@ struct {
   typedef struct (int arraySize) {
     OBJECT array[arraySize] <optimize=false>;
   } OBJECTS;     
-  OBJECTS Objects(Count) <name="Meshes">;   
+  OBJECTS Objects(Count) <name="Objects">;   
 } GEOMETRY_LIST  <name="Geometry List">;
 
 //--------------------
@@ -252,6 +253,10 @@ if (ReadInt(FTell()) != 9)
   } POINTS <optimize=false>;   
   POINTS Points(Count) <optimize=false, name="Points">; 
 };
+
+string pointName(POINT &p) {
+  return p.Name.Text;
+}
 // EndModel token
 
 CSTRING EndModel <name="EndModel token">;
