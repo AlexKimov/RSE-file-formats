@@ -12,120 +12,137 @@
 //   2017.06 v0.1 initial release
 //------------------------------------------------
 
-struct {
-  typedef struct {
-    UINT VertexCount <name="Vertex count">;
-  
-    struct {
-      typedef struct {
-        UINT A;
-      } INDEX;
-      INDEX indexArray[VertexCount] <optimize=false,name="Index">;
-     } INDEX_ARRAY <name="Vertex index array">;
+local float v;
 
-    struct {
-      typedef struct {
-        FLOAT P1;
-        FLOAT P2;
-        FLOAT P3;
-      } COORDINATES;
-      COORDINATES CoordinatesArray[VertexCount] <optimize=false>;
-    } COORDINATES_ARRAY <name="Vertex cordinates array">;
-  } BODYP <name="Body part">;
-  BODYP BodyParts[22] <optimize=false>;
-} BODY <name="Verticies">;
+typedef struct { 
+  UINT Length;  
+  char Text[Length];
+} CSTRING; 
+
+typedef struct {
+  UBYTE R;
+  UBYTE G;
+  UBYTE B;
+  UBYTE A;     
+} VECTOR_4B;
+
+typedef struct {
+  UINT Red;
+  UINT Green;
+  UINT Blue;
+  UINT Alpha;
+} VECTOR_4UI;
+
+typedef struct {
+  UINT X;
+  UINT Y;
+  UINT Z;
+} VECTOR_3UI;
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} VECTOR_3F;
+
+typedef struct {
+  FLOAT X;
+  FLOAT Y;
+} VECTOR_2F;
 
 //-------------------------------------------------
 
 typedef struct {
-    UINT Length;
-    char Name[Length];   
-    struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-      UINT P4; 
-      BYTE P5;
-    } PROPERTIES;  
-} TEXTURE <name=textureName>;
+  UINT VertexCount <name="Vertex count">;
+  struct {
+    UINT Index[VertexCount] <name="Index">;
+  } INDEXES <name="Vertex indexes">;
+  // ???
+  struct {
+    VECTOR_3F Coordinates[VertexCount] <name="Vertex">;
+  } COORDINATES_ARRAY <name="Vertex cordinates array">;
+} BODY_PART <name="Body part">;
 
-string textureName(TEXTURE & texture) {
-  return texture.Name;
+struct {
+  while (true) {
+    v = ReadFloat(FTell());
+    if (v >= 2 && v <= 2.1) 
+      break;
+    BODY_PART bpart;
+  };
+} BODY <name="Weight indexes">;
+
+//-------------------------------------------------
+
+struct {
+  FLOAT Version;
+  CSTRING Name;
+} HEADER <name="File header kind of">;
+
+//-------------------------------------------------
+
+typedef struct {
+  CSTRING Name;   
+  struct {
+    VECTOR_4B Ambient;
+    VECTOR_4B Diffuse;
+    UINT Unknown; // Transparency type ?
+    UINT Transparency; 
+    BYTE twoSided; // 1 - yes
+  } PROPERTIES;  
+} MATERIAL <name=textureName>;
+
+string textureName(MATERIAL &mat) {
+  return mat.Name.Text;
 };
 
+
 struct {
-  FLOAT P;
-  UINT Length;
-  char Name[Length];
-  //
   struct {
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-    UINT P1;
-    UINT P2;
-  } T_PROPERTIES; 
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+  } PROPERTIES <name="???">; 
   //
   UINT TextureCount <name="Number of textures">;
-  TEXTURE Textures[TextureCount] <optimize=false>;
-} TEXTURES <name="Textures">;
+  MATERIAL Textures[TextureCount] <optimize=false>;
+} MATERIALS <name="Materials">;
+
+//-------------------------------------------------
+
+struct {
+  UINT Count <name="Number of faces">;
+  typedef struct {
+    VECTOR_3UI FaceIndexes <name="Vertex indexes">;  
+    VECTOR_3UI UVIndexes <name="Texture coordinates indexes">;  
+    UINT MaterialIndex;
+    INT Unknown; // color, index ?
+  } FACE <name="Face">;
+  FACE Indexes[Count] <optimize=false>;
+} INDEXES <name="Face data">;
 
 //-------------------------------------------------
 
 struct {
   UINT Count <name="count">;
-  typedef struct {
-    struct {
-      UINT I1;
-      UINT I2;
-      UINT I3;
-    } INDEXIES1 <name="Face index">;  
-    struct {
-      UINT I1;
-      UINT I2;
-      UINT I3;
-    } INDEXIES2 <name="Texture coordinates index">;  
-    UINT MN;
-    UINT MN;
-  } PINDEX <name="Index">;
-  PINDEX IArray[Count] <optimize=false>;
-} INDIXIES <name="Indixies">;
+  VECTOR_3F Vertexes[Count] <optimize=false, name="Vertex coordinates">;
+} VERTEXES_ <name="Vertexes">;
 
 //-------------------------------------------------
+
 struct {
-  UINT Count <name="count">;
+  UINT VertexAttributesCount <name="Number of vertex attributes">;
   typedef struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-  } MN;
-  MN NArray[Count] <optimize=false>;
-} N <name="MN">;
-
-//-------------------------------------------------
-struct {
-  UINT FaceCount <name="Polygon count">;
-  typedef struct {
-    struct {    
-      FLOAT U;
-      FLOAT V;
-    } TEX_COORDINATES;   
-    struct {
-      FLOAT P1;
-      FLOAT P2;
-      FLOAT P3;
-    } NORMALS;
-    struct {
-      UINT Red;
-      UINT Green;
-      UINT Blue;
-      UINT Alpha;
-    } COLOR;
-  } Face <name="Polygon">;
-  Face FaceArray[FaceCount] <optimize=false>;
-} POLYGONS <name="Polygons">;
+    VECTOR_2F TexCoordinates <name="UV">;   
+    VECTOR_3F Normal <name="Normal">;
+    VECTOR_4UI FaceColor;
+  } VERTEX_ATTRIBUTES <name="Face">;
+  VERTEX_ATTRIBUTES VertexAttributes[VertexAttributesCount] <optimize=false>;
+} POLYGONS <name="Vertex attributes">;
 
 //-------------------------------------------------
 
-  UINT Count <name="count">;
+  UINT Count <name="unknown">;
