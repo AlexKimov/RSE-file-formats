@@ -11,42 +11,50 @@
 //   History: 
 //------------------------------------------------
 
-UINT Count1;
+UINT MeshCount;
 
 struct {
   UINT Count;
   char Name[Count];
 
   struct {
-    UINT Count;
+    UINT VertexCount;
      struct {
-      FLOAT A;
-      FLOAT A;
-      FLOAT A;
-      UINT B;
-      UINT B;
-      FLOAT A;
-      FLOAT A;
-       struct {
-       UINT Red;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+
+      struct {
+        UINT U1;
+        UINT U2;
+      } UNKNOWN;
+
+      struct {
+        FLOAT U;
+        FLOAT V;
+      } UV;
+      struct {
+        UINT Red;
         UINT Green;
         UINT Blue;
-         UINT Alpha;
-     } COLOR;
-      FLOAT A;
-      FLOAT A;
-      FLOAT A;
-    } A[Count];
-  } F;
+        UINT Alpha;
+      } COLOR;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } NORMAL;
+    } VERTEX[VertexCount];
+  } VERTEXES;
 
   struct {
-    UINT Count;
+    UINT FaceCount;
     struct {
-      UINT16 A;
-      UINT16 B;
-      UINT16 C;
-    } B[Count];
-  } E;
-} J[Count1] <optimize=false>;
+      UINT16 I1;
+      UINT16 I2;
+      UINT16 I3;
+    } INDEXES[FaceCount];
+  } FACE_INDEXES;
+} MESH[MeshCount] <optimize=false>;
 
-FLOAT I[6];
+FLOAT UNKNOWN_DATA[6];
