@@ -11,21 +11,52 @@
 //   History: 
 //------------------------------------------------
 
+local uint i;
 
-UINT Count1; 
+UINT BoneCount; 
+UINT FrameCount; 
+
+
+typedef struct (uint i) {
+  UINT Count;
+  UINT16 Index[Count];
+
+  UINT KeyCount;
+  if  (i == 0) {
+    struct {
+      UINT Frame;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } POSITION[KeyCount] <name="Pos">;
+  } else {
+    struct {
+      UINT Frame;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      FLOAT W;
+    } ROTATION[KeyCount] <name="Quat">;
+  };
+
+} BONE_ANIMATION <name="Bone">;
 
 struct {
-  UINT Count; 
-  UINT Count1[10]; 
-  struct {
-    UINT A;
-    FLOAT A;
-  } B[6];
-}A[Count1] <optimize=false>;
+  for (i = 0; i <= BoneCount; ++i) {
+    BONE_ANIMATION BoneAnimation(i);
+  }
+} MOTION;
 
-UINT Length;
-char B[Length];
-UINT A;
-UINT B;
-UINT C;
-FLOAT A2[3];
+struct {
+  UINT Length; // 
+  char Text[Length]; // 
+} Name <name="Name">;
+
+struct {
+  FLOAT Unknown;
+  FLOAT AnimationSpeed;
+  FLOAT Speed <name="in-game speed of the character">;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+} ANIMATION_PARAMETERS;
